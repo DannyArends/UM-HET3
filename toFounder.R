@@ -30,7 +30,7 @@ chr1.names <- rownames(map)[which(map[,"Chr"] == 1 & map[,"Origin"] == "Sequenom
 image(gts.cor[chr1.names,chr1.names])
 
 # Read the founder snps
-fvcf <- read.table("fvcfAll.txt", sep="\t", row.names=1,colClasses="character")
+fvcf <- read.table("../monsterplex/fvcfAll.txt", sep="\t", row.names=1,colClasses="character")
 
 # Bind the position names (since rsIDs are not in the founders), and test if in founders
 map <- cbind(map, posname = paste0(map[, "Chr"], "_", map[, "Position"]))
@@ -39,7 +39,8 @@ map <- cbind(map, type = NA)
 
 # 4way autosomes, X chromosome and matrix
 m4wayA <- mok[map[, "inFounder"] == 1 & map[, "Chr"] != "X"]
-m4way <- m4wayA
+m4wayX <- mok[map[, "inFounder"] == 1 & map[, "Chr"] == "X"]
+m4way <- c(m4wayA,m4wayX)
 
 gts4way <- matrix(NA, length(m4way), ncol(gtC), dimnames= list(m4way, colnames(gtC)))
 cat(length(m4way), "Markers", ncol(gtC), "individuals\n")
@@ -92,6 +93,32 @@ for (m in m4wayA) {
     gts4way[m, which(gtC[m,] == "0/1")] <-  "B?"
     gts4way[m, which(gtC[m,] == "0/0")] <-  "XX"
     map[m, "type"] = "Mat2"
+  }
+  cat("Done", m, "=", pm, "\n")
+}
+
+males <- ind[colnames(gtC),"Sex"] == "M"
+females <- ind[colnames(gtC),"Sex"] == "F"
+
+for (m in m4wayX) { # Only two posibilities are observed in the founder conversion map
+  pm <- map[m, "posname"] # position name
+  if(sum(fvcf[pm, founders] == "1/1") == 1){ # One founder
+    if (fvcf[pm, "BALB_cJ"] == "1/1") {
+      gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "B-"
+      gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "A-"
+      gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "A-"
+      gts4way[m, which(gtC[m,] == "0/0" & females)] <-  "B?"
+      gts4way[m, which(gtC[m,] == "0/1" & females)] <-  "A?"
+      gts4way[m, which(gtC[m,] == "1/1" & females)] <-  "XX"
+    }
+  }else if(sum(fvcf[pm, founders] == "1/1") == 3){ # 3 founders
+      gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "B-"
+      gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "XX"
+      gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "A-"
+      
+      gts4way[m, which(gtC[m,] == "0/0" & females)] <-  "XX"
+      gts4way[m, which(gtC[m,] == "0/1" & females)] <-  "B?"
+      gts4way[m, which(gtC[m,] == "1/1" & females)] <-  "A?"
   }
   cat("Done", m, "=", pm, "\n")
 }
