@@ -1,8 +1,6 @@
-setwd("C:/Github/UM-HET3/files/")
-
 setwd("C:/Github/UM-HET3/files/merged")
 
-gts4way <- read.table("gts4way.txt", sep="\t")
+gts4way <- read.table("gts4way.txt", sep="\t",na.strings=c("","NA", "??", "XX"))
 gts4wayRqtl <- read.table("gts4way.rqtl.txt", sep="\t")
 map <- read.table("map.gts4way.txt", sep="\t")
 ind <- read.table("ind.gts4way.txt", sep="\t")
@@ -92,8 +90,10 @@ fMap <- rownames(map)[grep("Pat", map[,"type"])]
 op <- par(mfrow=c(2,1))
 # Plot paternal map
 op <- par(mar = c(4,10,3,1))
+op <- par(cex = 0.5)
 image(1:length(fMap), 1:10, t(lods[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10),fMap]), xlab="Paternal Map",yaxt='n',ylab="",xaxt='n')
 abline(v=which(diff(map[fMap,"Chr"]) != 0))
+abline(h=c(2.5, 6.5), lty=2)
 axis(2, at = 1:10, rownames(lods)[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10)], las = 2)
 chrP <- c(0, which(diff(map[fMap,"Chr"]) != 0))
 axis(1, at = chrP + (diff(c(chrP, length(fMap)))/2), 1:19)
@@ -103,7 +103,21 @@ box()
 op <- par(mar = c(4,10,3,1))
 image(1:length(mMap), 1:10, t(lods[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10),mMap]), xlab="Maternal Map",yaxt='n',ylab="",xaxt='n')
 abline(v=which(diff(map[mMap,"Chr"]) != 0))
+abline(h=c(2.5, 6.5), lty=2)
 axis(2, at = 1:10, rownames(lods)[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10)], las = 2)
 chrP <- c(0, which(diff(map[mMap,"Chr"]) != 0))
 axis(1, at = chrP + (diff(c(chrP, length(mMap)))/2), 1:19)
 box()
+
+plot(x = c(0, 20), y = c(0, max(map[, "Position"])), t = 'n', xlab="Chromosome", ylab="Pos")
+lapply(rev(colnames(lods)), function(mname){
+  isMat = (2*grepl("Mat", map[mname, "type"])) - 1
+  mType = c("Green", "Blue", "Gold", "red")[as.numeric(factor(map[mname, "type"], levels = c("Mat1", "Mat2", "Pat1", "Pat2")))]
+  rect(map[mname, "Chr"] + isMat * 0, 0, map[mname, "Chr"] + isMat * 0.2, map[mname,"Position"], col= mType, border="white")
+})
+
+
+lapply(colnames(lods), function(mname){
+  isMat = (2*grepl("Mat", map[mname, "type"])) - 1
+  points(c(map[mname, "Chr"] + isMat * 0.1,map[mname, "Chr"] + isMat * 0.1), c(map[mname, "Position"], map[mname, "Position"]), pch = '-', cex= as.numeric(lods[2, mname]))
+})
