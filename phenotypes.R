@@ -1,9 +1,11 @@
 setwd("C:/Github/UM-HET3/files/merged")
 
-gts4way <- read.table("gts4way.txt", sep="\t",na.strings=c("","NA", "??", "XX"))
-gts4wayRqtl <- read.table("gts4way.rqtl.txt", sep="\t")
-map <- read.table("map.gts4way.txt", sep="\t")
-ind <- read.table("ind.gts4way.txt", sep="\t")
+gts4way <- read.table("gts4way.mai2021.txt", sep="\t",na.strings=c("","NA", "??", "XX"))
+gts4wayRqtl <- read.table("gts4way.rqtl.mai2021.txt", sep="\t")
+map <- read.table("map.gts4way.mai2021.txt", sep="\t")
+ind <- read.table("ind.gts4way.mai2021.txt", sep="\t")
+
+map[map[, "Chr"] == "X", "Chr"] <- 20
 
 gts4wayNum <- apply(gts4wayRqtl, 2, as.numeric)
 rownames(gts4wayNum) <- rownames(gts4wayNum)
@@ -23,7 +25,7 @@ for(site in unique(ind[,"Site"])){
   malesOnSite <- ind[which(ind$Site == site & ind$Sex == "M"),]
   femalesOnSite <- ind[which(ind$Site == site & ind$Sex == "F"),]
   resRow <- c()
-  for(pheCol in c(5, 8, 9, 10, 11)){
+  for(pheCol in c(8, 9, 10, 11)){
     phe <- colnames(ind)[pheCol]
     cat(site, phe, "\n")
     mean.m <- round(mean(malesOnSite[,phe], na.rm = TRUE),1)
@@ -42,13 +44,47 @@ for(site in unique(ind[,"Site"])){
   res <- rbind(res, resRow)
 }
 rownames(res) <- unique(ind[,"Site"])
-colnames(res) <- gsub("BodyWeight_HET3_ITP_", "BW", unlist(lapply(colnames(ind)[c(5,8:11)], paste, c("N.M", "Mean.M", "SD.M", "N.F", "Mean.F", "SD.F"))))
+colnames(res) <- gsub("BodyWeight_HET3_ITP_", "BW", unlist(lapply(colnames(ind)[c(8:11)], paste, c("N.M", "Mean.M", "SD.M", "N.F", "Mean.F", "SD.F"))))
 
 colnames(validInd) <- c("Site", "Phenotype", "Males", "Females")
 
-# Initial QTL mapping
+validBW <- validInd[grep("BodyWeight", validInd[,2]),]
+indAdjusted <- matrix(NA, nrow(ind), ncol(ind), dimnames = list(rownames(ind), colnames(ind)))
+indAdjusted <- data.frame(indAdjusted)
+indAdjusted[,1] <- ind[,1]
+indAdjusted[,2] <- ind[,2]
+indAdjusted[,3] <- ind[,3]
+indAdjusted[,4] <- ind[,4]
+indAdjusted[,6] <- ind[,6]
+indAdjusted[,7] <- ind[,7]
+indAdjusted <- indAdjusted[,-5]
+
+for(pheCol in c(7:10)){
+  phe <- colnames(indAdjusted)[pheCol]
+  cat("Adjusting", phe, "\n")
+  # Individuals valid for mapping
+  
+  isValid.M <- unlist(lapply(validInd[which(validInd[, "Phenotype"] == phe),"Males"], strsplit, ","))
+  isValid.F <- unlist(lapply(validInd[which(validInd[, "Phenotype"] == phe),"Females"], strsplit, ","))
+  mformula <- as.formula(paste0(phe, " ~ as.factor(Site) + as.factor(Treatment_Effect) + as.factor(Cohort.Year)"))
+  
+  indAdjusted[isValid.M, phe] <- as.numeric(ind[isValid.M, phe])
+  adj.M <- lm(mformula, indAdjusted[isValid.M,])  # Adjust phenotypes for males
+  BWAdj.M <- coef(adj.M)["(Intercept)"] + residuals(adj.M)
+  indAdjusted[names(BWAdj.M), phe] <- round(BWAdj.M,2)
+  
+  indAdjusted[isValid.F, phe] <- as.numeric(ind[isValid.F, phe])
+  adj.F <- lm(mformula, indAdjusted[isValid.F,])  # Adjust phenotypes for females
+  BWAdj.F  <- coef(adj.F)["(Intercept)"] + residuals(adj.F)
+  indAdjusted[names(BWAdj.F), phe] <- round(BWAdj.F,2)
+}
+
+write.table(indAdjusted, file = "bodyweights.nooutliers.adjusted.txt", quote=FALSE, sep="\t", na = "")
+
+
+# Initial QTL mapping (I adjust again for some reason)
 lods <- c()
-for(pheCol in c(5, 8, 9, 10, 11)){
+for(pheCol in c(8, 9, 10, 11)){
   phe <- colnames(ind)[pheCol]
 
   # Individuals valid for mapping
@@ -70,7 +106,7 @@ for(pheCol in c(5, 8, 9, 10, 11)){
     if(length(table(gts)) > 1) return(anova(lm(BWAdj.M ~ gts))[[5]][1])
     return(NA)
   })
-  plot(-log10(mm), col=map[names(mm), "Chr"], t = 'b', main = paste0("Male ",phe,"(Adj: Site & Cohort)"))
+  plot(-log10(mm), t = 'b', main = paste0("Male ",phe,"(Adj: Site & Cohort)"))
   lods <- rbind(lods, -log10(mm))
 
   # Map and plot females all markers
@@ -78,47 +114,120 @@ for(pheCol in c(5, 8, 9, 10, 11)){
     if(length(table(gts)) > 1) return(anova(lm(BWAdj.F ~ gts))[[5]][1])
     return(NA)
   })
-  plot(-log10(mm), col=map[names(mm), "Chr"], t = 'b', main = paste0("Female ",phe,"(Adj: Site & Cohort)"))
+  plot(-log10(mm), t = 'b', main = paste0("Female ",phe,"(Adj: Site & Cohort)"))
   lods <- rbind(lods, -log10(mm))
 }
-rownames(lods) <- gsub("BodyWeight_HET3_ITP_", "BW", unlist(lapply(colnames(ind)[c(5,8:11)], paste, c("M", "F"))))
+rownames(lods) <- gsub("BodyWeight_HET3_ITP_", "BW", unlist(lapply(colnames(ind)[c(8:11)], paste, c("M", "F"))))
 
 # Paternal and Maternal maps
 mMap <- rownames(map)[grep("Mat", map[,"type"])]
 fMap <- rownames(map)[grep("Pat", map[,"type"])]
 
 op <- par(mfrow=c(2,1))
+
+library(RColorBrewer)
+mcol = brewer.pal(4, "PuRd")
+
 # Plot paternal map
 op <- par(mar = c(4,10,3,1))
-op <- par(cex = 0.5)
-image(1:length(fMap), 1:10, t(lods[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10),fMap]), xlab="Paternal Map",yaxt='n',ylab="",xaxt='n')
-abline(v=which(diff(map[fMap,"Chr"]) != 0))
-abline(h=c(2.5, 6.5), lty=2)
-axis(2, at = 1:10, rownames(lods)[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10)], las = 2)
-chrP <- c(0, which(diff(map[fMap,"Chr"]) != 0))
+op <- par(cex = 1)
+image(1:length(fMap), 1:8, t(lods[c(1, 3, 5, 7, 2, 4, 6, 8),fMap]), xlab="Paternal Map",yaxt='n',ylab="",xaxt='n')
+abline(v=which(diff(as.numeric(map[fMap,"Chr"])) != 0))
+abline(h=c(4.5), lty=2)
+axis(2, at = 1:8, rownames(lods)[c(1, 3, 5, 7, 2, 4, 6, 8)], las = 2)
+chrP <- c(0, which(diff(as.numeric(map[fMap,"Chr"])) != 0))
 axis(1, at = chrP + (diff(c(chrP, length(fMap)))/2), 1:19)
 box()
 
 # Plot maternal map
 op <- par(mar = c(4,10,3,1))
-image(1:length(mMap), 1:10, t(lods[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10),mMap]), xlab="Maternal Map",yaxt='n',ylab="",xaxt='n')
-abline(v=which(diff(map[mMap,"Chr"]) != 0))
-abline(h=c(2.5, 6.5), lty=2)
-axis(2, at = 1:10, rownames(lods)[c(1, 2, 3, 5, 7, 9, 4, 6, 8, 10)], las = 2)
-chrP <- c(0, which(diff(map[mMap,"Chr"]) != 0))
+image(1:length(mMap), 1:8, t(lods[c(1, 3, 5, 7, 2, 4, 6, 8),mMap]), xlab="Maternal Map",yaxt='n',ylab="",xaxt='n')
+abline(v=which(diff(as.numeric(map[mMap,"Chr"])) != 0))
+abline(h=c(4.5), lty=2)
+axis(2, at = 1:8, rownames(lods)[c(1, 3, 5, 7, 2, 4, 6, 8)], las = 2)
+chrP <- c(0, which(diff(as.numeric(map[mMap,"Chr"])) != 0))
 axis(1, at = chrP + (diff(c(chrP, length(mMap)))/2), 1:19)
 box()
 
+### QTL mapping of the longevity phenotypes in Males
+phe <- "Longevity_HET3_ITP"
+males <- ind[which(ind[,"Sex"] == "M"),]
 
-plot(x = c(0, 20), y = c(0, max(map[, "Position"])), t = 'n', xlab="Chromosome", ylab="Pos")
-aa <- lapply(rev(colnames(lods)), function(mname){
-  isMat = (2*grepl("Mat", map[mname, "type"])) - 1
-  mType = c("Green", "Blue", "Gold", "red")[as.numeric(factor(map[mname, "type"], levels = c("Mat1", "Mat2", "Pat1", "Pat2")))]
-  rect(map[mname, "Chr"] + isMat * 0, 0, map[mname, "Chr"] + isMat * 0.2, map[mname,"Position"], col= mType, border="white")
-})
+adj.M <- lm(Longevity_HET3_ITP ~ as.factor(Site) + as.factor(Treatment_Effect) + as.factor(Cohort.Year), males)
+phe.M <- residuals(adj.M) + coef(adj.M)["(Intercept)"]
+
+lods.M <- c()
+for(todrop in seq(0, 0.6, 0.1)){
+  sorted <- sort(phe.M)
+  phe.M.dropped <- sorted[round(length(sorted) * todrop):length(sorted)]
+  cat("Left with:", length(phe.M.dropped), "\n")
+  # Map the remaining males
+  mm <- apply(gts4way[,names(phe.M.dropped)], 1, function(gts){ 
+    if(length(table(gts)) > 1) return(anova(lm(phe.M.dropped ~ gts))[[5]][1])
+    return(NA)
+  })
+  lods.M <- rbind(lods.M, -log10(mm))
+}
+
+op <- par(mfrow=c(2,1))
+
+# Plot maternal map
+op <- par(mar = c(4,6,3,1))
+image(1:length(mMap), 1:7, t(lods.M[,mMap]), xlab="",yaxt='n',ylab="",xaxt='n')
+abline(v=which(diff(as.numeric(map[mMap,"Chr"])) != 0))
+axis(2, at = 1:7, paste0("Top ", 100 - (seq(0, 0.6, 0.1) * 100), "%"), las = 2)
+chrP <- c(0, which(diff(as.numeric(map[mMap,"Chr"])) != 0))
+axis(1, at = chrP + (diff(c(chrP, length(mMap)))/2), 1:19)
+box()
+
+# Plot paternal map
+op <- par(mar = c(4,6,3,1))
+op <- par(cex = 1)
+image(1:length(fMap), 1:7, t(lods.M[,fMap]), xlab="",yaxt='n',ylab="",xaxt='n')
+abline(v=which(diff(as.numeric(map[fMap,"Chr"])) != 0))
+axis(2, at = 1:7, paste0("Top ", 100 - (seq(0, 0.6, 0.1) * 100), "%"), las = 2)
+chrP <- c(0, which(diff(as.numeric(map[fMap,"Chr"])) != 0))
+axis(1, at = chrP + (diff(c(chrP, length(fMap)))/2), 1:19)
+box()
 
 
-aa <- lapply(colnames(lods), function(mname){
-  isMat = (2*grepl("Mat", map[mname, "type"])) - 1
-  points(c(map[mname, "Chr"] + isMat * 0.1,map[mname, "Chr"] + isMat * 0.1), c(map[mname, "Position"], map[mname, "Position"]), pch = '-', cex= as.numeric(lods[2, mname]))
-})
+### QTL mapping of the longevity phenotypes in Males
+females <- ind[which(ind[,"Sex"] == "F"),]
+
+adj.F <- lm(Longevity_HET3_ITP ~ as.factor(Site) + as.factor(Treatment_Effect) + as.factor(Cohort.Year), females)
+phe.F <- residuals(adj.F) + coef(adj.F)["(Intercept)"]
+
+lods.F <- c()
+for(todrop in seq(0, 0.6, 0.1)){
+  sorted <- sort(phe.F)
+  phe.F.dropped <- sorted[round(length(sorted) * todrop):length(sorted)]
+  cat("Left with:", length(phe.F.dropped), "\n")
+  # Map the remaining males
+  mm <- apply(gts4way[,names(phe.F.dropped)], 1, function(gts){ 
+    if(length(table(gts)) > 1) return(anova(lm(phe.F.dropped ~ gts))[[5]][1])
+    return(NA)
+  })
+  lods.F <- rbind(lods.F, -log10(mm))
+}
+
+op <- par(mfrow=c(2,1))
+
+# Plot maternal map
+op <- par(mar = c(4,6,3,1))
+image(1:length(mMap), 1:7, t(lods.F[,mMap]), xlab="",yaxt='n',ylab="",xaxt='n')
+abline(v=which(diff(as.numeric(map[mMap,"Chr"])) != 0))
+axis(2, at = 1:7, paste0("Top ", 100 - (seq(0, 0.6, 0.1) * 100), "%"), las = 2)
+chrP <- c(0, which(diff(as.numeric(map[mMap,"Chr"])) != 0))
+axis(1, at = chrP + (diff(c(chrP, length(mMap)))/2), 1:19)
+box()
+
+# Plot paternal map
+op <- par(mar = c(4,6,3,1))
+op <- par(cex = 1)
+image(1:length(fMap), 1:7, t(lods.F[,fMap]), xlab="",yaxt='n',ylab="",xaxt='n')
+abline(v=which(diff(as.numeric(map[fMap,"Chr"])) != 0))
+axis(2, at = 1:7, paste0("Top ", 100 - (seq(0, 0.6, 0.1) * 100), "%"), las = 2)
+chrP <- c(0, which(diff(as.numeric(map[fMap,"Chr"])) != 0))
+axis(1, at = chrP + (diff(c(chrP, length(fMap)))/2), 1:19)
+box()
+

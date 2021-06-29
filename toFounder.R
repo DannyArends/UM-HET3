@@ -1,9 +1,9 @@
 setwd("C:/Github/UM-HET3/files/merged")
 
 # Load vcf coded merged data
-gtC <- read.table("all.vcf.sorted.txt", sep="\t", row.names=1,colClasses="character")
-map <- read.table("map.sorted.txt", sep="\t", row.names=1)
-ind <- read.table("ind.sorted.txt", sep="\t", row.names=1)
+gtC <- read.table("all.vcf.sorted.mai2021.txt", sep="\t", row.names=1,colClasses="character")
+map <- read.table("map.sorted.mai2021.txt", sep="\t", row.names=1)
+ind <- read.table("ind.sorted.mai2021.txt", sep="\t", row.names=1)
 
 gts <- apply(gtC,2,function(x){ return(as.numeric(factor(x, levels=c("0/0", "0/1", "1/1")))) } )
 rownames(gts) <- rownames(gtC)
@@ -21,7 +21,7 @@ gtC <- gtC[mok, iok]
 map <- map[mok,]
 ind <- ind[iok,]
 
-write.table(gtC, "selected.vcf.sorted.txt", quote=FALSE, sep="\t", na = "")
+write.table(gtC, "selected.vcf.sorted.mai2021.txt", quote=FALSE, sep="\t", na = "")
 
 gts.cor <- cor(t(gts), use="pair")
 chr1.names <- rownames(map)[which(map[,"Chr"] == 1 & map[,"Origin"] == "Monsterplex")]
@@ -30,7 +30,10 @@ chr1.names <- rownames(map)[which(map[,"Chr"] == 1 & map[,"Origin"] == "Sequenom
 image(gts.cor[chr1.names,chr1.names])
 
 # Read the founder snps
-fvcf <- read.table("../monsterplex/fvcfAll.txt", sep="\t", row.names=1,colClasses="character")
+setwd("D:/Edrive/Mouse/ITP Data/VCFSmay2021")
+fvcf <- read.table("fvcfAll.txt", sep="\t",colClasses="character", header=TRUE)
+rownames(fvcf) <- paste0(fvcf[,1], "_", fvcf[,2])
+setwd("C:/Github/UM-HET3/files/merged")
 
 # Bind the position names (since rsIDs are not in the founders), and test if in founders
 map <- cbind(map, posname = paste0(map[, "Chr"], "_", map[, "Position"]))
@@ -50,7 +53,7 @@ founders <- colnames(fvcf)[6:9]
 for (m in m4wayA) {
   pm <- map[m, "posname"] # position name 
   if(sum(fvcf[pm, founders] == "1/1") == 1){ # One founder
-    if (fvcf[pm, "BALB_cJ"] == "1/1") {
+    if (fvcf[pm, "BALBBYJ"] == "1/1") {
       gts4way[m, which(gtC[m,] == "0/0")] <-  "B?"
       gts4way[m, which(gtC[m,] == "0/1")] <-  "A?"
       gts4way[m, which(gtC[m,] == "1/1")] <-  "XX"
@@ -70,7 +73,7 @@ for (m in m4wayA) {
     }
   }
   if(sum(fvcf[pm, founders] == "1/1") == 2){ # 2 Founders
-    if(fvcf[pm, "BALB_cJ"] == "1/1") {
+    if(fvcf[pm, "BALBBYJ"] == "1/1") {
       if(fvcf[pm, "C3H_HeJ"] == "1/1"){
         gts4way[m, which(gtC[m,] == "0/0")] <-  "BD"
         gts4way[m, which(gtC[m,] == "0/1")] <-  "??"
@@ -103,22 +106,22 @@ females <- ind[colnames(gtC),"Sex"] == "F"
 for (m in m4wayX) { # Only two posibilities are observed in the founder conversion map
   pm <- map[m, "posname"] # position name
   if(sum(fvcf[pm, founders] == "1/1") == 1){ # One founder
-    if (fvcf[pm, "BALB_cJ"] == "1/1") {
-      gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "B-"
-      gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "A-"
-      gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "A-"
-      gts4way[m, which(gtC[m,] == "0/0" & females)] <-  "B?"
-      gts4way[m, which(gtC[m,] == "0/1" & females)] <-  "A?"
+    if (fvcf[pm, "BALBBYJ"] == "1/1") {
+      gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "BD"
+      gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "AD"
+      gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "AD"
+      gts4way[m, which(gtC[m,] == "0/0" & females)] <-  "BC"
+      gts4way[m, which(gtC[m,] == "0/1" & females)] <-  "AC"
       gts4way[m, which(gtC[m,] == "1/1" & females)] <-  "XX"
     }
   }else if(sum(fvcf[pm, founders] == "1/1") == 3){ # 3 founders
-      gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "B-"
+      gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "BD"
       gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "XX"
-      gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "A-"
+      gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "AD"
       
       gts4way[m, which(gtC[m,] == "0/0" & females)] <-  "XX"
-      gts4way[m, which(gtC[m,] == "0/1" & females)] <-  "B?"
-      gts4way[m, which(gtC[m,] == "1/1" & females)] <-  "A?"
+      gts4way[m, which(gtC[m,] == "0/1" & females)] <-  "BC"
+      gts4way[m, which(gtC[m,] == "1/1" & females)] <-  "AC"
   }
   cat("Done", m, "=", pm, "\n")
 }
@@ -136,9 +139,9 @@ mOK <- rownames(gts4way)[which(!rownames(gts4way) %in% wrong)]
 gts4way <- gts4way[mOK,]
 map <- map[mOK, ]
 
-write.table(gts4way, "gts4way.txt", quote=FALSE, sep="\t")
-write.table(map, "map.gts4way.txt", quote=FALSE, sep="\t")
-write.table(ind, "ind.gts4way.txt", quote=FALSE, sep="\t")
+write.table(gts4way, "gts4way.mai2021.txt", quote=FALSE, sep="\t",na="")
+write.table(map, "map.gts4way.mai2021.txt", quote=FALSE, sep="\t",na="")
+write.table(ind, "ind.gts4way.mai2021.txt", quote=FALSE, sep="\t",na="")
 
 gts4way[gts4way=="AC"] <- 1
 gts4way[gts4way=="BC"] <- 2
@@ -157,4 +160,7 @@ gts4num <- apply(gts4way, 2, as.numeric)
 rownames(gts4num) <- rownames(gts4way)
 table(unlist(gts4way))
 
-write.table(gts4way, "gts4way.rqtl.txt", quote=FALSE, sep="\t", na = "")
+write.table(gts4way, "gts4way.rqtl.mai2021.txt", quote=FALSE, sep="\t", na = "")
+
+gts4wayGN2 <- cbind(map[rownames(gts4way),c(2,3)], gts4way)
+write.table(gts4wayGN2, "gts4way.rqtl.GN2.mai2021.txt", quote=FALSE, sep="\t", na = "")

@@ -1,9 +1,9 @@
 setwd("C:/Github/UM-HET3/files/merged")
 
-gts4way <- read.table("gts4way.txt", sep="\t")
-gts4wayRqtl <- read.table("gts4way.rqtl.txt", sep="\t")
-map <- read.table("map.gts4way.txt", sep="\t")
-ind <- read.table("ind.gts4way.txt", sep="\t")
+gts4way <- read.table("gts4way.mai2021.txt", sep="\t")
+gts4wayRqtl <- read.table("gts4way.rqtl.mai2021.txt", sep="\t")
+map <- read.table("map.gts4way.mai2021.txt", sep="\t")
+ind <- read.table("ind.gts4way.mai2021.txt", sep="\t")
 
 gts4wayNum <- apply(gts4wayRqtl, 2, as.numeric)
 rownames(gts4wayNum) <- rownames(gts4wayNum)
@@ -39,7 +39,11 @@ fcross <- fill.geno(mcross, method = "maxmarginal", error.prob = 0.01, min.prob 
 gts4way.full <- t(pull.geno(fcross))
 colnames(gts4way.full) <- as.character(fcross$pheno$Individual)
 
-write.table(gts4way.full, "merged/gts4way.rqtl.filled.txt", quote=FALSE, sep="\t", na="")
+write.table(gts4way.full, "merged/gts4way.rqtl.filled.mai2021.txt", quote=FALSE, sep="\t", na="")
+
+gts4way.fullGN2 <- cbind(map[rownames(gts4way.full),c(2,3)], gts4way.full)
+
+write.table(gts4way.fullGN2, "merged/gts4way.filled.GN2.txt", quote=FALSE, sep="\t", na="")
 
 gts4way.fullnum <- apply(gts4way.full, 2, as.numeric)
 rownames(gts4way.fullnum) <- rownames(gts4way.fullnum)
@@ -58,7 +62,7 @@ males.UT <- subset(mcross, ind = Sex == "M" & Site == "UT" & Treatment %in% c("C
 females.UM <- subset(mcross, ind = Sex == "F" & Site == "UM" & Treatment %in% c("Cont", "Controls", "Aspirin"))
 males.UM <- subset(mcross, ind = Sex == "M" & Site == "UM" & Treatment %in% c("Cont", "Controls", "Aspirin")) 
 
-phe <- "BodyWeight_HET3_ITP_12m"#"Longevity_HET3_ITP"
+phe <- "BodyWeight_HET3_ITP_6m"#"Longevity_HET3_ITP"
 
 qtl.JL.f <- scanone(females.JL, pheno.col = phe, method="hk")
 qtl.JL.m <- scanone(males.JL, pheno.col = phe, method="hk")
@@ -79,6 +83,10 @@ plot(qtl.JL.f,qtl.UT.f, qtl.UM.f, main = paste0("QTL ",phe," (females)"))
 lod.overview <- cbind(JL.M = qtl.JL.m$lod, UT.M = qtl.UT.m$lod, UM.M = qtl.UM.m$lod,
                       JL.F = qtl.JL.f$lod, UT.F = qtl.UT.f$lod, UM.F = qtl.UM.f$lod)
 cor(lod.overview)
+
+addcovar <- cbind(as.numeric(pull.pheno(mcross)[, "Site"]), as.numeric(pull.pheno(mcross)[, "Cohort.Year"]))
+
+res <- scanone(mcross, pheno.col=phe,addcovar=addcovar, method="hk")
 
 
 heatmap(t(lod.overview), scale = "none", Colv=NA)

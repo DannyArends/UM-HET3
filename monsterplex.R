@@ -4,13 +4,25 @@ setwd("C:/Github/UM-HET3/files/monsterplex")
 annot <- read.csv("Sample_Metadata.csv", sep=",", na.strings=c("blank", "U", "x", "", "NA"))
 annot <- annot[which(annot[,3] == "Monsterplex"),]
 
+setwd("D:/Edrive/Mouse/ITP Data/VCFSmay2021")
 # Load the data (children and founders)
 cvcf <- read.csv("cvcfAll.txt", sep="\t", na.strings=c("U", "x", "", "NA"))
 fvcf <- read.csv("fvcfAll.txt",sep="\t", na.strings=c("U", "x", "", "NA"))
 
+dim(cvcf)
+dim(fvcf)
+
+setwd("C:/Github/UM-HET3/files/monsterplex")
+
 # Match between them
 rownames(cvcf) <- paste0(cvcf[,1], "_", cvcf[,2])
+rownames(fvcf) <- paste0(fvcf[,1], "_", fvcf[,2])
+# Throw away markers with NAs in the founder genotyping
+fvcf <- fvcf[names(which(apply(apply(fvcf,1,is.na),2,sum) == 0)),]
+
 cvcf <- cvcf[which(rownames(cvcf) %in% rownames(fvcf)),]
+
+dim(cvcf)
 
 # Remove the annotation from the data file
 map <- cvcf[,1:4]
@@ -116,7 +128,7 @@ allP <- allP[colnames(monsterplex),c("Sex", "Longevity_HET3_ITP", "Drug_Site", "
 allP[,"Drug_Site"] <- unlist(lapply(strsplit(allP[,"Drug_Site"], "_"),"[",1))
 colnames(allP)[3] <- c("Treatment_Effect")
 
-write.table(monsterplex, "monsterplex.vcfdata.dedup.txt", quote=FALSE, sep="\t")
-write.table(map, "monsterplex.snp.annot.txt", quote=FALSE, sep="\t")
-write.table(allP, "monsterplex.ind.annot.txt", quote=FALSE, sep="\t")
+write.table(monsterplex, "monsterplex.vcfdata.dedup.mai2021.txt", quote=FALSE, sep="\t")
+write.table(map, "monsterplex.snp.annot.mai2021.txt", quote=FALSE, sep="\t")
+write.table(allP, "monsterplex.ind.annot.mai2021.txt", quote=FALSE, sep="\t")
 
