@@ -1,22 +1,24 @@
-setwd("C:/Github/UM-HET3/files/merged")
+setwd("C:/Github/UM-HET3/files")
 
-gts4way <- read.table("gts4way.mai2021.txt", sep="\t")
-gts4wayRqtl <- read.table("gts4way.rqtl.mai2021.txt", sep="\t")
-map <- read.table("map.gts4way.mai2021.txt", sep="\t")
-ind <- read.table("ind.gts4way.mai2021.txt", sep="\t")
+gts4way <- read.table("merged/gts4way.rqtl.GN2.Juli2021.txt", sep="\t")
+map <- read.table("merged/map.gts4way.Juli2021.txt", sep="\t")
+ind <- read.table("merged/ind.gts4way.Juli2021.txt", sep="\t")
+
+#map <- data.frame(cbind(Chr = gts4way[, "Chr"], Position = gts4way[, "Position"] * 1000000))
+gts4wayRqtl <- gts4way[, -c(1:2)]
 
 gts4wayNum <- apply(gts4wayRqtl, 2, as.numeric)
 rownames(gts4wayNum) <- rownames(gts4wayNum)
 table(gts4wayNum)
 
-gts4wayNum.cor <- cor(t(gts4wayNum), use="pair")
-write.table(gts4wayNum.cor, "gts4way.raw.cor.txt", quote=FALSE, sep="\t")
+#gts4wayNum.cor <- cor(t(gts4wayNum), use="pair")
+#write.table(gts4wayNum.cor, "merged/gts4way.raw.cor.txt", quote=FALSE, sep="\t")
 
 # Create cross object for determining genotypes
 setwd("C:/Github/UM-HET3/files")
 write.table(cbind(NA,NA, t(cbind(Individual = rownames(ind), ind))), file = "um-het3-rqtl.csvr", col.names = FALSE, sep = ",", quote=FALSE, na = "")
 write.table(rbind(GenoID = c(NA, NA, colnames(gts4wayRqtl)), 
-                  cbind(Chr = map$Chr, Mb = map$Position / 1000000, gts4wayRqtl)
+                  cbind(Chr = map$Chr, Mb = as.numeric(map$Position) / 1000000, gts4wayRqtl)
                  ), file = "um-het3-rqtl.csvr", col.names = FALSE, sep = ",", append=TRUE, quote=FALSE, na="")
 
 # Read cross object for determining genotypes
@@ -37,9 +39,13 @@ plot.map(mcross, main = "Physical positions", ylab="Location (Mb)")
 
 fcross <- fill.geno(mcross, method = "maxmarginal", error.prob = 0.01, min.prob = 0.85)
 gts4way.full <- t(pull.geno(fcross))
+
+mcor <- cor(t(gts4way.full), use="pair")
+image(1:nrow(mcor), 1:ncol(mcor), mcor)
+
 colnames(gts4way.full) <- as.character(fcross$pheno$Individual)
 
-write.table(gts4way.full, "merged/gts4way.rqtl.filled.mai2021.txt", quote=FALSE, sep="\t", na="")
+write.table(gts4way.full, "merged/gts4way.rqtl.filled.Juli2021.txt", quote=FALSE, sep="\t", na="")
 
 gts4way.fullGN2 <- cbind(map[rownames(gts4way.full),c(2,3)], gts4way.full)
 
