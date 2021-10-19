@@ -3,7 +3,7 @@
 execute <- function(x, intern = FALSE, execute = TRUE){
   cat("----", x, "\n")
   if (execute) {
-    res <- system(x, intern = intern, wait = FALSE)
+    res <- system(x, intern = intern, wait = TRUE)
     cat(">>>>", res[1], "\n")
     if(res[1] >= 1) q("no")
   }
@@ -13,19 +13,19 @@ callSNPs <- function(chr = "chr1", outname = "snps") {
   bcftools = "/home/danny/Github/bcftools/bcftools" # Location of BCFtools executable
   reference = "/home/danny/UCSC_mm10.fa" #Reference genome
 
-  cmd1 <- paste0(bcftools, " mpileup --threads 4 -q 30 -b bamfiles.txt -r ", chr, " -Ou -f ", reference)
+  cmd1 <- paste0(bcftools, " mpileup --threads 4 -q 30 -b bamfiles.txt -a FORMAT/DP -r ", chr, " -Ou -f ", reference)
   cmd2 <- paste0(bcftools, " call --threads 4 -mv -Ov ")
-  cmd3 <- paste0(bcftools, " view --threads 4 -i '%QUAL>=100 && DP>100' - -o ~/", outname, "snps-filtered_",chr,".vcf")
+  cmd3 <- paste0(bcftools, " view --threads 4 -i '%QUAL>=100 && INFO/DP>10' - -o ~/", outname, "snps-filtered_",chr,".vcf")
   execute(paste0(cmd1, " | ", cmd2, " | ", cmd3))
   invisible("")
 }
 
-setwd("/home/danny/UMHET3bams")
+setwd("/home/danny/NAS/Mouse/UMHET3bams")
 bamfiles <- dir(".", "*.bam$")
 cat(paste0("./", bamfiles, collapse="\n"), file="bamfiles.txt")
 
-for(x in c(1:19, "X")){
-  callSNPs(paste0("chr", x), "UM_HET3Mai/")
+for(x in c("X")){
+  callSNPs(paste0("chr", x), "UM_HET3Juli/")
 }
 
 # Call SNPs in the Founders based on the genome positions we found in the UM-HET3
@@ -43,9 +43,9 @@ callSNPs <- function(bamfiles) {
   bcftools = "/home/danny/Github/bcftools/bcftools" # Location of BCFtools executable
   reference = "/home/danny/NAS/Mouse/Reference_Genomes/GRCm38_68/GRCm38_68.fa" #Reference genome
 
-  cmd1 <- paste0(bcftools, " mpileup -q 30 -Ou -R regionsITP.txt -f ", reference, " ", bamstr)
+  cmd1 <- paste0(bcftools, " mpileup -q 30 -Ou -R regionsITP.txt -a FORMAT/DP -f ", reference, " ", bamstr)
   cmd2 <- paste0(bcftools, " call -mv -Ov ")
-  cmd3 <- paste0(bcftools, " view -i '%QUAL>=30 && DP>10' - -o ~/UMHET3parental/Founders.snps-filtered.vcf")
+  cmd3 <- paste0(bcftools, " view -i '%QUAL>=30 && INFO/DP>10' - -o ~/UMHET3parental/Founders.snps-filteredDP.vcf")
   execute(paste0(cmd1, " | ", cmd2, " | ", cmd3))
   invisible("")
 }
