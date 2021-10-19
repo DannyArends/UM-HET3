@@ -1,0 +1,13 @@
+
+# try some non parametric regression
+library(quantreg)
+lods.cnp <- c()
+model.null = rq(longevity ~ sex + site + cohort + treatment + 0 , data = cdata, tau = 0.5, method="lasso")
+for(marker in colnames(pull.geno(mcross))){
+  mp <- gtsp[, grep(marker, colnames(gtsp))]
+  model.alt <- rq(longevity ~ sex + site + cohort + treatment + mp, data = cdata, tau = 0.5, method="lasso")
+  n <- sum(!is.na(model.alt$resid))
+  lod <- (n/2) * log10(sum(model.null$resid^2) / sum(model.alt$resid^2))
+  lods.cnp <- c(lods.cnp, lod)
+}
+names(lods.cnp) <- colnames(pull.geno(mcross))
