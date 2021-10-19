@@ -1,9 +1,9 @@
 setwd("C:/Github/UM-HET3/files/merged")
 
-gts4way <- read.table("gts4way.mai2021.txt", sep="\t",na.strings=c("","NA", "??", "XX"))
-gts4wayRqtl <- read.table("gts4way.rqtl.mai2021.txt", sep="\t")
-map <- read.table("map.gts4way.mai2021.txt", sep="\t")
-ind <- read.table("ind.gts4way.mai2021.txt", sep="\t")
+gts4way <- read.table("gts4way.Juli2021.txt", sep="\t",na.strings=c("","NA", "??", "XX"))
+gts4wayRqtl <- read.table("gts4way.rqtl.Juli2021.txt", sep="\t")
+map <- read.table("map.gts4way.Juli2021.txt", sep="\t")
+ind <- read.table("ind.gts4way.Juli2021.txt", sep="\t")
 
 map[map[, "Chr"] == "X", "Chr"] <- 20
 
