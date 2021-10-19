@@ -4,10 +4,12 @@ setwd("C:/Github/UM-HET3/files/monsterplex")
 annot <- read.csv("Sample_Metadata.csv", sep=",", na.strings=c("blank", "U", "x", "", "NA"))
 annot <- annot[which(annot[,3] == "Monsterplex"),]
 
-setwd("D:/Edrive/Mouse/ITP Data/VCFSmay2021")
-# Load the data (children and founders)
+setwd("C:/Github/UM-HET3/files/rawSNPs")
 cvcf <- read.csv("cvcfAll.txt", sep="\t", na.strings=c("U", "x", "", "NA"))
+setwd("D:/Edrive/Mouse/ITP Data/VCFSmay2021")
+# Load the data (founders)
 fvcf <- read.csv("fvcfAll.txt",sep="\t", na.strings=c("U", "x", "", "NA"))
+# Load the data (children)
 
 dim(cvcf)
 dim(fvcf)
@@ -128,7 +130,7 @@ allP <- allP[colnames(monsterplex),c("Sex", "Longevity_HET3_ITP", "Drug_Site", "
 allP[,"Drug_Site"] <- unlist(lapply(strsplit(allP[,"Drug_Site"], "_"),"[",1))
 colnames(allP)[3] <- c("Treatment_Effect")
 
-write.table(monsterplex, "monsterplex.vcfdata.dedup.mai2021.txt", quote=FALSE, sep="\t")
-write.table(map, "monsterplex.snp.annot.mai2021.txt", quote=FALSE, sep="\t")
-write.table(allP, "monsterplex.ind.annot.mai2021.txt", quote=FALSE, sep="\t")
+write.table(monsterplex, "monsterplex.vcfdata.dedup.juli2021.txt", quote=FALSE, sep="\t")
+write.table(map, "monsterplex.snp.annot.juli2021.txt", quote=FALSE, sep="\t")
+write.table(allP, "monsterplex.ind.annot.juli2021.txt", quote=FALSE, sep="\t")
 
