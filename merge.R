@@ -6,9 +6,9 @@ sMap <- read.table("sequenom/sequenom.map.aligned.txt", sep="\t", row.names=1)
 sInd <- read.table("sequenom/sequenom.ind.aligned.txt", sep="\t", row.names=1)
 
 # Load vcf coded monsterplex
-mData <- read.table("monsterplex/monsterplex.vcfdata.dedup.mai2021.txt", sep="\t", row.names=1)
-mMap <- read.table("monsterplex/monsterplex.snp.annot.mai2021.txt", sep="\t", row.names=1)
-mInd <- read.table("monsterplex/monsterplex.ind.annot.mai2021.txt", sep="\t", row.names=1)
+mData <- read.table("monsterplex/monsterplex.vcfdata.dedup.juli2021.txt", sep="\t", row.names=1)
+mMap <- read.table("monsterplex/monsterplex.snp.annot.juli2021.txt", sep="\t", row.names=1)
+mInd <- read.table("monsterplex/monsterplex.ind.annot.juli2021.txt", sep="\t", row.names=1)
 
 uniqueInd <- unique(c(rownames(mInd), rownames(sInd)))
 uniqueMar <- unique(c(rownames(mMap), rownames(sMap)))
@@ -49,6 +49,7 @@ for(x in colnames(sData)){
 
 for(x in colnames(mData)){
   hasData <- rownames(mData)[which(!is.na(mData[,x]))]
+  #cat(x, "\n")
   merged[hasData, x] <- mData[hasData, x]
 }
 
@@ -67,6 +68,6 @@ dim(annot)
 
 merged <- merged[rownames(map), rownames(annot)]
 
-write.table(merged, "merged/all.vcf.sorted.mai2021.txt", quote=FALSE, sep="\t", na = "")
-write.table(map, "merged/map.sorted.mai2021.txt", quote=FALSE, sep="\t", na = "")
-write.table(annot, "merged/ind.sorted.mai2021.txt", quote=FALSE, sep="\t", na = "")
+write.table(merged, "merged/all.vcf.sorted.juli2021.txt", quote=FALSE, sep="\t", na = "")
+write.table(map, "merged/map.sorted.juli2021.txt", quote=FALSE, sep="\t", na = "")
+write.table(annot, "merged/ind.sorted.juli2021.txt", quote=FALSE, sep="\t", na = "")
