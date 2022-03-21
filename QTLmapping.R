@@ -52,9 +52,6 @@ for(m1 in colnames(pull.geno(mcross))){
 }
 write.table(log10.I, "GxG_LODs.txt", sep = "\t")
 
-
-
-
 ## Combined longevity > 356 days
 lods.c <- c()
 lm.null <- lm(longevity ~ sex + site + cohort + treatment + 0, data = cdata)
@@ -138,10 +135,11 @@ getEffect <- function(sdata, gtsprob, marker = "1_24042124", model = "longevity 
   pheAdj <- rep(NA, nrow(sdata))
   adj <- residuals(mlm) + mean(sdata[, "longevity"])
   pheAdj[as.numeric(names(adj))] <- adj
-  means <- c(mean(pheAdj[which(gts == "AC")]),mean(pheAdj[which(gts == "AD")]),mean(pheAdj[which(gts == "BC")]),mean(pheAdj[which(gts == "BD")]))
+  OAmean <- mean(pheAdj[which(!is.na(gts))])
+  means <- c(mean(pheAdj[which(gts == "AC")]),mean(pheAdj[which(gts == "AD")]),mean(pheAdj[which(gts == "BC")]),mean(pheAdj[which(gts == "BD")])) - OAmean
   std <- function(x) sd(x)/sqrt(length(x))
   stderrs <- c(std(pheAdj[which(gts == "AC")]),std(pheAdj[which(gts == "AD")]),std(pheAdj[which(gts == "BC")]),std(pheAdj[which(gts == "BD")]))
-  paste0(round(means,0), " ± ", round(stderrs,2))
+  paste0(length(which(!is.na(gts))), "\t", round(OAmean,0), "\t", paste0(round(means,0), " ± ", round(stderrs,2), collapse="\t"))
 }
 
 write.table(
@@ -158,3 +156,44 @@ rbind(getEffect(cdata[females,], gtsp[females,], "2_144490178", "longevity ~ sit
 write.table(
 rbind(getEffect(cdata[males,], gtsp[males,], "6_134870385", "longevity ~ site + cohort + treatment"))
       , file = "All_M_Eff.txt", sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
+
+
+mdata <- cdata[males,]
+gtspm <- gtsp[males,]
+idxs <- sort(mdata[, "longevity"], index.return=TRUE)$ix
+getEffect(mdata[idxs[(1+ (.42 * length(idxs))): length(idxs)],], gtspm[idxs[(1+ (.42 * length(idxs))): length(idxs)],], "1_3010274", "longevity ~ site + cohort + treatment") #58%
+min(mdata[idxs[(1+ (.42 * length(idxs))): length(idxs)],"longevity"])
+
+getEffect(mdata[idxs[(1+ (.20 * length(idxs))): length(idxs)],], gtspm[idxs[(1+ (.20 * length(idxs))): length(idxs)],], "4_52524395", "longevity ~ site + cohort + treatment") #80%
+getEffect(mdata[idxs[(1+ (.38 * length(idxs))): length(idxs)],], gtspm[idxs[(1+ (.38 * length(idxs))): length(idxs)],], "9_124056586", "longevity ~ site + cohort + treatment") #62%
+getEffect(mdata[idxs[(1+ (.74 * length(idxs))): length(idxs)],], gtspm[idxs[(1+ (.74 * length(idxs))): length(idxs)],], "10_72780332", "longevity ~ site + cohort + treatment") #26%
+getEffect(mdata[idxs[(1+ (.42 * length(idxs))): length(idxs)],], gtspm[idxs[(1+ (.42 * length(idxs))): length(idxs)],], "15_55481391", "longevity ~ site + cohort + treatment") #58%
+getEffect(mdata[idxs[(1+ (.26 * length(idxs))): length(idxs)],], gtspm[idxs[(1+ (.26 * length(idxs))): length(idxs)],], "17_34460077", "longevity ~ site + cohort + treatment") #74%
+
+fdata <- cdata[females,]
+gtspf <- gtsp[females,]
+idxs <- sort(fdata[, "longevity"], index.return=TRUE)$ix
+getEffect(fdata[idxs[(1+ (.22 * length(idxs))): length(idxs)],], gtspf[idxs[(1+ (.22 * length(idxs))): length(idxs)],], "1_24042124", "longevity ~ site + cohort + treatment") #78%
+min(fdata[idxs[(1+ (.42 * length(idxs))): length(idxs)],"longevity"])
+
+getEffect(fdata[idxs[(1+ (.02 * length(idxs))): length(idxs)],], gtspf[idxs[(1+ (.02 * length(idxs))): length(idxs)],], "2_148442635", "longevity ~ site + cohort + treatment") #98%
+getEffect(fdata[idxs[(1+ (.08 * length(idxs))): length(idxs)],], gtspf[idxs[(1+ (.08 * length(idxs))): length(idxs)],], "9_29939029", "longevity ~ site + cohort + treatment") #92%
+getEffect(fdata[idxs[(1+ (.16 * length(idxs))): length(idxs)],], gtspf[idxs[(1+ (.16 * length(idxs))): length(idxs)],], "X_156343080", "longevity ~ site + cohort + treatment") #84%
+
+idxs <- sort(cdata[, "longevity"], index.return=TRUE)$ix
+getEffect(cdata[idxs[(1+ (.20 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.20 * length(idxs))): length(idxs)],], "1_24042124", "longevity ~ sex + site + cohort + treatment") #80%
+getEffect(cdata[idxs[(1+ (.34 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.34 * length(idxs))): length(idxs)],], "2_112712327", "longevity ~ sex + site + cohort + treatment") #66%
+getEffect(cdata[idxs[(1+ (.14 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.14 * length(idxs))): length(idxs)],], "4_55012301", "longevity ~ sex + site + cohort + treatment") #86%
+getEffect(cdata[idxs[(1+ (.04 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.04 * length(idxs))): length(idxs)],], "6_107382038", "longevity ~ sex + site + cohort + treatment") #96%
+getEffect(cdata[idxs[(1+ (.72 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.72 * length(idxs))): length(idxs)],], "9_122888918", "longevity ~ sex + site + cohort + treatment") #28%
+getEffect(cdata[idxs[(1+ (.70 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.70 * length(idxs))): length(idxs)],], "10_72780332", "longevity ~ sex + site + cohort + treatment") #30%
+getEffect(cdata[idxs[(1+ (.14 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.14 * length(idxs))): length(idxs)],], "12_112855820", "longevity ~ sex + site + cohort + treatment") #86%
+getEffect(cdata[idxs[(1+ (.46 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.46 * length(idxs))): length(idxs)],], "14_101437457", "longevity ~ sex + site + cohort + treatment") #54%
+getEffect(cdata[idxs[(1+ (.54 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.54 * length(idxs))): length(idxs)],], "15_74248242", "longevity ~ sex + site + cohort + treatment") #46%
+getEffect(cdata[idxs[(1+ (.1 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.1 * length(idxs))): length(idxs)],], "17_32883804", "longevity ~ sex + site + cohort + treatment") #90%
+getEffect(cdata[idxs[(1+ (.24 * length(idxs))): length(idxs)],], gtsp[idxs[(1+ (.24 * length(idxs))): length(idxs)],], "X_156343080", "longevity ~ sex + site + cohort + treatment") #76%
+
+
+
+
+

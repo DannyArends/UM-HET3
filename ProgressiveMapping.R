@@ -105,7 +105,7 @@ for(x in msequence){
 colnames(lods.fM) <- colnames(pull.geno(mcross))
 
 op <- par(mar = c(4,10,3,1))
-image(1:ncol(lods.cM), 1:nrow(lods.cM), t(lods.fM), xlab="4-way map",
+image(1:ncol(lods.fM), 1:nrow(lods.fM), t(lods.fM), xlab="4-way map",
       yaxt='n',ylab="",xaxt='n', main="Longevity - females", breaks = c(0,3,4,6,8,100), col=c("white", colz))
 abline(v=which(diff(as.numeric(as.factor(map[,"Chr"]))) != 0))
 yaxisD <- paste0(c("All (>", paste("top", 100*(1 - msequence[-1]), "% (>")), minAge, " days)")
@@ -165,3 +165,24 @@ box()
 legend("topright", legend= c("0-3", "3-4", "4-6", "6-8", "8+"), fill = c("white", colz), bg="white")
 
 
+rownames(lods.mM) <- paste0("Top ", round(100*(1-msequence),0), "%")
+rownames(lods.fM) <- paste0("Top ", round(100*(1-msequence),0), "%")
+rownames(lods.cM) <- paste0("Top ", round(100*(1-msequence),0), "%")
+
+write.table(round(lods.mM,2), "progressiveMapping_males.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.fM,2), "progressiveMapping_females.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "progressiveMapping_all.txt", sep = "\t", quote=FALSE)
+
+mSign <- names(which(apply(lods.mM,1,function(x){any(x > 4.25)})))
+fSign <- names(which(apply(lods.fM,1,function(x){any(x > 4.25)})))
+cSign <- names(which(apply(lods.cM,1,function(x){any(x > 4.25)})))
+
+
+lods.mM[mSign, which(apply(lods.mM[mSign,],2,max) > 4.25)]
+lods.mM[mSign, grep("17_", colnames(lods.mM))]
+
+lods.fM[fSign, which(apply(lods.fM[mSign,],2,max) > 4.25)]
+lods.fM[fSign, grep("1_", colnames(lods.fM))]
+
+lods.cM[cSign, which(apply(lods.cM[mSign,],2,max) > 4.25)]
+lods.cM[cSign, grep("1_", colnames(lods.cM))]
