@@ -11,3 +11,8 @@ adjustXprobs <- function(cross){
   cross$geno[["X"]]$prob <- pr
   invisible(cross)
 }
+
+mlog <- function(msg, append = TRUE){
+  cat(paste0(Sys.time(), " - ", msg), file = "log.out", append = append)
+  cat(paste0(Sys.time(), " - ", msg))
+}
