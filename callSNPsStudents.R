@@ -27,8 +27,6 @@ callSNPs(bamfiles, "18:11017447-36665388", "muqadassa")
 callSNPs(bamfiles, "15:34609241-79013396", "taya")
 
 
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline \\
--i /home/danny/StudentsNCL/Founders.snpsmuqadassa.vcf  --everything -o /home/danny/StudentsNCL/Founders.snps.muqadassa.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/StudentsNCL/Founders.snps.muqadassa.vcf  --everything -o /home/danny/StudentsNCL/Founders.snps.muqadassa.vep
 
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline \\
--i /home/danny/StudentsNCL/Founders.snpsmuqadassa.vcf  --everything -o /home/danny/StudentsNCL/Founders.snps.taya.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/StudentsNCL/Founders.snps.taya.vcf  --everything -o /home/danny/StudentsNCL/Founders.snps.taya.vep
