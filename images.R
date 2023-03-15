@@ -1,6 +1,6 @@
 library(RColorBrewer)
 
-setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")
+setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 map <- read.table("genetic_map.txt", sep = "\t")
 
 lods.m.All <- read.table("progressiveMapping_males.txt", sep = "\t", check.names=FALSE)

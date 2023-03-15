@@ -123,58 +123,64 @@ bamfiles <- c("/naszb2/Mouse/DNA/Sequencing/UM-HET3/BALBBYJ_M_S2_L002_default_GR
               "/naszb2/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/C3H_HeJ.bam",
               "/naszb2/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/DBA_2J.bam")
 
-cnt <- 1
-for(r in regions){
-  rr <- unlist(strsplit(r,":"))
+for(r in names(regions)[c(1,7)]){
+  rr <- unlist(strsplit(regions[r],":"))
   if(rr[2] == 0) rr[2] <- 1
   reg <- paste0(rr[1],":", rr[2], "-", rr[3])
-  callSNPs(bamfiles, reg, names(regions)[cnt])
-  cnt <- cnt + 1
+  callSNPs(bamfiles, reg, r)
 }
 
 
 
 
 
-setwd("~/SNPsDashbrook")
+setwd("~/March14")
 
 files <- list.files(pattern = "\\.vcf$")
 
 for(file in files){
 ## Do VEP predictions for all Files from david
-cat("/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/", file, " --everything -o /home/danny/SNPsDashbrook/", gsub("vcf","vep", file), "\n")
+cat(paste0("/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/", file, " --everything -o /home/danny/March14/", gsub("vcf","vep", file), "\n"))
 }
 
 # Commands generated
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr1_0_26682184.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr1_0_26682184.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr1_0_31062759.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr1_0_31062759.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr1_0_34173196.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr1_0_34173196.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr10_46831195_94163743.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr10_46831195_94163743.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr10_56745317_94163743.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr10_56745317_94163743.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr12_99576264_120092757.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr12_99576264_120092757.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr14_78415875_120296832.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr14_78415875_120296832.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr15_31335181_84914043.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr15_31335181_84914043.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr15_48895974_84914043.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr15_48895974_84914043.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr17_0_48308023.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr17_0_48308023.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr17_8288690_53515555.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr17_8288690_53515555.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr1_7969906_31062737.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr1_7969906_31062737.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr2_113364081_182113224.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr2_113364081_182113224.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr2_122685194_182113224.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr2_122685194_182113224.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr2_92975818_153078512.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr2_92975818_153078512.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr4_30761996_66839598.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr4_30761996_66839598.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr4_43036567_74811205.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr4_43036567_74811205.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr4_74811205_112765106.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr4_74811205_112765106.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr6_81943533_122290952.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr6_81943533_122290952.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr6_97252294_149736546.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr6_97252294_149736546.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr9_101942923_124359700.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr9_101942923_124359700.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr9_13442519_39046745.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr9_13442519_39046745.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr9_13442519_44688426.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr9_13442519_44688426.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chr9_90405149_124359700.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chr9_90405149_124359700.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chrX_0_69830745.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chrX_0_69830745.vep
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/SNPsDashbrook/Joint_called_gvcfs_ITP_parents_QTL_chrX_150646933_169476592.vcf  --everything -o /home/danny/SNPsDashbrook/Joint_called_gveps_ITP_parents_QTL_chrX_150646933_169476592.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita10a.snps.vcf --everything -o /home/danny/March14/Vita10a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita11a.snps.vcf --everything -o /home/danny/March14/Vita11a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita11b.snps.vcf --everything -o /home/danny/March14/Vita11b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita12a.snps.vcf --everything -o /home/danny/March14/Vita12a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita13a.snps.vcf --everything -o /home/danny/March14/Vita13a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita13b.snps.vcf --everything -o /home/danny/March14/Vita13b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita14a.snps.vcf --everything -o /home/danny/March14/Vita14a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita15a.snps.vcf --everything -o /home/danny/March14/Vita15a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita17a.snps.vcf --everything -o /home/danny/March14/Vita17a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita17b.snps.vcf --everything -o /home/danny/March14/Vita17b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita17c.snps.vcf --everything -o /home/danny/March14/Vita17c.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita18a.snps.vcf --everything -o /home/danny/March14/Vita18a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita1b.snps.vcf --everything -o /home/danny/March14/Vita1b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita1c.snps.vcf --everything -o /home/danny/March14/Vita1c.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita2a.snps.vcf --everything -o /home/danny/March14/Vita2a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita2b.snps.vcf --everything -o /home/danny/March14/Vita2b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita2c.snps.vcf --everything -o /home/danny/March14/Vita2c.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita3b.snps.vcf --everything -o /home/danny/March14/Vita3b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita4a.snps.vcf --everything -o /home/danny/March14/Vita4a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita4b.snps.vcf --everything -o /home/danny/March14/Vita4b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita4c.snps.vcf --everything -o /home/danny/March14/Vita4c.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita5a.snps.vcf --everything -o /home/danny/March14/Vita5a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita6a.snps.vcf --everything -o /home/danny/March14/Vita6a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita6b.snps.vcf --everything -o /home/danny/March14/Vita6b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita8a.snps.vcf --everything -o /home/danny/March14/Vita8a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9a.snps.vcf --everything -o /home/danny/March14/Vita9a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9b.snps.vcf --everything -o /home/danny/March14/Vita9b.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9c.snps.vcf --everything -o /home/danny/March14/Vita9c.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9d.snps.vcf --everything -o /home/danny/March14/Vita9d.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/VitaXa.snps.vcf --everything -o /home/danny/March14/VitaXa.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/VitaXb.snps.vcf --everything -o /home/danny/March14/VitaXb.snps.vep &
+
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita1a.snps.vcf --everything -o /home/danny/March14/Vita1a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita3a.snps.vcf --everything -o /home/danny/March14/Vita3a.snps.vep &
 
 
-setwd("C:/Github/UM-HET3/files/DGA_vcfs")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/March14")
 files <- list.files(pattern = "\\.vep$")
 
 mvepdata <- c()
@@ -200,7 +206,18 @@ for(r in regions){
   namezDel <- mvepdata[iii[nDel], "V2"]
   namezGDel <- mvepdata[iii[nDel], "V4"]
   cat(r," ", length(unique(namez))," ", length(unique(namezDel))," ", length(unique(namezGDel)), "\n")
-  res.biomart <- getBM(attributes = c("ensembl_gene_id", "external_gene_name"), 
+  if(length(namezGDel) > 0){
+    res.biomart <- getBM(attributes = c("ensembl_gene_id", "external_gene_name", "mgi_description"), 
                           filters = c("ensembl_gene_id"), values = list(unique(namezGDel)), mart = bio.mart)
-  cat(paste0(res.biomart[, "external_gene_name"], collapse=", "), "\n")
+
+    isGM <- grep("^Gm", res.biomart[,"external_gene_name"])
+    if(length(isGM) > 0) res.biomart <- res.biomart[-isGM,]
+
+    isRIKEN <- grep("^RIKEN", res.biomart[,"mgi_description"])
+    if(length(isRIKEN) > 0) res.biomart <- res.biomart[-isRIKEN,]
+
+    cat(paste0(res.biomart[, "external_gene_name"], collapse=", "), "\n")
+  }
 }
+
+
