@@ -1,4 +1,4 @@
-setwd("C:/Github/UM-HET3/files/merged")
+setwd("C:/Users/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/merged")
 
 gts4way <- read.table("gts4way.txt", sep="\t")
 gts4wayRqtl <- read.table("gts4way.rqtl.txt", sep="\t")
