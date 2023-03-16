@@ -1,6 +1,6 @@
-setwd("C:/Users/rqdt9/Github/UM-HET3")
+setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
-setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")
+setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 
 # Read cross object
 library(qtl)
@@ -38,10 +38,10 @@ for(x in msequence){
   minAge <- c(minAge, min(cdata[, "longevity"]))
 
   lods.c <- c()
-  lm.null <- lm(longevity ~ site + cohort + treatment + treatment + 0, data = cdata)
+  lm.null <- lm(longevity ~ sex + site + cohort + treatment + 0, data = cdata)
   for(marker in colnames(pull.geno(mcross))){
     mp <- gtsM[, grep(marker, colnames(gtsM))]
-    lm.alt <- lm(longevity ~ site + cohort + treatment + treatment + mp + 0, data = cdata)
+    lm.alt <- lm(longevity ~ sex + site + cohort + treatment + mp + 0, data = cdata)
     n <- sum(!is.na(lm.alt$resid))
     lod <- (n/2) * log10(sum(lm.null$resid^2) / sum(lm.alt$resid^2))
     lods.c <- c(lods.c, lod)
@@ -50,6 +50,9 @@ for(x in msequence){
   cat("Done", x, "\n")
 }
 colnames(lods.cM) <- colnames(pull.geno(mcross))
+rownames(lods.cM) <- paste0("> ", msequence)
+
+write.table(round(lods.cM,2), "progressiveMapping_all_oeps.txt", sep = "\t", quote=FALSE)
 
 png("ProgressiveMapping_UMHET3.png", width = 1400, height = 1050)
 

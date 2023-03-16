@@ -1,12 +1,12 @@
 #
 # genAge
 #
-setwd("C:/Users/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
 GAmodel <- read.table("genage/genage_models.csv",sep=",", header=TRUE)
 GAhuman <- read.table("genage/genage_human.csv",sep=",", header=TRUE)
 
-regions <- read.table("regions_4way_merged.txt", sep="\t", header=FALSE, row.names=1)
+regions <- read.table("regions_4way_merged_March23.txt", sep="\t", header=FALSE, row.names=1)
 colnames(regions) <- c("Chr", "Proximal", "Distal")
 
 library(biomaRt)
