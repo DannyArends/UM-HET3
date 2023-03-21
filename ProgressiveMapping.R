@@ -287,3 +287,10 @@ getEffect(mcross, gtsp, marker = "10_72780332", timepoint = 980, sex = 1, model 
 getEffect(mcross, gtsp, marker = "11_5628810", timepoint = 635, sex = 1, model = "longevity ~ site + cohort + treatment")
 getEffect(mcross, gtsp, marker = "15_62405371", timepoint = 845, sex = 1, model = "longevity ~ site + cohort + treatment")
 getEffect(mcross, gtsp, marker = "17_34460077", timepoint = 695, sex = 1, model = "longevity ~ site + cohort + treatment")
+
+
+
+
+
+
+
