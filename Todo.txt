@@ -1,0 +1,6 @@
+- Negative pleiotropy (finish off)
+- B versus Everybody (code is there, add in excel for Rob to look at)
+- 30x30 interactions
+#### For the Grant ####
+- xgboost
+- UM-HET3 SNPs are they detectable using RNA-Seq

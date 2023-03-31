@@ -67,10 +67,98 @@ for(x in msequence){
 
 lods.cM[is.infinite(lods.cM)] <- NA
 
-mmx <- which(apply(t(lods.cM) > 4,1,sum,na.rm=TRUE) > 0)
+rownames(lods.cM) <- paste0("> ", msequence)
+colnames(lods.cM) <- rownames(markers)
+
+write.table(round(lods.cM,2), "progressiveMapping_B6N_all.txt", sep = "\t", quote=FALSE)
+
+mmx <- which(apply(t(lods.cM) > 4, 1, sum, na.rm=TRUE) > 0)
 mL <- apply(lods.cM[,mmx],2,max)
+tP <- rownames(lods.cM)[apply(lods.cM[,mmx],2,which.max)]
 
-cbind(map[mmx,], mL)
+sum.cM <- cbind(map[mmx,], tP,  mL)
 
+lods.fM <- c()
+for(x in msequence){
+  lods.c <- c()
+  for(marker in rownames(markers)){
+    cdata <- data.frame(longevity = as.numeric(pheno[, "Longevity_HET3_ITP"]), 
+                        sex = as.factor(pheno[, "Sex"]), 
+                        site = as.factor(pheno[, "Site"]),
+                        cohort = as.factor(pheno[, "Cohort.Year"]), 
+                        treatment = as.factor(pheno[, "Treatment_Effect"] != "Cont"),
+                        gt = as.factor(as.character(markers[marker, rownames(pheno)]))
+                        )
+    noMissing <- apply(apply(cdata,1,is.na),2,sum) == 0
+    cdata <- cdata[which(cdata[,"longevity"] > x & noMissing & cdata[, "sex"] == "F"),]
+    tryCatch({
+      lm.null <- lm(longevity ~ site + cohort + treatment + 0, data = cdata)
+      lm.alt <- lm(longevity ~ site + cohort + treatment + gt + 0, data = cdata)
+      n <- sum(!is.na(lm.alt$resid))
+      lod <- (n/2) * log10(sum(lm.null$resid^2) / sum(lm.alt$resid^2))
+      lods.c <- c(lods.c, lod)
+    }, error = function(x){
+      lods.c <<- c(lods.c, NA)
+    })
+
+  }
+  lods.fM <- rbind(lods.fM, lods.c)
+  cat("Done", x, "\n")
+}
+
+lods.fM[is.infinite(lods.fM)] <- NA
+
+rownames(lods.fM) <- paste0("> ", msequence)
+colnames(lods.fM) <- rownames(markers)
+
+write.table(round(lods.fM,2), "progressiveMapping_B6N_females.txt", sep = "\t", quote=FALSE)
+
+mmx <- which(apply(t(lods.fM) > 4, 1, sum, na.rm=TRUE) > 0)
+mL <- apply(lods.fM[,mmx],2,max)
+tP <- rownames(lods.fM)[apply(lods.fM[,mmx],2,which.max)]
+
+sum.fM <- cbind(map[mmx,], tP,  mL)
+
+
+lods.mM <- c()
+for(x in msequence){
+  lods.c <- c()
+  for(marker in rownames(markers)){
+    cdata <- data.frame(longevity = as.numeric(pheno[, "Longevity_HET3_ITP"]), 
+                        sex = as.factor(pheno[, "Sex"]), 
+                        site = as.factor(pheno[, "Site"]),
+                        cohort = as.factor(pheno[, "Cohort.Year"]), 
+                        treatment = as.factor(pheno[, "Treatment_Effect"] != "Cont"),
+                        gt = as.factor(as.character(markers[marker, rownames(pheno)]))
+                        )
+    noMissing <- apply(apply(cdata,1,is.na),2,sum) == 0
+    cdata <- cdata[which(cdata[,"longevity"] > x & noMissing & cdata[, "sex"] == "M"),]
+    tryCatch({
+      lm.null <- lm(longevity ~ site + cohort + treatment + 0, data = cdata)
+      lm.alt <- lm(longevity ~ site + cohort + treatment + gt + 0, data = cdata)
+      n <- sum(!is.na(lm.alt$resid))
+      lod <- (n/2) * log10(sum(lm.null$resid^2) / sum(lm.alt$resid^2))
+      lods.c <- c(lods.c, lod)
+    }, error = function(x){
+      lods.c <<- c(lods.c, NA)
+    })
+
+  }
+  lods.mM <- rbind(lods.mM, lods.c)
+  cat("Done", x, "\n")
+}
+
+lods.mM[is.infinite(lods.mM)] <- NA
+
+rownames(lods.mM) <- paste0("> ", msequence)
+colnames(lods.mM) <- rownames(markers)
+
+write.table(round(lods.mM,2), "progressiveMapping_B6N_males.txt", sep = "\t", quote=FALSE)
+
+mmx <- which(apply(t(lods.mM) > 4, 1, sum, na.rm=TRUE) > 0)
+mL <- apply(lods.mM[,mmx],2,max)
+tP <- rownames(lods.mM)[apply(lods.mM[,mmx],2,which.max)]
+
+sum.mM <- cbind(map[mmx,], tP,  mL)
 
 
