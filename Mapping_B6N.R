@@ -114,7 +114,7 @@ colnames(lods.fM) <- rownames(markers)
 write.table(round(lods.fM,2), "progressiveMapping_B6N_females.txt", sep = "\t", quote=FALSE)
 
 mmx <- which(apply(t(lods.fM) > 4, 1, sum, na.rm=TRUE) > 0)
-mL <- apply(lods.fM[,mmx],2,max)
+mL <- apply(lods.fM[,mmx], 2, max,na.rm=TRUE)
 tP <- rownames(lods.fM)[apply(lods.fM[,mmx],2,which.max)]
 
 sum.fM <- cbind(map[mmx,], tP,  mL)
