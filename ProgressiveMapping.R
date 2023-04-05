@@ -217,7 +217,7 @@ lapply(mSignificant, function(x){c(x, rownames(lods.mM)[which.max(lods.mM[,x])],
 
 lods.mM["> 770",]
 
-getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1_3010274", model = "longevity ~ site + cohort + treatment + treatment"){
+getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1_3010274", model = "longevity ~ sex + site + cohort + treatment"){
   mp <- gtsprob[, grep(marker, colnames(gtsprob))]
   gts <- unlist(lapply(lapply(lapply(apply(mp,1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
     if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
