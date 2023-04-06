@@ -1,6 +1,8 @@
-- Negative pleiotropy (finish off)
 - B versus Everybody (code is there, add in excel for Rob to look at)
 - 30x30 interactions
+- Trio of trios for the new figures
+- Partha Dasgupta
+
 #### For the Grant ####
 - xgboost
 - UM-HET3 SNPs are they detectable using RNA-Seq
