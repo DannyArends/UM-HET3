@@ -106,6 +106,12 @@ getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1
         ))
 }
 
+library(RColorBrewer)
+#col.main <- brewer.pal(4, "PiYG")
+col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
+add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
+col.alpha <- add.alpha(col.main, 0.1)
+
 all <- c("1_3010272", "1_24042124", "1_120474787", "2_112712327", "2_139956785", "2_157112564","3_83838529", "3_92135706", "4_55012301",
          "4_74811205", "4_145301445", "5_67573068", "6_54992703", "6_107382038", "8_36994142", "9_29939029", "9_54904313", "9_104091597",
          "9_124056586", "10_72780332", "11_5628810", "11_82178599", "12_112855820", "13_20905668", "13_89689878", "14_101437457", 
@@ -117,7 +123,7 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita2a", "Vita2b", "Vita2c", "Vit
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
 
-for(ii in 1:length(all)){
+for(ii in 1:1){#length(all)){
   pos <- all[ii]
   name = names(all)[ii]
 
@@ -141,52 +147,52 @@ for(ii in 1:length(all)){
   plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (combined)"), xaxs = "i")
 
   # Combined
-  points(msequence, remaining[,2], t = 'l', col = "red", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,2] + errors[,1], rev(remaining[,2] - errors[,1])), col = rgb(1,0,0,0.2), border = NA)
+  points(msequence, remaining[,2], t = 'l', col = col.main[1], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,2] + errors[,1], rev(remaining[,2] - errors[,1])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,3], t = 'l', col = "green", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,3] + errors[,2], rev(remaining[,3] - errors[,2])), col = rgb(0,1,0,0.2), border = NA)
+  points(msequence, remaining[,3], t = 'l', col = col.main[2], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,3] + errors[,2], rev(remaining[,3] - errors[,2])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,4], t = 'l', col = "blue", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,4] + errors[,3], rev(remaining[,4] - errors[,3])), col = rgb(0,0,1,0.2), border = NA)
+  points(msequence, remaining[,4], t = 'l', col = col.main[3], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,4] + errors[,3], rev(remaining[,4] - errors[,3])), col = col.alpha[3], border = NA)
 
-  points(msequence, remaining[,5], t = 'l', col = "orange", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,5] + errors[,4], rev(remaining[,5] - errors[,4])), col = rgb(1,.647, 0, 0.2), border = NA)
+  points(msequence, remaining[,5], t = 'l', col = col.main[4], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,5] + errors[,4], rev(remaining[,5] - errors[,4])), col = col.alpha[4], border = NA)
 
   #abline(v=c(935, 1055))
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = c("red", "green", "blue", "orange"), lwd=2, bg = "white")
+  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", ncol=2)
 
   plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (females)"), xaxs = "i")
   # Females
-  points(msequence, remaining[,7], t = 'l', col = "red", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,7] + errors[,5], rev(remaining[,7] - errors[,5])), col = rgb(1,0,0,0.2), border = NA)
+  points(msequence, remaining[,7], t = 'l', col = col.main[1], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,7] + errors[,5], rev(remaining[,7] - errors[,5])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,8], t = 'l', col = "green", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,8] + errors[,6], rev(remaining[,8] - errors[,6])), col = rgb(0,1,0,0.2), border = NA)
+  points(msequence, remaining[,8], t = 'l', col = col.main[2], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,8] + errors[,6], rev(remaining[,8] - errors[,6])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,9], t = 'l', col = "blue", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,9] + errors[,7], rev(remaining[,9] - errors[,7])), col = rgb(0,0,1,0.2), border = NA)
+  points(msequence, remaining[,9], t = 'l', col = col.main[3], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,9] + errors[,7], rev(remaining[,9] - errors[,7])), col = col.alpha[3], border = NA)
 
-  points(msequence, remaining[,10], t = 'l', col = "orange", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,10] + errors[,8], rev(remaining[,10] - errors[,8])), col = rgb(1,.647, 0, 0.2), border = NA)
+  points(msequence, remaining[,10], t = 'l', col = col.main[4], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,10] + errors[,8], rev(remaining[,10] - errors[,8])), col = col.alpha[4], border = NA)
   #abline(v=1040)
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = c("red", "green", "blue", "orange"), lwd=2, bg = "white")
+  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white")
 
   # Males
   plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (males)"), xaxs = "i")
-  points(msequence, remaining[,12], t = 'l', col = "red", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,12] + errors[,9], rev(remaining[,12] - errors[,9])), col = rgb(1,0,0,0.2), border = NA)
+  points(msequence, remaining[,12], t = 'l', col = col.main[1], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,12] + errors[,9], rev(remaining[,12] - errors[,9])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,13], t = 'l', col = "green", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,13] + errors[,10], rev(remaining[,13] - errors[,10])), col = rgb(0,1,0,0.2), border = NA)
+  points(msequence, remaining[,13], t = 'l', col = col.main[2], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,13] + errors[,10], rev(remaining[,13] - errors[,10])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,14], t = 'l', col = "blue", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,14] + errors[,11], rev(remaining[,14] - errors[,11])), col = rgb(0,0,1,0.2), border = NA)
+  points(msequence, remaining[,14], t = 'l', col = col.main[3], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,14] + errors[,11], rev(remaining[,14] - errors[,11])), col = col.alpha[3], border = NA)
 
-  points(msequence, remaining[,15], t = 'l', col = "orange", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,15] + errors[,12], rev(remaining[,15] - errors[,12])), col = rgb(1,.647, 0, 0.2), border = NA)
+  points(msequence, remaining[,15], t = 'l', col = col.main[4], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,15] + errors[,12], rev(remaining[,15] - errors[,12])), col = col.alpha[4], border = NA)
 
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = c("red", "green", "blue", "orange"), lwd=2, bg = "white")
+  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white")
 
   dev.off()
 
@@ -195,11 +201,29 @@ for(ii in 1:length(all)){
 
 ### PLot 3 x 3
 
-all <- all[c("Vita1a", "Vita9c", "Vita15a")]
+all <- all[c("Vita1b", "Vita9c", "Vita15a")]
 png(paste0("paper.eff.png"), width = 1200, height = 1200)
-nf <- layout(matrix(c(1,1,1,2,3,4,5,5,5,6,7,8,9,9,9,10,11,12), ncol=3, byrow=TRUE),heights=c(1,3,1,3,1,3))
+nf <- layout(matrix(c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), ncol=4, byrow=TRUE), heights=c(1, 10, 10, 10), widths=c(1,3,3,3))
 par(mar = c(1, 1, 1, 1))
 par(cex=1.4)
+
+  par(mar = c(0, 0, 0, 0))
+  plot.new()
+  text(0.5,0.5,"", cex=1.4, font=2, srt = 90)
+
+  par(mar = c(0, 0, 0, 0))
+  plot.new()
+  text(0.5,0.5,"Combined", cex=1.4, font=2)
+
+  par(mar = c(0, 0, 0, 0))
+  plot.new()
+  text(0.5,0.5,"Females", cex=1.4, font=2)
+
+  par(mar = c(0, 0, 0, 0))
+  plot.new()
+  text(0.5,0.5,"Males", cex=1.4, font=2)
+
+
 for(ii in 1:length(all)){
   pos <- all[ii]
   name = names(all)[ii]
@@ -220,65 +244,75 @@ for(ii in 1:length(all)){
 
   par(mar = c(0, 0, 0, 0))
   plot.new()
-  text(0.5,0.5,paste0("Allele effect at ",name), cex=1.7, font=2)
-  par(mar = c(2.1, 4.1, 1.1, 0.5))
+  text(0.5,0.5,paste0(name), cex=1.4, font=2, srt = 90)
 
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = paste0("Combined"), xaxs = "i", las=1)
+
+  par(mar = c(2.1, 2.5, 1.1, 0.5))
+  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
+  text(x=240, y=0, 'Allele effect (days)', xpd=NA, srt = 90)
 
   # Combined
-  points(msequence, remaining[,2], t = 'l', col = "red", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,2] + errors[,1], rev(remaining[,2] - errors[,1])), col = rgb(1,0,0,0.2), border = NA)
+  points(msequence, remaining[,2], t = 'l', col = col.main[1], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,2] + errors[,1], rev(remaining[,2] - errors[,1])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,3], t = 'l', col = "green", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,3] + errors[,2], rev(remaining[,3] - errors[,2])), col = rgb(0,1,0,0.2), border = NA)
+  points(msequence, remaining[,3], t = 'l', col = col.main[2], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,3] + errors[,2], rev(remaining[,3] - errors[,2])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,4], t = 'l', col = "blue", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,4] + errors[,3], rev(remaining[,4] - errors[,3])), col = rgb(0,0,1,0.2), border = NA)
+  points(msequence, remaining[,4], t = 'l', col = col.main[3], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,4] + errors[,3], rev(remaining[,4] - errors[,3])), col = col.alpha[3], border = NA)
 
-  points(msequence, remaining[,5], t = 'l', col = "orange", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,5] + errors[,4], rev(remaining[,5] - errors[,4])), col = rgb(1,.647, 0, 0.2), border = NA)
+  points(msequence, remaining[,5], t = 'l', col = col.main[4], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,5] + errors[,4], rev(remaining[,5] - errors[,4])), col = col.alpha[4], border = NA)
 
   #abline(v=c(935, 1055))
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = c("red", "green", "blue", "orange"), lwd=2, bg = "white", cex=0.7)
+  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
 
   par(mar = c(2.1, 2.5, 1.1, 0.5))
 
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = paste0("Females"), xaxs = "i", las=1)
   # Females
-  points(msequence, remaining[,7], t = 'l', col = "red", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,7] + errors[,5], rev(remaining[,7] - errors[,5])), col = rgb(1,0,0,0.2), border = NA)
+  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
-  points(msequence, remaining[,8], t = 'l', col = "green", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,8] + errors[,6], rev(remaining[,8] - errors[,6])), col = rgb(0,1,0,0.2), border = NA)
+  points(msequence, remaining[,7], t = 'l', col = col.main[1], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,7] + errors[,5], rev(remaining[,7] - errors[,5])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,9], t = 'l', col = "blue", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,9] + errors[,7], rev(remaining[,9] - errors[,7])), col = rgb(0,0,1,0.2), border = NA)
+  points(msequence, remaining[,8], t = 'l', col = col.main[2], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,8] + errors[,6], rev(remaining[,8] - errors[,6])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,10], t = 'l', col = "orange", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,10] + errors[,8], rev(remaining[,10] - errors[,8])), col = rgb(1,.647, 0, 0.2), border = NA)
+  points(msequence, remaining[,9], t = 'l', col = col.main[3], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,9] + errors[,7], rev(remaining[,9] - errors[,7])), col = col.alpha[3], border = NA)
+
+  points(msequence, remaining[,10], t = 'l', col = col.main[4], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,10] + errors[,8], rev(remaining[,10] - errors[,8])), col = col.alpha[4], border = NA)
   #abline(v=1040)
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = c("red", "green", "blue", "orange"), lwd=2, bg = "white", cex=0.7)
+  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
 
   par(mar = c(2.1, 2.5, 1.1, 0.5))
-
   # Males
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = paste0("Males"), xaxs = "i", las=1)
-  points(msequence, remaining[,12], t = 'l', col = "red", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,12] + errors[,9], rev(remaining[,12] - errors[,9])), col = rgb(1,0,0,0.2), border = NA)
+  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
-  points(msequence, remaining[,13], t = 'l', col = "green", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,13] + errors[,10], rev(remaining[,13] - errors[,10])), col = rgb(0,1,0,0.2), border = NA)
+  points(msequence, remaining[,12], t = 'l', col = col.main[1], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,12] + errors[,9], rev(remaining[,12] - errors[,9])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,14], t = 'l', col = "blue", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,14] + errors[,11], rev(remaining[,14] - errors[,11])), col = rgb(0,0,1,0.2), border = NA)
+  points(msequence, remaining[,13], t = 'l', col = col.main[2], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,13] + errors[,10], rev(remaining[,13] - errors[,10])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,15], t = 'l', col = "orange", lwd=2)
-  polygon(c(msequence, rev(msequence)), c(remaining[,15] + errors[,12], rev(remaining[,15] - errors[,12])), col = rgb(1,.647, 0, 0.2), border = NA)
+  points(msequence, remaining[,14], t = 'l', col = col.main[3], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,14] + errors[,11], rev(remaining[,14] - errors[,11])), col = col.alpha[3], border = NA)
 
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = c("red", "green", "blue", "orange"), lwd=2, bg = "white", cex=0.7)
+  points(msequence, remaining[,15], t = 'l', col = col.main[4], lwd=2)
+  polygon(c(msequence, rev(msequence)), c(remaining[,15] + errors[,12], rev(remaining[,15] - errors[,12])), col = col.alpha[4], border = NA)
+
+  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
 }
-
-
 dev.off()
 
 
