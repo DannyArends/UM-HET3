@@ -1,6 +1,6 @@
-setwd("C:/Users/rqdt9/Github/UM-HET3")
+setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
-setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")
+setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 
 # Read cross object
 library(qtl)
@@ -9,7 +9,7 @@ mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
-regions <- read.table("regions_4way_sorted.txt", sep = "\t", header=TRUE)
+regions <- read.table("regions_4way_sorted_final.txt", sep = "\t", header=TRUE)
 regions[,"Top"] <- gsub(",", "", regions[,"Top"])
 
 as.DNI <- function(regions, col = "BALB.C3H"){
@@ -90,7 +90,7 @@ rect(1:13 - 0.25, rep(750,13), 1:13 + 0.25, aa$stats[3,], col = xx)
 #points(aa$stats[3,] - sds, pch = "-", cex=3)
 points(aa$conf[2,], pch = "-", cex=2, t = "h", lwd=2)
 points(aa$conf[2,], pch = "-", cex=3)
-points(aa$conf[1,], pch = "-", cex=2, t = "h", col = xx, lwd=2)
+points(aa$conf[1,], pch = "-", cex=2, t = "h", col = xx, lwd=4)
 points(aa$conf[1,], pch = "-", cex=3)
 axis(1, at = 1:13, seq(-6,6,1))
 
@@ -99,7 +99,7 @@ mRp2c <- cut(mRp2, breaks = seq(-150, 150, 25), labels = FALSE)
 iix <- which(pull.pheno(mcross)[, "longevity"] > 365)
 aa <- boxplot(pull.pheno(mcross)[iix, "longevity"] ~ mRp2c[iix], plot=FALSE)
 
-xx <- colorRampPalette(c("#E41A1C", "white", "#377EB8"))( 18 )
+xx <- colorRampPalette(c("#E41A1C", "white", "#377EB8"))( 12 )
 
 plot(c(1, 12), c(750, 1000), t = 'n', xaxt='n', xlab = "Expected effect on longevity ", ylab="Lifespan", las=2, yaxs='i')
 
@@ -116,8 +116,10 @@ rect(1:12 - 0.25, rep(750,18), 1:12 + 0.25, aa$stats[3,], col = xx)
 #points(aa$stats[3,] - sds, pch = "-", cex=3)
 points(aa$conf[2,], pch = "-", cex=2, t = "h", lwd=2)
 points(aa$conf[2,], pch = "-", cex=3)
-points(aa$conf[1,], pch = "-", cex=2, t = "h", col = xx, lwd=2)
+points(aa$conf[1,], pch = "-", cex=2, t = "h", col = xx, lwd=4)
 points(aa$conf[1,], pch = "-", cex=3)
 mRp2c <- cut(mRp2, breaks = seq(-150, 150, 10))
 
 axis(1, at = 1:18, names(table(mRp2c))[7:(7+17)])
+
+

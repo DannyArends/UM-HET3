@@ -123,7 +123,7 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita2a", "Vita2b", "Vita2c", "Vit
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
 
-for(ii in 1:1){#length(all)){
+for(ii in 1:length(all)){
   pos <- all[ii]
   name = names(all)[ii]
 
@@ -144,7 +144,7 @@ for(ii in 1:1){#length(all)){
   png(paste0(name, ".eff.png"), width = 1200, height = 600)
   op <- par(mfrow = c(1,3))
   op <- par(cex = 1.2)
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (combined)"), xaxs = "i")
+  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (combined)"), xaxs = "i", las=2)
 
   # Combined
   points(msequence, remaining[,2], t = 'l', col = col.main[1], lwd=2)
@@ -162,7 +162,7 @@ for(ii in 1:1){#length(all)){
   #abline(v=c(935, 1055))
   legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", ncol=2)
 
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (females)"), xaxs = "i")
+  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (females)"), xaxs = "i", las=2)
   # Females
   points(msequence, remaining[,7], t = 'l', col = col.main[1], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,7] + errors[,5], rev(remaining[,7] - errors[,5])), col = col.alpha[1], border = NA)
@@ -179,7 +179,7 @@ for(ii in 1:1){#length(all)){
   legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white")
 
   # Males
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (males)"), xaxs = "i")
+  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (males)"), xaxs = "i", las=2)
   points(msequence, remaining[,12], t = 'l', col = col.main[1], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,12] + errors[,9], rev(remaining[,12] - errors[,9])), col = col.alpha[1], border = NA)
 
@@ -202,14 +202,18 @@ for(ii in 1:1){#length(all)){
 ### PLot 3 x 3
 
 all <- all[c("Vita1b", "Vita9c", "Vita15a")]
-png(paste0("paper.eff.png"), width = 1200, height = 1200)
-nf <- layout(matrix(c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), ncol=4, byrow=TRUE), heights=c(1, 10, 10, 10), widths=c(1,3,3,3))
+png(paste0("paper.eff.png"), width = 1200 * (600/72), height = 1200 * (600/72), res=600)
+nf <- layout(matrix(c(1,2,3,4,
+                      5,6,7,8,
+                      9,10,11,12,
+                      13,14,15,16), ncol=4, byrow=TRUE), heights=c(1, 12, 12, 12), widths=c(2,5,5,5))
 par(mar = c(1, 1, 1, 1))
 par(cex=1.4)
 
   par(mar = c(0, 0, 0, 0))
   plot.new()
   text(0.5,0.5,"", cex=1.4, font=2, srt = 90)
+  legend("center", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2, bty = 'n')
 
   par(mar = c(0, 0, 0, 0))
   plot.new()
@@ -244,11 +248,11 @@ for(ii in 1:length(all)){
 
   par(mar = c(0, 0, 0, 0))
   plot.new()
-  text(0.5,0.5,paste0(name), cex=1.4, font=2, srt = 90)
+  text(0.5,0.5,substitute(italic(x), list(x = name)), cex=1.4, font=2, srt = 90)
 
 
   par(mar = c(2.1, 2.5, 1.1, 0.5))
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
   abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
   abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
@@ -268,12 +272,13 @@ for(ii in 1:length(all)){
   polygon(c(msequence, rev(msequence)), c(remaining[,5] + errors[,4], rev(remaining[,5] - errors[,4])), col = col.alpha[4], border = NA)
 
   #abline(v=c(935, 1055))
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
+  #legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
+  box()
 
   par(mar = c(2.1, 2.5, 1.1, 0.5))
 
   # Females
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
   abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
   abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
@@ -290,11 +295,12 @@ for(ii in 1:length(all)){
   points(msequence, remaining[,10], t = 'l', col = col.main[4], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,10] + errors[,8], rev(remaining[,10] - errors[,8])), col = col.alpha[4], border = NA)
   #abline(v=1040)
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
+  #legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
+  box()
 
   par(mar = c(2.1, 2.5, 1.1, 0.5))
   # Males
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "", ylab = "Allele effect (days)", main = "", xaxs = "i", las=1, xaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
   abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
   abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
@@ -310,8 +316,9 @@ for(ii in 1:length(all)){
 
   points(msequence, remaining[,15], t = 'l', col = col.main[4], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,15] + errors[,12], rev(remaining[,15] - errors[,12])), col = col.alpha[4], border = NA)
+  box()
 
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
+  #legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", cex=0.7, ncol=2)
 }
 dev.off()
 
