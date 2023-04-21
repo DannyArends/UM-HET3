@@ -1,3 +1,5 @@
+library(svglite)
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -70,8 +72,9 @@ mRp2 <- apply(mRm2,1, function(x){
 
 #plot(pull.pheno(mcross)[iix, "longevity"] ~ mRp2[iix])
 
-
-
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
+svglite(paste0("risk.svg"), width = 24, height = 12)
+op <- par(cex=4)
 layout(matrix(c(1,1,2,2,2,1,1,2,2,2), 2, 5, byrow = TRUE))
 
 plot(c(1, 13), c(750, 1000), t = 'n', xaxt='n', xlab = "(Inc - Dec) alleles", ylab="Lifespan", las=2, yaxs='i')
@@ -121,5 +124,7 @@ points(aa$conf[1,], pch = "-", cex=3)
 mRp2c <- cut(mRp2, breaks = seq(-150, 150, 10))
 
 axis(1, at = 1:18, names(table(mRp2c))[7:(7+17)])
+
+dev.off()
 
 

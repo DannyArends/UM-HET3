@@ -1,4 +1,5 @@
 library(RColorBrewer)
+library(svglite)
 
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 map <- read.table("genetic_map.txt", sep = "\t")
@@ -31,6 +32,9 @@ y.max <- max(map[, "Pos"])
 y.min <- 0
 x.min <- 1
 x.max <- length(table(map[, "Chr"]))
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
+svglite(paste0("mapping.svg"), width = 24, height = 12)
 
 plot(x = c(x.min, x.max),
      y = c(y.min, y.max),
@@ -120,3 +124,8 @@ for(chr in chrs){
 }
 axis(2, at = 0.5 + 1:nrow(lods.c.All), rownames(lods.c.All), las=2)
 legend("topright", fill = c(colz.m[3],colz.c[3],colz.f[3]), c("Males", "Combined", "Females"), bg = "white")
+
+
+dev.off()
+
+

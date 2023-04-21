@@ -1,3 +1,6 @@
+
+library(svglite)
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -123,7 +126,7 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita2a", "Vita2b", "Vita2c", "Vit
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
 
-for(ii in 1:length(all)){
+for(ii in 1:length(all)[1]){
   pos <- all[ii]
   name = names(all)[ii]
 
@@ -141,10 +144,13 @@ for(ii in 1:length(all)){
   rownames(remaining) <- paste0("day", msequence)
   rownames(errors) <- paste0("day", msequence)
 
-  png(paste0(name, ".eff.png"), width = 1200, height = 600)
+  svglite(paste0(name, ".eff.svg"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   op <- par(cex = 1.2)
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (combined)"), xaxs = "i", las=2)
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (combined)"), xaxs = "i", las=2, xaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
   # Combined
   points(msequence, remaining[,2], t = 'l', col = col.main[1], lwd=2)
@@ -162,8 +168,12 @@ for(ii in 1:length(all)){
   #abline(v=c(935, 1055))
   legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", ncol=2)
 
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (females)"), xaxs = "i", las=2)
   # Females
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (females)"), xaxs = "i", las=2, xaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
+
   points(msequence, remaining[,7], t = 'l', col = col.main[1], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,7] + errors[,5], rev(remaining[,7] - errors[,5])), col = col.alpha[1], border = NA)
 
@@ -179,7 +189,11 @@ for(ii in 1:length(all)){
   legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white")
 
   # Males
-  plot(c(365, 1050), c(-40, 40), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (males)"), xaxs = "i", las=2)
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (males)"), xaxs = "i", las=2, xaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
+
   points(msequence, remaining[,12], t = 'l', col = col.main[1], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,12] + errors[,9], rev(remaining[,12] - errors[,9])), col = col.alpha[1], border = NA)
 
@@ -202,7 +216,7 @@ for(ii in 1:length(all)){
 ### PLot 3 x 3
 
 all <- all[c("Vita1b", "Vita9c", "Vita15a")]
-png(paste0("paper.eff.png"), width = 1200 * (600/72), height = 1200 * (600/72), res=600)
+svglite(paste0("paper.eff.svg"), width = (1200 * (600/72)) / 280, height = (1200 * (600/72)) / 280)
 nf <- layout(matrix(c(1,2,3,4,
                       5,6,7,8,
                       9,10,11,12,

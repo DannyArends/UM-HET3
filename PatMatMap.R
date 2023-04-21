@@ -1,4 +1,8 @@
-setwd("C:/Github/UM-HET3/files")
+library(svglite)
+
+setwd("/home/rqdt9/Github/UM-HET3")
+source("adjustXprobs.R")
+setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 
 library(qtl)
 mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
@@ -12,6 +16,11 @@ gMat <- gMat[,-c(1:2)]
 gPat <- read.table(file="ITP_6480x396_Paternal_Sep21.txt", sep = "\t",na.strings=c("", "NA", "x", "Not available"))
 gPap <- gPat[,1:2]
 gPat <- gPat[,-c(1:2)]
+
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
+svglite(paste0("geneticmap.svg"), width = 24, height = 12)
+
 
 plot(x = c(1,20), y = c(-2, 195), t = 'n', xlab = "Chromosome", ylab = "Location (Mb)", xaxt='n', yaxt='n', las=2, yaxs='i', main = "UM-HET3 genetic marker map")
 cnt <- 1
@@ -30,6 +39,10 @@ axis(1, at = 1:20, c(1:19, "X"))
 axis(2, at = seq(0,200,25), seq(0,200,25),las=2)
 legend("topright", c("Maternal", "Paternal", "X chromosome"), lwd=1, col = c("hotpink", "blue", "black"))
 
+dev.off()
+
+
+
 aa <- cor(pull.geno(fill.geno(mcross)), use = "pair")
 
 library(RColorBrewer)
@@ -41,6 +54,8 @@ abline(v = cumsum(table(mapAll[,1])))
 axis(1, at = (c(0, cumsum(table(mapAll[,1]))) +  0.5 * diff(c(0, cumsum(table(mapAll[,1])))))[-21], c(1:19,"X"),cex.axis=0.8)
 axis(2, at = (c(0, cumsum(table(mapAll[,1]))) +  0.5 * diff(c(0, cumsum(table(mapAll[,1])))))[-21], c(1:19,"X"), las=2,cex.axis=0.8)
 
+
+#
 
 annot <- read.table("phenotypes/HET3-ITP_traitsGN2_Sep2021.csv", sep=",", skip=11, header=TRUE,na.strings=c("x", "Not available"))
 annot <- annot[-c(1:20),]
