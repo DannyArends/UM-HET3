@@ -9,6 +9,10 @@ mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
+# Writing out 
+iix <- which(pull.pheno(mcross)[,"longevity"] > 365)
+write.table(pull.pheno(mcross)[iix,"GenoID"], "Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
+
 # Create the map object
 chrs <- unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",1))
 positions <- as.numeric(unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",2)))

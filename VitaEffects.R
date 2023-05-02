@@ -1,5 +1,7 @@
 
 library(svglite)
+library(pspline)
+
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
@@ -12,8 +14,8 @@ mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
-pos <- "1_3010272"
-name <- "vita1a"
+pos <- "4_55012301"
+name <- "vita4a"
 
 mm <- pull.geno(fill.geno(mcross))
 phe <- pull.pheno(mcross)[, "longevity"]
@@ -29,7 +31,7 @@ Wf <- which(sex == 0)
 Wm <- which(sex == 1)
 
 curves <- c()
-msequence <- seq(1, max(phe), 1)
+msequence <- seq(1, max(phe), 15)
 for(d in msequence){
   all = round(100 * length(which(phe > d)) / length(phe),0)
   females = round(100 * length(which(phe[Wf] > d)) / length(phe[Wf]),1)
@@ -48,27 +50,38 @@ for(d in msequence){
 }
 
 curves[curves < 1] <- NA
-curves <- log10(curves)
+#curves <- log10(curves)
 
-plot(c(500, 1300), c(-2, 2), t = 'n', xlab = "days", ylab = "log10(% surviving)", main = paste0("Survival curve at ", name))
+plot(c(500, 1300), c(0, 1), t = 'n', xlab = "days", ylab = "log10(% surviving)", main = paste0("Survival curve at ", name))
 rect(0,0,2000, 3, col = rgb(1,0.8,0.8,0.2))
 rect(0,0,2000, -3, col = rgb(0,0.0,0.8,0.2))
 
+curves[is.na(curves)] <- 0
+
+
+oa.females <- predict(sm.spline(msequence, curves[,2]), msequence, 1)
+oa.males <- predict(sm.spline(msequence, curves[,7]), msequence, 1)
+
+op <- par(mfrow=c(2,1))
+plot(c(365, 1050), c(0.1, -0.1), t = 'n', xlab = "days", ylab = "Slope - Slope(μ)", main = paste0("Survival curve slope at ", name, " (Female)"))
+
 # Females
-points(msequence, curves[,2], t = 'l', col = "black", lwd=2)
-points(msequence, curves[,3], t = 'l', col = "red", lwd=2)
-points(msequence, curves[,4], t = 'l', col = "green", lwd=2)
-points(msequence, curves[,5], t = 'l', col = "blue", lwd=2)
-points(msequence, curves[,6], t = 'l', col = "orange", lwd=2)
+#points(msequence, oa, t = 'l', col = "black", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,3]), msequence, 1) - oa.females, t = 'l', col = "red", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,4]), msequence, 1) - oa.females, t = 'l', col = "green", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,5]), msequence, 1) - oa.females, t = 'l', col = "blue", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,6]), msequence, 1) - oa.females, t = 'l', col = "orange", lwd=2)
 
+plot(c(365, 1050), c(0.1, -0.1), t = 'n', xlab = "days", ylab = "Slope - Slope(μ)", main = paste0("Survival curve slope at ", name, " (Male)"))
 # Males
-points(msequence, -curves[,7], t = 'l', col = "black", lwd=2)
-points(msequence, -curves[,8], t = 'l', col = "red", lwd=2)
-points(msequence, -curves[,9], t = 'l', col = "green", lwd=2)
-points(msequence, -curves[,10], t = 'l', col = "blue", lwd=2)
-points(msequence, -curves[,11], t = 'l', col = "orange", lwd=2)
+#points(msequence, oa, t = 'l', col = "black", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,8]), msequence, 1) - oa.males, t = 'l', col = "red", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,9]), msequence, 1) - oa.males, t = 'l', col = "green", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,10]), msequence, 1) - oa.males, t = 'l', col = "blue", lwd=2)
+points(msequence, predict(sm.spline(msequence, curves[,11]), msequence, 1) - oa.males, t = 'l', col = "orange", lwd=2)
 
-legend("topright", c("Avg", "C||H", "C||D", "B||H", "B||D"), col = c("black", "red", "green", "blue", "orange"), lwd=2)
+
+#legend("topright", c("Avg", "C||H", "C||D", "B||H", "B||D"), col = c("black", "red", "green", "blue", "orange"), lwd=2)
 
 
 getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1_3010274", model = "longevity ~ sex + site + cohort + treatment"){
