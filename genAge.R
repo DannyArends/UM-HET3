@@ -47,29 +47,37 @@ for(x in 1:nrow(regions)){
 
 #Done Vita1a in GenAge: 9 / 81 total Features: 319 
 #Done Vita1b in GenAge: 8 / 87 total Features: 373 
-#Done Vita1c in GenAge: 14 / 305 total Features: 858 
-#Done Vita2a in GenAge: 30 / 404 total Features: 805 
-#Done Vita2b in GenAge: 45 / 674 total Features: 1294 
+#Done Vita1c in GenAge: 6 / 114 total Features: 310 
+#Done Vita2a in GenAge: 8 / 131 total Features: 222 
+#Done Vita2b in GenAge: 2 / 25 total Features: 66 
+#Done Vita2c in GenAge: 5 / 83 total Features: 152 
 #Done Vita3a in GenAge: 43 / 672 total Features: 1697 
 #Done Vita3b in GenAge: 38 / 569 total Features: 1295 
-#Done Vita4 in GenAge: 16 / 281 total Features: 623 
-#Done Vita5 in GenAge: 14 / 232 total Features: 843 
-#Done Vita6 in GenAge: 13 / 147 total Features: 394 
+#Done Vita4a in GenAge: 4 / 53 total Features: 132 
+#Done Vita4b in GenAge: 4 / 41 total Features: 156 
+#Done Vita4c in GenAge: 14 / 177 total Features: 351 
+#Done Vita5a in GenAge: 14 / 232 total Features: 843 
+#Done Vita6a in GenAge: 7 / 121 total Features: 304 
+#Done Vita6b in GenAge: 11 / 123 total Features: 339 
+#Done Vita8a in GenAge: 14 / 125 total Features: 425 
 #Done Vita9a in GenAge: 14 / 291 total Features: 628 
-#Done Vita9b in GenAge: 20 / 356 total Features: 809 
-#Done Vita9c in GenAge: 10 / 210 total Features: 461 
-#Done Vita10 in GenAge: 48 / 478 total Features: 1084 
+#Done Vita9b in GenAge: 4 / 55 total Features: 91 
+#Done Vita9c in GenAge: 20 / 356 total Features: 809 
+#Done Vita9d in GenAge: 0 / 4 total Features: 9 
+#Done Vita10a in GenAge: 48 / 478 total Features: 1084 
 #Done Vita11a in GenAge: 17 / 165 total Features: 431 
 #Done Vita11b in GenAge: 92 / 953 total Features: 1658 
-#Done Vita12 in GenAge: 12 / 180 total Features: 801 
-#Done Vita13 in GenAge: 15 / 141 total Features: 430 
-#Done Vita14 in GenAge: 4 / 62 total Features: 366 
-#Done Vita15 in GenAge: 29 / 340 total Features: 710 
-#Done Vita17 in GenAge: 58 / 771 total Features: 1507 
-#Done Vita18 in GenAge: 28 / 377 total Features: 986 
+#Done Vita12a in GenAge: 11 / 151 total Features: 456 
+#Done Vita13a in GenAge: 4 / 113 total Features: 396 
+#Done Vita13b in GenAge: 15 / 141 total Features: 430 
+#Done Vita14a in GenAge: 4 / 62 total Features: 366 
+#Done Vita15a in GenAge: 29 / 340 total Features: 710 
+#Done Vita17a in GenAge: 23 / 322 total Features: 674 
+#Done Vita17b in GenAge: 15 / 224 total Features: 474 
+#Done Vita17c in GenAge: 17 / 148 total Features: 387 
+#Done Vita18a in GenAge: 21 / 219 total Features: 677 
 #Done VitaXa in GenAge: 22 / 376 total Features: 997 
 #Done VitaXb in GenAge: 11 / 114 total Features: 306 
-
 
 regions <- read.table("regions_pmap_ctrl.txt", sep="\t", header=TRUE)
 

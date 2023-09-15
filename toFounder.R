@@ -1,4 +1,4 @@
-setwd("C:/Github/UM-HET3/files/merged")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/merged")
 
 # Load vcf coded merged data
 gtC <- read.table("all.vcf.sorted.juli2021.txt", sep="\t", row.names=1,colClasses="character")

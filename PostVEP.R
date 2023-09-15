@@ -19,8 +19,11 @@ for(x in 1:nrow(regions)){
   isRIKEN <- grep("^RIKEN", mlist[[x]][,"mgi_description"])
   if(length(isRIKEN) > 0) mlist[[x]] <- mlist[[x]][-isRIKEN,]
 
-  isNA <- which(is.na(mm[, "description"]))
-  if(length(isNA) > 0){ mm <- mm[-isNA,] }
+  isNA <- which(is.na(mlist[[x]][, "description"]))
+  if(length(isNA) > 0){ mlist[[x]] <- mlist[[x]][-isNA,] }
+
+  write.table(mlist[[x]][which(mlist[[x]][, "gene_biotype"] == "protein_coding"),], 
+              paste0("genes/protein_coding_genes_", rownames(regions)[x], ".txt"),sep="\t",quote=FALSE)
 }
 names(mlist) <- rownames(regions)
 
