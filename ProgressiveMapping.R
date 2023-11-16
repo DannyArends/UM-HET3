@@ -28,7 +28,7 @@ markers <- unique(unlist(lapply(strsplit(colnames(gtsp), ":"), "[",1)))
 
 lods.cM <- c()
 minAge <- c()
-for(x in msequence){
+for(x in msequence[1]){
   cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
                       sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
                       site = as.factor(pull.pheno(mcross)[, "site"]),
