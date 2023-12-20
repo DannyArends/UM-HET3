@@ -159,9 +159,11 @@ for(ii in 1:length(all)[1]){
 
   svglite(paste0(name, ".eff.svg"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
-  op <- par(cex = 1.2)
-  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (combined)"), xaxs = "i", las=2, xaxt="n")
+  op <- par(cex = 2)
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
+         ylab = "Difference in Expectancy (days)", main = paste0(name," Combined"), xaxs = "i", las=2, xaxt="n", yaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
   abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
   abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
@@ -179,11 +181,13 @@ for(ii in 1:length(all)[1]){
   polygon(c(msequence, rev(msequence)), c(remaining[,5] + errors[,4], rev(remaining[,5] - errors[,4])), col = col.alpha[4], border = NA)
 
   #abline(v=c(935, 1055))
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white", ncol=2)
+  legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
 
   # Females
-  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (females)"), xaxs = "i", las=2, xaxt="n")
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
+        ylab = "Difference in Expectancy (days)", main = paste0(name," Females"), xaxs = "i", las=2, xaxt="n", yaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
   abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
   abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
@@ -199,11 +203,13 @@ for(ii in 1:length(all)[1]){
   points(msequence, remaining[,10], t = 'l', col = col.main[4], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,10] + errors[,8], rev(remaining[,10] - errors[,8])), col = col.alpha[4], border = NA)
   #abline(v=1040)
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white")
+  legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
 
   # Males
-  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "days", ylab = "Allele effect (days)", main = paste0("Allele effect at ",name," (males)"), xaxs = "i", las=2, xaxt="n")
+  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
+         ylab = "Difference in Expectancy (days)", main = paste0(name," Males"), xaxs = "i", las=2, xaxt="n", yaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
+  axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
   abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
   abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
@@ -219,10 +225,9 @@ for(ii in 1:length(all)[1]){
   points(msequence, remaining[,15], t = 'l', col = col.main[4], lwd=2)
   polygon(c(msequence, rev(msequence)), c(remaining[,15] + errors[,12], rev(remaining[,15] - errors[,12])), col = col.alpha[4], border = NA)
 
-  legend("topleft", c("C||H", "C||D", "B||H", "B||D"), col = col.main, lwd=2, bg = "white")
+  legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
 
   dev.off()
-
 }
 
 

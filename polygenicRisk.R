@@ -98,32 +98,35 @@ points(aa$conf[1,], pch = "-", cex=3)
 axis(1, at = 1:13, seq(-6,6,1))
 
 
-mRp2c <- cut(mRp2, breaks = seq(-150, 150, 25), labels = FALSE)
+width = 10
+
+mRp2c <- cut(mRp2, breaks = seq(-150, 150, width), labels = FALSE)
 iix <- which(pull.pheno(mcross)[, "longevity"] > 365)
 aa <- boxplot(pull.pheno(mcross)[iix, "longevity"] ~ mRp2c[iix], plot=FALSE)
+r <- 7:24#which(aa$n > 100)
 
-xx <- colorRampPalette(c("#E41A1C", "white", "#377EB8"))( 12 )
+xx <- colorRampPalette(c("#E41A1C", "white", "#377EB8"))( length(r) )
 
-plot(c(1, 12), c(750, 1000), t = 'n', xaxt='n', xlab = "Expected effect on longevity ", ylab="Lifespan", las=2, yaxs='i')
+plot(c(1, length(r)), c(750, 1000), t = 'n', xaxt='n', xlab = "Expected effect on longevity ", ylab="Lifespan", las=2, yaxs='i')
 
 phe <- pull.pheno(mcross)[iix, "longevity"]
 sds <- c()
-for(x in seq(1,12,1)){ sds <- c(sds, sd(phe[which(mRp2c[iix] == x)]) / sqrt(length(phe[which(mRp2c[iix] == x)]))); }
+for(x in r){ sds <- c(sds, sd(phe[which(mRp2c[iix] == x)]) / sqrt(length(phe[which(mRp2c[iix] == x)]))); }
 
 
-rect(1:12 - 0.25, rep(750,18), 1:12 + 0.25, aa$stats[3,], col = xx)
+rect(1:length(r) - 0.25, rep(750,length(r)), 1:length(r) + 0.25, aa$stats[3,r], col = xx)
 #points(aa$stats[3,], pch = 19, t = 'b')
 #points(aa$stats[3,] + sds, pch = "-", cex=2, t = "h", lwd=2)
 #points(aa$stats[3,] + sds, pch = "-", cex=3)
 #points(aa$stats[3,] - sds, pch = "-", cex=2, t = "h", col = xx, lwd=2)
 #points(aa$stats[3,] - sds, pch = "-", cex=3)
-points(aa$conf[2,], pch = "-", cex=2, t = "h", lwd=2)
-points(aa$conf[2,], pch = "-", cex=3)
-points(aa$conf[1,], pch = "-", cex=2, t = "h", col = xx, lwd=4)
-points(aa$conf[1,], pch = "-", cex=3)
-mRp2c <- cut(mRp2, breaks = seq(-150, 150, 10))
+points(aa$conf[2,r], pch = "-", cex=2, t = "h", lwd=2)
+points(aa$conf[2,r], pch = "-", cex=3)
+points(aa$conf[1,r], pch = "-", cex=2, t = "h", col = xx, lwd=4)
+points(aa$conf[1,r], pch = "-", cex=3)
+mRp2c <- cut(mRp2, breaks = seq(-150, 150, width))
 
-axis(1, at = 1:18, names(table(mRp2c))[7:(7+17)])
+axis(1, at = 1:length(r), names(table(mRp2c))[min(r):max(r)])
 
 dev.off()
 
