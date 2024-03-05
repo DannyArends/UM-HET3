@@ -10,7 +10,7 @@ mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
 # Writing out 
-iix <- which(pull.pheno(mcross)[,"longevity"] > 365)
+iix <- which(pull.pheno(mcross)[,"longevity"] >= 365)
 write.table(pull.pheno(mcross)[iix,"GenoID"], "Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
 
 # Create the map object
@@ -56,7 +56,28 @@ for(x in msequence[1]){
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.cM,2), "progressiveMapping_all_oeps.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "progressiveMapping_all.txt", sep = "\t", quote=FALSE)
+
+subset <- map[which(as.numeric(map[,1]) %in% 1:4),]
+subset <- cbind(subset, cpos = NA)
+gap <- 10000000
+chr.start <- c(0)
+chr.mids <- c()
+cp <- 0
+for(x in 1:4){
+  cl <- max(as.numeric(subset[which(subset[,1] == x),2]))
+  chr.start <- c(chr.start, cl + cp + gap)
+  subset[which(subset[,1] == x), "cpos"] <- as.numeric(subset[which(subset[,1] == x), 2]) + cp
+  chr.mids <- c(chr.mids, chr.start[x] + cl/2)
+  cp = cl + cp + gap
+}
+
+plot(c(0, max(chr.start)), y = c(0, 7), t = 'n', ylab = "LOD", xlab = "Chr",xaxt="n", las=2)
+for(x in 1:4){
+  points(subset[which(subset[,1] == x),"cpos"], lods.cM[, rownames(subset)[which(subset[,1] == x)]], t = 'l')
+}
+
+axis(1, at = chr.mids, paste0("Chr", 1:4))
 
 png("ProgressiveMapping_UMHET3.png", width = 1400, height = 1050)
 
