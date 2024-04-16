@@ -4,12 +4,14 @@ library(svglite)
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 map <- read.table("genetic_map.txt", sep = "\t")
 
-lods.m.All <- read.table("progressiveMapping_males.txt", sep = "\t", check.names=FALSE)
+lods.m.All <- read.table("progressiveMapping_pat_males.txt", sep = "\t", check.names=FALSE)
 lods.m.All <- lods.m.All[c(TRUE,FALSE,FALSE), ]
-lods.f.All <- read.table("progressiveMapping_females.txt", sep = "\t", check.names=FALSE)
+lods.f.All <- read.table("progressiveMapping_pat_females.txt", sep = "\t", check.names=FALSE)
 lods.f.All <- lods.f.All[c(TRUE,FALSE,FALSE), ]
-lods.c.All <- read.table("progressiveMapping_all.txt", sep = "\t", check.names=FALSE)
+lods.c.All <- read.table("progressiveMapping_pat_all.txt", sep = "\t", check.names=FALSE)
 lods.c.All <- lods.c.All[c(TRUE,FALSE,FALSE), ]
+
+map <- map[which(rownames(map) %in% colnames(lods.c.All)),]
 
 threshold <- 2.5
 # Do some basic checks
@@ -26,7 +28,7 @@ x.min <- 1
 x.max <- length(table(map[, "Chr"]))
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
-svglite(paste0("mapping_4way.svg"), width = 24, height = 12)
+svglite(paste0("mapping_PAT.svg"), width = 24, height = 12)
 
 plot(x = c(x.min, x.max),
      y = c(y.min, y.max),
@@ -49,7 +51,7 @@ for(i in 1:nrow(map)) {
   points(x = pos.x, y = map[i, "Pos"], pch = "-")
 }
 
-chrs <- c(1:19, "X")
+chrs <- c(1:19)#, "X")
 gap <- 10000000
 chrs.length <- unlist(lapply(chrs, function(x){ max(map[map[, "Chr"] == x,"Pos"]) }))
 names(chrs.length) <- chrs
@@ -118,5 +120,4 @@ axis(2, at = 0.5 + 1:nrow(lods.c.All), rownames(lods.c.All), las=2)
 legend("topright", fill = c(colz.m[3],colz.c[3],colz.f[3]), c("Males", "Combined", "Females"), bg = "white")
 
 dev.off()
-
 
