@@ -85,3 +85,16 @@ library(qtl)
 mcross <- read.cross(format="csvr", file="UMHET3.Juli21.noDup.geno", genotypes=NULL, na.strings=c("-", "NA"))
 nxo <- countXO(mcross)
 plot(nxo)
+
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/merged/")
+ind <- read.table("ind.gts4way.Juli2021.txt", sep="\t")
+umhet3.geno.unique <- read.table("UMHET3.Juli21.noDup.geno", sep=",")
+
+write.table(cbind(NA,NA, t(cbind(Individual = rownames(ind), ind))), file = "UMHET3.Juli21.noDup.1.geno", col.names = FALSE, sep = ",", quote=FALSE, na = "")
+write.table(rbind(GenoID = c(NA, NA, colnames(umhet3.geno.unique)[-c(1:4)]), 
+                  cbind(Chr = umhet3.geno.unique$Chr, Mb = as.numeric(umhet3.geno.unique$Mb) , umhet3.geno.unique[, -c(1:4)])
+                 ), file = "UMHET3.Juli21.noDup.1.geno", col.names = FALSE, sep = ",", append=TRUE, quote=FALSE, na="")
+
+
+

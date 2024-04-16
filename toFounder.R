@@ -5,6 +5,9 @@ gtC <- read.table("all.vcf.sorted.juli2021.txt", sep="\t", row.names=1,colClasse
 map <- read.table("map.sorted.juli2021.txt", sep="\t", row.names=1)
 ind <- read.table("ind.sorted.juli2021.txt", sep="\t", row.names=1)
 
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/")
+cat(unique(rownames(ind)), file = "Genotypes_Total.txt", sep = "\n")
+
 gts <- apply(gtC,2,function(x){ return(as.numeric(factor(x, levels=c("0/0", "0/1", "1/1")))) } )
 rownames(gts) <- rownames(gtC)
 
@@ -21,6 +24,10 @@ gtC <- gtC[mok, iok]
 map <- map[mok,]
 ind <- ind[iok,]
 
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/")
+cat(unique(rownames(ind)), file = "Max_90_Perc.txt", sep = "\n")
+
+
 write.table(gtC, "selected.vcf.sorted.juli2021.txt", quote=FALSE, sep="\t", na = "")
 
 gts.cor <- cor(t(gts), use="pair")
@@ -30,10 +37,10 @@ chr1.names <- rownames(map)[which(map[,"Chr"] == 1 & map[,"Origin"] == "Sequenom
 image(gts.cor[chr1.names,chr1.names])
 
 # Read the founder snps
-setwd("C:/Github/UM-HET3/files/monsterplex")
+setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files/merged")
 fvcf <- read.table("fvcfAll.txt", sep="\t",colClasses="character", header=TRUE)
 rownames(fvcf) <- paste0(fvcf[,1], "_", fvcf[,2])
-setwd("C:/Github/UM-HET3/files/merged")
+#setwd("C:/Github/UM-HET3/files/merged")
 
 # Bind the position names (since rsIDs are not in the founders), and test if in founders
 map <- cbind(map, posname = paste0(map[, "Chr"], "_", map[, "Position"]))
@@ -53,7 +60,7 @@ founders <- colnames(fvcf)[6:9]
 for (m in m4wayA) {
   pm <- map[m, "posname"] # position name 
   if(sum(fvcf[pm, founders] == "1/1") == 1){ # One founder
-    if (fvcf[pm, "BALBBYJ"] == "1/1") {
+    if (fvcf[pm, "BALB_cJ"] == "1/1") {
       gts4way[m, which(gtC[m,] == "0/0")] <-  "B?"
       gts4way[m, which(gtC[m,] == "0/1")] <-  "A?"
       gts4way[m, which(gtC[m,] == "1/1")] <-  "XX"
@@ -73,7 +80,7 @@ for (m in m4wayA) {
     }
   }
   if(sum(fvcf[pm, founders] == "1/1") == 2){ # 2 Founders
-    if(fvcf[pm, "BALBBYJ"] == "1/1") {
+    if(fvcf[pm, "BALB_cJ"] == "1/1") {
       if(fvcf[pm, "C3H_HeJ"] == "1/1"){
         gts4way[m, which(gtC[m,] == "0/0")] <-  "BD"
         gts4way[m, which(gtC[m,] == "0/1")] <-  "??"
@@ -106,7 +113,7 @@ females <- ind[colnames(gtC),"Sex"] == "F"
 for (m in m4wayX) { # Only two posibilities are observed in the founder conversion map
   pm <- map[m, "posname"] # position name
   if(sum(fvcf[pm, founders] == "1/1") == 1){ # One founder
-    if (fvcf[pm, "BALBBYJ"] == "1/1") {
+    if (fvcf[pm, "BALB_cJ"] == "1/1") {
       gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "BD"
       gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "AD"
       gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "AD"
@@ -194,7 +201,7 @@ umhet3.geno.unique <- umhet3.geno.unique[,-1]
 write.table(umhet3.geno.unique, "gts4way.rqtl.GN2.Juli2021.NoDUP.txt", quote=FALSE, sep="\t", na = "")
 
 # Create cross object for determining genotypes
-setwd("C:/Github/UM-HET3/files")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/merged")
 write.table(cbind(NA,NA, t(cbind(Individual = rownames(ind), ind))), file = "um-het3-rqtl.noDup.csvr", col.names = FALSE, sep = ",", quote=FALSE, na = "")
 write.table(rbind(GenoID = c(NA, NA, colnames(umhet3.geno.unique)[-c(1,2)]), 
                   cbind(Chr = umhet3.geno.unique[,"Chr"], Mb = as.numeric(umhet3.geno.unique[,"Position"]) / 1000000, umhet3.geno.unique[, -c(1,2)])
