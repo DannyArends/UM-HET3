@@ -22,7 +22,7 @@ males <- phe[sex == 1 & phe >= 365]
 females <- phe[sex == 0 & phe >= 365]
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-svglite("Figure_1_KM.svg", width = 12, height = 12)
+pdf("Figure_1_KM.pdf", width = 12, height = 12)
 par(cex=2)
 par(cex.axis=1.2)
 plot(c(365, 1456), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve")
@@ -36,7 +36,7 @@ axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
 legend("topright", c("Males", "Females"), col = c("blue", "hotpink"), pch=18)
 dev.off()
 
-svglite("Figure_1_EC.svg", width = 12, height = 12)
+pdf("Figure_1_EC.pdf", width = 12, height = 12)
 par(cex=2)
 par(cex.axis=1.2)
 

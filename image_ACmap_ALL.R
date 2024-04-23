@@ -25,9 +25,6 @@ y.min <- 0
 x.min <- 1
 x.max <- length(table(map[, "Chr"]))
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
-svglite(paste0("mapping_4way.svg"), width = 24, height = 12)
-
 plot(x = c(x.min, x.max),
      y = c(y.min, y.max),
      type = "n",
@@ -61,6 +58,9 @@ colz.m <- c("white", brewer.pal(9, "Blues")[-c(1:4)])
 colz.f <- c("white", brewer.pal(9, "PuRd")[-c(1:4)])
 
 thresholds <- c(0, 2, 3.65, 4.25, 4.95, 5.95, 100)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
+pdf(paste0("Figure_1_actuaryQTL.pdf"), width = 24, height = 12)
+
 
 plot(c(1, l.x), c(1, 1+nrow(lods.c.All)), t = 'n', xlab = "", xaxt='n', ylab="", yaxt='n', xaxs="i", yaxs="i")
 abline(h = 1:nrow(lods.c.All))

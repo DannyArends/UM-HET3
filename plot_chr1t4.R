@@ -43,7 +43,7 @@ for(chr in c(1:19, "X")){
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
 library(svglite)
-svglite("Figure_1_basicQTL.svg", width = 36, height = 12)
+pdf("Figure_1_basicQTL.pdf", width = 36, height = 12)
   par(cex=2)
   par(cex.axis=1.5)
   plot(c(0, max(chr.start)), y = c(0, 10), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "Longevity (≥ 365 days)")

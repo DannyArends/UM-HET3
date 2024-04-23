@@ -26,7 +26,7 @@ colz.c <- c("white", brewer.pal(9, "Greens")[-c(1:4)])
 thresholds <- c(0, 2, 3.65, 4.25, 4.95, 5.95, 100)
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-svglite(paste0("Figure_2_Haplo_x_Sex.svg"), width = 24, height = 12)
+pdf(paste0("Figure_2_Haplo_x_Sex.pdf"), width = 24, height = 12)
 
 plot(c(1, l.x), c(1, 1+nrow(lods.cI)), t = 'n', xlab = "", xaxt='n', ylab="", yaxt='n', xaxs="i", yaxs="i", main = "Haplotype x Sex interaction")
 abline(h = 1:nrow(lods.cI))
