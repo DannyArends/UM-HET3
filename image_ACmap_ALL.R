@@ -5,11 +5,11 @@ setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 map <- read.table("genetic_map.txt", sep = "\t")
 
 lods.m.All <- read.table("progressiveMapping_males.txt", sep = "\t", check.names=FALSE)
-lods.m.All <- lods.m.All[c(TRUE,FALSE,FALSE), ]
+#lods.m.All <- lods.m.All[c(TRUE,FALSE,FALSE), ]
 lods.f.All <- read.table("progressiveMapping_females.txt", sep = "\t", check.names=FALSE)
-lods.f.All <- lods.f.All[c(TRUE,FALSE,FALSE), ]
+#lods.f.All <- lods.f.All[c(TRUE,FALSE,FALSE), ]
 lods.c.All <- read.table("progressiveMapping_all.txt", sep = "\t", check.names=FALSE)
-lods.c.All <- lods.c.All[c(TRUE,FALSE,FALSE), ]
+#lods.c.All <- lods.c.All[c(TRUE,FALSE,FALSE), ]
 
 threshold <- 2.5
 # Do some basic checks
@@ -59,18 +59,18 @@ colz.f <- c("white", brewer.pal(9, "PuRd")[-c(1:4)])
 
 thresholds <- c(0, 2, 3.65, 4.25, 4.95, 5.95, 100)
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-pdf(paste0("Figure_1_actuaryQTL.pdf"), width = 24, height = 12)
+pdf(paste0("Figure_1_actuaryQTL_all.pdf"), width = 24, height = 12)
 
 
 plot(c(1, l.x), c(1, 1+nrow(lods.c.All)), t = 'n', xlab = "", xaxt='n', ylab="", yaxt='n', xaxs="i", yaxs="i")
-abline(h = 1:nrow(lods.c.All))
+abline(h = 1:nrow(lods.c.All), col = rgb(0.5,0.5,0.5))
 chr.s <- 0
 chr.pe <- 0
 c.i <- 1
 for(chr in chrs){
-  rect(chr.s, 0, chr.s + chrs.length[chr], 1+nrow(lods.c.All), col = c(rgb(1,1,1,0.5), rgb(0.9,0.9,0.9,0.5))[1 + (c.i %% 2)]); c.i <- c.i + 1;
+  rect(chr.s, 0, chr.s + chrs.length[chr], 1+nrow(lods.c.All), col = c(rgb(1,1,1,0.5), rgb(1,1,1,0.5))[1 + (c.i %% 2)], border=NA); c.i <- c.i + 1;
   axis(1, at = chr.s + chrs.length[chr] / 2, chr)
-  rect(chr.pe, 0, chr.s, 1+nrow(lods.c.All), col = "white")
+  rect(chr.pe, 0, chr.s, 1+nrow(lods.c.All), col = "white", border=NA)
   abline(v = chr.s)
   abline(v = chr.s + chrs.length[chr])
   rr <- rownames(map)[which(map[, "Chr"] == chr)]

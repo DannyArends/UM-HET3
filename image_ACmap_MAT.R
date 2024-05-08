@@ -27,8 +27,8 @@ y.min <- 0
 x.min <- 1
 x.max <- length(table(map[, "Chr"]))
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
-svglite(paste0("mapping_MAT.svg"), width = 24, height = 12)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2024/Supplemental files")
+svglite(paste0("mapping_MAT_V2.svg"), width = 24, height = 12)
 
 plot(x = c(x.min, x.max),
      y = c(y.min, y.max),
