@@ -6,16 +6,28 @@ setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 GAmodel <- read.table("genage/genage_models.csv",sep=",", header=TRUE)
 GAhuman <- read.table("genage/genage_human.csv",sep=",", header=TRUE)
 
-regions <- read.table("regions_4way_merged_March23.txt", sep="\t", header=FALSE, row.names=1)
+regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
 colnames(regions) <- c("Chr", "Proximal", "Distal")
 
 library(biomaRt)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/May2024")
 
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
 for(x in 1:nrow(regions)){
   r <- paste0(regions[x, "Chr"],":", regions[x, "Proximal"], ":", regions[x, "Distal"])
   ortho <- getBM(attributes = c("ensembl_gene_id", "external_gene_name", "hsapiens_homolog_associated_gene_name", "celegans_homolog_associated_gene_name", "dmelanogaster_homolog_associated_gene_name", "scerevisiae_homolog_associated_gene_name"), filters = "chromosomal_region", values = r, mart = mart)
-  descr <- getBM(attributes = c("ensembl_gene_id", "chromosome_name", "start_position", "end_position", "strand", "external_gene_name", "gene_biotype", "mgi_id", "mgi_symbol", "mgi_description"), filters = "chromosomal_region", values = r, mart = mart)
+  descr <- getBM(attributes = c("ensembl_gene_id", "chromosome_name", "start_position", "end_position", "strand", "external_gene_name", "gene_biotype", "mgi_id", "mgi_symbol", "description", "mgi_description"), filters = "chromosomal_region", values = r, mart = mart)
+
+  isGM <- grep("^Gm", descr[,"external_gene_name"])
+  if(length(isGM) > 0) descr <- descr[-isGM,]
+
+  isRIKEN <- grep("^RIKEN", descr[,"mgi_description"])
+  if(length(isRIKEN) > 0) descr <- descr[-isRIKEN,]
+
+  isNA <- which(is.na(descr[, "description"]))
+  if(length(isNA) > 0){ descr <- descr[-isNA,] }
+
+  write.table(descr, paste0("genes/all/",rownames(regions)[x], "_all.txt"), sep = "\t", quote = FALSE, na = "", row.names=FALSE)
 
   inGenAge <- c()
   for(co in c(4,5,6)){
@@ -36,7 +48,7 @@ for(x in 1:nrow(regions)){
     descr[which(descr[,"ensembl_gene_id"] == ge), "genAge"] <- specV
   }
   
-  rname <- paste0("genes/all/",rownames(regions)[x], ".txt")
+  rname <- paste0("genes/all/",rownames(regions)[x], "_genAge.txt")
   nFeat <- nrow(descr)
   nAll <- sum(descr[, "gene_biotype"] == "protein_coding")
   
@@ -45,96 +57,31 @@ for(x in 1:nrow(regions)){
   cat("Done",rownames(regions)[x], "in GenAge:", length(unique(inGenAge[,2])), "/", nAll, "total Features:", nFeat, "\n")
 }
 
-#Done Vita1a in GenAge: 9 / 81 total Features: 319 
-#Done Vita1b in GenAge: 8 / 87 total Features: 373 
-#Done Vita1c in GenAge: 6 / 114 total Features: 310 
-#Done Vita2a in GenAge: 8 / 131 total Features: 222 
-#Done Vita2b in GenAge: 2 / 25 total Features: 66 
-#Done Vita2c in GenAge: 5 / 83 total Features: 152 
-#Done Vita3a in GenAge: 43 / 672 total Features: 1697 
-#Done Vita3b in GenAge: 38 / 569 total Features: 1295 
-#Done Vita4a in GenAge: 4 / 53 total Features: 132 
-#Done Vita4b in GenAge: 4 / 41 total Features: 156 
-#Done Vita4c in GenAge: 14 / 177 total Features: 351 
-#Done Vita5a in GenAge: 14 / 232 total Features: 843 
-#Done Vita6a in GenAge: 7 / 121 total Features: 304 
-#Done Vita6b in GenAge: 11 / 123 total Features: 339 
-#Done Vita8a in GenAge: 14 / 125 total Features: 425 
-#Done Vita9a in GenAge: 14 / 291 total Features: 628 
-#Done Vita9b in GenAge: 4 / 55 total Features: 91 
-#Done Vita9c in GenAge: 20 / 356 total Features: 809 
-#Done Vita9d in GenAge: 0 / 4 total Features: 9 
-#Done Vita10a in GenAge: 48 / 478 total Features: 1084 
-#Done Vita11a in GenAge: 17 / 165 total Features: 431 
-#Done Vita11b in GenAge: 92 / 953 total Features: 1658 
-#Done Vita12a in GenAge: 11 / 151 total Features: 456 
-#Done Vita13a in GenAge: 4 / 113 total Features: 396 
-#Done Vita13b in GenAge: 15 / 141 total Features: 430 
-#Done Vita14a in GenAge: 4 / 62 total Features: 366 
-#Done Vita15a in GenAge: 29 / 340 total Features: 710 
-#Done Vita17a in GenAge: 23 / 322 total Features: 674 
-#Done Vita17b in GenAge: 15 / 224 total Features: 474 
-#Done Vita17c in GenAge: 17 / 148 total Features: 387 
-#Done Vita18a in GenAge: 21 / 219 total Features: 677 
-#Done VitaXa in GenAge: 22 / 376 total Features: 997 
-#Done VitaXb in GenAge: 11 / 114 total Features: 306 
+#Done Vita1a in GenAge: 1 / 14 total Features: 16 
+#Done Vita1b in GenAge: 8 / 80 total Features: 97 
+#Done Vita1c in GenAge: 14 / 289 total Features: 330 
+#Done Vita2a in GenAge: 16 / 377 total Features: 479 
+#Done Vita2b in GenAge: 18 / 246 total Features: 291 
+#Done Vita2c in GenAge: 42 / 544 total Features: 632 
+#Done Vita3a in GenAge: 43 / 628 total Features: 714 
+#Done Vita3b in GenAge: 38 / 532 total Features: 596 
+#Done Vita4a in GenAge: 16 / 262 total Features: 331 
+#Done Vita5a in GenAge: 14 / 213 total Features: 252 
+#Done Vita6a in GenAge: 13 / 143 total Features: 162 
+#Done Vita6b in GenAge: 12 / 121 total Features: 144 
+#Done Vita9a  in GenAge: 14 / 278 total Features: 328 
+#Done Vita9b in GenAge: 15 / 259 total Features: 291 
+#Done Vita9c in GenAge: 10 / 206 total Features: 234 
+#Done Vita10a in GenAge: 48 / 421 total Features: 475 
+#Done Vita11a in GenAge: 17 / 154 total Features: 186 
+#Done Vita11b in GenAge: 92 / 896 total Features: 1071 
+#Done Vita12a in GenAge: 12 / 172 total Features: 497 
+#Done Vita13a in GenAge: 14 / 119 total Features: 135 
+#Done Vita14a in GenAge: 4 / 61 total Features: 86 
+#Done Vita15a in GenAge: 28 / 307 total Features: 367 
+#Done Vita17a in GenAge: 58 / 721 total Features: 878 
+#Done Vita18a in GenAge: 17 / 178 total Features: 213 
+#Done VitaXa in GenAge: 22 / 313 total Features: 422 
+#Done VitaXb in GenAge: 11 / 111 total Features: 132 
 
-regions <- read.table("regions_pmap_ctrl.txt", sep="\t", header=TRUE)
-
-library(biomaRt)
-
-mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
-
-for(x in 1:nrow(regions)){
-  r <- paste0(regions[x, "Chr"],":", regions[x, "Proximal"], ":", regions[x, "Distal"])
-  ortho <- getBM(attributes = c("ensembl_gene_id", "external_gene_name", "hsapiens_homolog_associated_gene_name", "celegans_homolog_associated_gene_name", "dmelanogaster_homolog_associated_gene_name", "scerevisiae_homolog_associated_gene_name"), filters = "chromosomal_region", values = r, mart = mart)
-  descr <- getBM(attributes = c("ensembl_gene_id", "chromosome_name", "start_position", "end_position", "strand", "external_gene_name", "gene_biotype", "mgi_id", "mgi_symbol", "mgi_description"), filters = "chromosomal_region", values = r, mart = mart)
-
-  inGenAge <- c()
-  for(co in c(4,5,6)){
-    species <- gsub("_homolog_associated_gene_name","", colnames(ortho)[co])
-    mHasG <- unique(ortho[which(ortho[, co] %in% GAmodel[,2]),1])
-    if(length(mHasG) > 0){
-      inGenAge <- rbind(inGenAge, cbind(species, mHasG))
-    }
-  }
-  hHasG <- unique(ortho[which(ortho[, 3] %in% GAhuman[,2]),1])
-  if(length(hHasG) > 0){
-    inGenAge <- rbind(inGenAge, cbind("Human", hHasG))
-  }
-
-  descr <- cbind(descr, genAge = NA)
-  for(ge in unique(inGenAge[,2])){
-    specV <- paste0(as.character(inGenAge[which(inGenAge[,2] == ge),1]), collapse = ";")
-    descr[which(descr[,"ensembl_gene_id"] == ge), "genAge"] <- specV
-  }
-  write.table(descr, paste0("genes/ctrl/", gsub(":", "_", r), ".txt"), sep = "\t", quote = FALSE, na = "")
-  cat("Done",r, "in GenAge:", length(unique(inGenAge[,2])), "/", sum(descr[, "gene_biotype"] == "protein_coding"), "total Features:", nrow(descr), "\n")
-}
-
-#Done 1:42044440:58823920 in GenAge: 18 / 87 total Features: 276 
-#Done 2:30426723:129010510 in GenAge: 64 / 949 total Features: 1893 
-#Done 3:89167102:121463445 in GenAge: 30 / 435 total Features: 950 
-#Done 9:0:124359700 in GenAge: 86 / 1205 total Features: 2838 
-#Done 9:58081975:124359700 in GenAge: 45 / 611 total Features: 1558 
-#Done 12:99576264:120092757 in GenAge: 12 / 180 total Features: 801 
-#Done 13:83858506:120883175 in GenAge: 20 / 200 total Features: 582 
-#Done 14:48473970:106980923 in GenAge: 30 / 435 total Features: 1282 
-#Done 17:0:32883804 in GenAge: 36 / 437 total Features: 952 
-#Done 19:8803985:38057964 in GenAge: 22 / 297 total Features: 618 
-#Done 2:92975818:182113224 in GenAge: 63 / 930 total Features: 1805 
-#Done 3:93148504:121463445 in GenAge: 25 / 316 total Features: 768 
-#Done 9:13442519:54904313 in GenAge: 32 / 498 total Features: 1076 
-#Done 16:30343647:74899626 in GenAge: 15 / 248 total Features: 610 
-#Done 19:4907657:43849879 in GenAge: 39 / 508 total Features: 976 
-#Done 1:170283138:195154279 in GenAge: 18 / 244 total Features: 575 
-#Done 2:26373532:119210795 in GenAge: 61 / 892 total Features: 1810 
-#Done 3:28380854:121463445 in GenAge: 52 / 748 total Features: 1961 
-#Done 4:134348530:156860686 in GenAge: 25 / 354 total Features: 669 
-#Done 9:120427595:124359700 in GenAge: 4 / 56 total Features: 146 
-#Done 10:56745317:122981479 in GenAge: 58 / 589 total Features: 1459 
-#Done 12:79076511:114630804 in GenAge: 17 / 315 total Features: 1072 
-#Done 14:0:41200458 in GenAge: 21 / 321 total Features: 769 
-#Done 15:48895974:102208446 in GenAge: 49 / 589 total Features: 1208 
-#Done 17:0:28902980 in GenAge: 29 / 374 total Features: 789 
 
