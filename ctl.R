@@ -2,13 +2,15 @@ setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 
+#
+# Use a different clor scheme (blue - red)
+#
+
 library(qtl)
 mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
-mapAll <- scanone(mcross)[,1:2]
-
-genotypes <- pull.geno(fill.geno(mcross, method = "maxmarginal", error.prob=0.01, min.prob = 0.9))
+gtsp <- pull.genoprob(mcross)
 
 cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
                     adjLongevity = NA, 
@@ -18,39 +20,43 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     adjBw6 = NA,
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
-idx <- which(cdata[, "longevity"] > 365 & !is.na(cdata[, "bw6"]))
+idx <- which(cdata[, "longevity"] >= 365 & !is.na(cdata[, "bw6"]))
 cdata <- cdata[idx,]
-gtsM <- genotypes[idx,]
+gtsp <- gtsp[idx,]
 
 lm.null.long <- lm(longevity ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjLongevity"] <- round(as.numeric(coef(lm.null.long)["(Intercept)"]) + residuals(lm.null.long),0)
 
 lm.null.bw6 <- lm(bw6 ~ sex + site + cohort, data = cdata)
-cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6),0)
+cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 1)
 
 bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw6"], use = "pair", method = "spearman")
 
 allCor <- c()
 allN <- c()
-for(x in 1:ncol(genotypes)){
-  balb <- which(genotypes[,x] == 1)
-  b6 <- which(genotypes[,x] == 2)
-  c3h <- which(genotypes[,x] == 3)
-  dba <- which(genotypes[,x] == 4)
-  cBalb <- NA; cB6 <- NA; cC3h <- NA; cDba <- NA
-  if(length(balb) > 100) cBalb <- cor(cdata[balb, "adjLongevity"], cdata[balb, "adjBw6"], use = "pair", method = "spearman");
-  if(length(b6) > 100) cB6 <- cor(cdata[b6, "adjLongevity"], cdata[b6, "adjBw6"], use = "pair", method = "spearman");
-  if(length(c3h) > 100) cC3h <- cor(cdata[c3h, "adjLongevity"], cdata[c3h, "adjBw6"], use = "pair", method = "spearman");
-  if(length(dba) > 100) cDba <- cor(cdata[dba, "adjLongevity"], cdata[dba, "adjBw6"], use = "pair", method = "spearman");
-  allCor <- rbind(allCor, c(cBalb, cB6, cC3h, cDba))
-  allN <- rbind(allN, c(length(balb), length(b6), length(c3h), length(dba)))
+for(marker in colnames(pull.geno(mcross))){
+  mp <- gtsp[, grep(marker, colnames(gtsp))]
+  gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+    if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+  }))
+  CH <- which(gts == "AC")
+  BH <- which(gts == "BC")
+  CD <- which(gts == "AD")
+  BD <- which(gts == "BD")
+  cCH <- NA; cBH <- NA; cCD <- NA; cBD <- NA
+  if(length(CH) > 100) cCH <- cor(cdata[CH, "adjLongevity"], cdata[CH, "adjBw6"], use = "pair", method = "spearman");
+  if(length(BH) > 100) cBH <- cor(cdata[BH, "adjLongevity"], cdata[BH, "adjBw6"], use = "pair", method = "spearman");
+  if(length(CD) > 100) cCD <- cor(cdata[CD, "adjLongevity"], cdata[CD, "adjBw6"], use = "pair", method = "spearman");
+  if(length(BD) > 100) cBD <- cor(cdata[BD, "adjLongevity"], cdata[BD, "adjBw6"], use = "pair", method = "spearman");
+
+  allCor <- rbind(allCor, c(cCH, cBH, cCD, cBD))
+  allN <- rbind(allN, c(length(CH), length(BH), length(CD), length(BD)))
 }
-rownames(allCor) <- colnames(genotypes)
-colnames(allCor) <- c("BALB/cByJ | C3H/HeJ", "C57BL/6J | C3H/HeJ", "BALB/cByJ | DBA/2J", "C57BL/6J | DBA/2J")
+rownames(allCor) <- colnames(pull.geno(mcross))
+colnames(allCor) <- c("CH", "BH", "CD", "BD")
 
-rownames(allN) <- colnames(genotypes)
-colnames(allN) <- c("BALB/cByJ | C3H/HeJ", "C57BL/6J | C3H/HeJ", "BALB/cByJ | DBA/2J", "C57BL/6J | DBA/2J")
-
+rownames(allN) <- colnames(pull.geno(mcross))
+colnames(allN) <- c("CH", "BH", "CD", "BD")
 
 allCor <- allCor[-which(apply(apply(allCor,1,is.na),2,sum) == 4),]
 write.table(allCor, file="correlations_Long_BW6.txt",sep="\t", quote=FALSE)
@@ -83,16 +89,55 @@ pdf(paste0("Figure_3_CTL_Chr6.pdf"), width = 16, height = 8)
 plot(c(0, max(as.numeric(pos[iix]))), y = c(1,5), t = "n", yaxs= "i", xaxs= "i",xlab = "Position (Mb)", ylab = "Genotype", xaxt="n", yaxt = "n", main = "CTL Chromosome 6")
 i <- 1
 for(x in 1:nrow(allCor[iix,])){
-  rect(mids[i], 1, mids[i+1], 2, col = colz.c[round(abs(allCor[iix[x],1]) * 100)], border=colz.c[round(abs(allCor[iix[x],1]) * 100)])
-  rect(mids[i], 2, mids[i+1], 3, col = colz.c[round(abs(allCor[iix[x],3]) * 100)], border=colz.c[round(abs(allCor[iix[x],3]) * 100)])
-  rect(mids[i], 3, mids[i+1], 4, col = colz.c[round(abs(allCor[iix[x],2]) * 100)], border=colz.c[round(abs(allCor[iix[x],2]) * 100)])
-  rect(mids[i], 4, mids[i+1], 5, col = colz.c[round(abs(allCor[iix[x],4]) * 100)], border=colz.c[round(abs(allCor[iix[x],4]) * 100)])
+  rect(mids[i], 1, mids[i+1], 2, col = colz.c[round(abs(allCor[iix[x],1]) * 100)], border=colz.c[round(abs(allCor[iix[x],"CH"]) * 100)])
+  rect(mids[i], 2, mids[i+1], 3, col = colz.c[round(abs(allCor[iix[x],3]) * 100)], border=colz.c[round(abs(allCor[iix[x],"CD"]) * 100)])
+  rect(mids[i], 3, mids[i+1], 4, col = colz.c[round(abs(allCor[iix[x],2]) * 100)], border=colz.c[round(abs(allCor[iix[x],"BH"]) * 100)])
+  rect(mids[i], 4, mids[i+1], 5, col = colz.c[round(abs(allCor[iix[x],4]) * 100)], border=colz.c[round(abs(allCor[iix[x],"BD"]) * 100)])
   i <- i + 1
 }
 axis(1, at = seq(0, max(as.numeric(pos[iix])), 10000000), seq(0, max(as.numeric(pos[iix])), 10000000) / 1000000)
 axis(2, at = 0.5 + 1:4, c("CH", "CD", "BH", "BD"), las=2)
 box()
 dev.off()
+
+
+### Plotting correlation at the top markers
+apply(!apply(genotypes[,names(which(apply(allCor,1, function(x){any(x > -0.1)})))],2,is.na),2,sum)
+
+m2 <- "2_25363944"
+m6 <- "6_51450974"
+m10 <- "10_127745179"
+
+for(x in c(m2, m6, m10)){
+  CH <- which(genotypes[,x] == 1)
+  BH <- which(genotypes[,x] == 2)
+  CD <- which(genotypes[,x] == 3)
+  BD <- which(genotypes[,x] == 4)
+  
+  col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
+  col.main <- adjustcolor( col.main, alpha.f = 0.6)
+
+  pdf(paste0("Figure_3_CTL_",x,".pdf"), width = 8, height = 8)
+  plot(c(20, 55), c(365, 1250), t = "n", xlab = "Adjusted bodyweight (6mo)", ylab = "Adjusted longevity", main = paste0("CTL @ ", x), log = "y", yaxt = "n")
+  points(cdata[CH, "adjBw6"], cdata[CH, "adjLongevity"], pch = 19, col = col.main[1])
+  points(cdata[CD, "adjBw6"], cdata[CD, "adjLongevity"], pch = 19, col = col.main[2])
+  points(cdata[BH, "adjBw6"], cdata[BH, "adjLongevity"], pch = 19, col = col.main[3])
+  points(cdata[BD, "adjBw6"], cdata[BD, "adjLongevity"], pch = 19, col = col.main[4])
+
+  abline(lm(cdata[CH, "adjLongevity"] ~ cdata[CH, "adjBw6"]), col = col.main[1], lwd=2, untf=T)
+  abline(lm(cdata[CD, "adjLongevity"] ~ cdata[CD, "adjBw6"]), col = col.main[2], lwd=2, untf=T)
+  abline(lm(cdata[BH, "adjLongevity"] ~ cdata[BH, "adjBw6"]), col = col.main[3], lwd=2, untf=T)
+  abline(lm(cdata[BD, "adjLongevity"] ~ cdata[BD, "adjBw6"]), col = col.main[4], lwd=2, untf=T)
+
+  axis(2, at = seq(400, 1200,200), seq(400, 1200,200), las=2)
+
+  legend("topright", c("CH", "CD", "BH", "BD"), col = col.main, pch=19, bg = "white", ncol=4, bty = "n")
+  dev.off()
+}
+
+
+### Mapping for P-values
+
 
 ## Chromosome 2, 6, and 10
 pvs <- c()
@@ -110,6 +155,8 @@ for(x in 1:nrow(allCor)){
 
 names(pvs) <- rownames(allCor)
 
+pvs[names(apply(!apply(genotypes[,names(which(apply(allCor,1, function(x){any(x > -0.1)})))],2,is.na),2,sum))]
+
 # Create the map object
 chrs <- unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",1))
 positions <- as.numeric(unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",2)))
@@ -120,7 +167,7 @@ rownames(map) <- colnames(pull.geno(mcross))
 subset <- map[which(map[,1] %in% c(1:19, "X")),]
 subset <- subset[which(rownames(subset) %in% rownames(allCor)),]
 subset <- cbind(subset, cpos = NA)
-gap <- 30000000
+gap <- 10000000
 chr.start <- c(0)
 chr.mids <- c()
 cp <- 0
@@ -134,7 +181,9 @@ for(chr in c(1:19, "X")){
   cp = cl + cp + gap
 }
 
-plot(c(0, max(chr.start)), y = c(-0.3, 0), t = 'n', ylab = "COR", xlab = "Chromosome",xaxt="n", las=2, main = "CTL Longevity x BW6")
+pdf("Figure_3_CTLeffects.pdf", width = 36, height = 12)
+
+plot(c(0, max(chr.start)), y = c(-0.3, 0), t = 'n', ylab = "Correlation", xlab = "Chromosome",xaxt="n", las=2, main = "CTL Longevity x BW6")
 col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
 for(x in c(1:19, "X")){
   onC <- which(subset[,1] == x)
@@ -147,9 +196,15 @@ for(x in c(1:19, "X")){
 }
 abline(h = 3.65, lty=2, col = "green")
 axis(1, at = chr.mids, paste0("", c(1:19, "X")), cex.axis=1.2, las=1)
+legend("topright", c("CH", "CD", "BH", "BD"), col = col.main, pch=19, bg = "white", ncol=4, bty = "n")
+dev.off()
+
 
 plot(-log10(pvs), t = 'l')
 
+
+
+### Old figure
 
 library(RColorBrewer)
 colz <- colorRampPalette(c("white", "red"))(15)[15:1]
