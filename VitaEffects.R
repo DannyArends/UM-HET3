@@ -137,7 +137,7 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita2a", "Vita2b", "Vita2c", "Vit
                 "Vita6a", "Vita6b", "Vita8a", "Vita9a", "Vita9b", "Vita9c", "Vita9d", "Vita10a", "Vita11a", "Vita11b", "Vita12a", "Vita13a",
                 "Vita13b", "Vita14a", "Vita15a", "Vita17a", "Vita17b", "Vita17c", "Vita18a", "VitaXa", "VitaXb")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/01_Paper_and_Main_Arends_Working_Files_2023/Supplemental files")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures/Vita Loci")
 
 for(ii in 1:length(all)[1]){
   pos <- all[ii]
@@ -157,10 +157,10 @@ for(ii in 1:length(all)[1]){
   rownames(remaining) <- paste0("day", msequence)
   rownames(errors) <- paste0("day", msequence)
 
-  svglite(paste0(name, ".eff.svg"), width = 36, height = 12)
+  pdf(paste0(name, ".eff.pdf"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   op <- par(cex = 2)
-  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
+  plot(c(365, 1100), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
          ylab = "Difference in Expectancy (days)", main = paste0(name," Combined"), xaxs = "i", las=2, xaxt="n", yaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
   axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
@@ -184,7 +184,7 @@ for(ii in 1:length(all)[1]){
   legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
 
   # Females
-  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
+  plot(c(365, 1100), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
         ylab = "Difference in Expectancy (days)", main = paste0(name," Females"), xaxs = "i", las=2, xaxt="n", yaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
   axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
@@ -206,7 +206,7 @@ for(ii in 1:length(all)[1]){
   legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
 
   # Males
-  plot(c(365, 1050), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
+  plot(c(365, 1100), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
          ylab = "Difference in Expectancy (days)", main = paste0(name," Males"), xaxs = "i", las=2, xaxt="n", yaxt="n")
   axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
   axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
