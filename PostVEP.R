@@ -122,7 +122,7 @@ for(x in 1:nrow(regions)){
   cat("Writing\n")
   write.table(cbind(ensembl_gene_id = rownames(mm), mm), file = paste0("summary/",rownames(regions)[x], ".summary.txt"), 
               sep = "\t", quote = FALSE,na="", row.names=FALSE)
-  mmF[rownames(regions)[x], "MO"] <- nrow(mm)
+  mmF[rownames(regions)[x], "MO"] <- length(which(mm[,"Impact"] != "NONE"))
   mmF[rownames(regions)[x], "HI"] <- length(which(mm[,"Impact"] == "HIGH"))
   mmF[rownames(regions)[x], "MOGA"] <- length(which(mm[,"inGenAge"] == "YES"))
   mmF[rownames(regions)[x], "HIGA"] <- length(which(mm[,"Impact"] == "HIGH" & mm[,"inGenAge"] == "YES"))

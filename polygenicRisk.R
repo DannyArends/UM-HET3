@@ -11,7 +11,9 @@ mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
-regions <- read.table("regions_4way_sorted_final.txt", sep = "\t", header=TRUE)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+
+regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
 regions[,"Top"] <- gsub(",", "", regions[,"Top"])
 
 as.DNI <- function(regions, col = "BALB.C3H"){
