@@ -31,6 +31,9 @@ lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
 
 bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw6"], use = "pair")
+bCor.f <- cor(cdata[which(cdata[, "sex"] == 0), "adjLongevity"], cdata[which(cdata[, "sex"] == 0), "adjBw6"], use = "pair")
+bCor.m <- cor(cdata[which(cdata[, "sex"] == 1), "adjLongevity"], cdata[which(cdata[, "sex"] == 1), "adjBw6"], use = "pair")
+
 
 allCor <- c()
 allN <- c()
@@ -185,9 +188,7 @@ for(i in 1:length(all)){
 }
 
 
-
-
-
+#### OLD code there be Dragons down here
 
 pvs[names(apply(!apply(genotypes[,names(which(apply(allCor,1, function(x){any(x > -0.1)})))],2,is.na),2,sum))]
 
