@@ -40,31 +40,31 @@ for(x in sequ){
     Vita1c <- rmarkers[idx, 9:12]
     Vita2a <- rmarkers[idx, 13:16]
     Vita2b <- rmarkers[idx, 17:20]
-    Vita3a <- rmarkers[idx, 21:24]
-    Vita3b <- rmarkers[idx, 25:28]
-    Vita4a <- rmarkers[idx, 29:32]
-    Vita5a <- rmarkers[idx, 33:36]
-    Vita6a <- rmarkers[idx, 37:40]
-    Vita6b <- rmarkers[idx, 41:44]
-    Vita9a <- rmarkers[idx, 45:48]
-    Vita9c <- rmarkers[idx, 49:52]
-    Vita9d <- rmarkers[idx, 53:56]
-    Vita10a <- rmarkers[idx, 57:60]
-    Vita11a <- rmarkers[idx, 61:64]
-    Vita11b <- rmarkers[idx, 65:68]
-    Vita12a <- rmarkers[idx, 69:72]
-    Vita13a <- rmarkers[idx, 73:76]
-    Vita14a <- rmarkers[idx, 77:80]
-    Vita15a <- rmarkers[idx, 81:84]
-    Vita17a <- rmarkers[idx, 85:88]
-    Vita17b <- rmarkers[idx, 89:92]
+    Vita2c <- rmarkers[idx, 21:24]
+    Vita3a <- rmarkers[idx, 25:28]
+    Vita3b <- rmarkers[idx, 29:32]
+    Vita4a <- rmarkers[idx, 33:36]
+    Vita5a <- rmarkers[idx, 37:40]
+    Vita6a <- rmarkers[idx, 41:44]
+    Vita6b <- rmarkers[idx, 45:48]
+    Vita9a <- rmarkers[idx, 49:52]
+    Vita9b <- rmarkers[idx, 53:56]
+    Vita9c <- rmarkers[idx, 57:60]
+    Vita10a <- rmarkers[idx, 61:64]
+    Vita11a <- rmarkers[idx, 65:68]
+    Vita11b <- rmarkers[idx, 69:72]
+    Vita12a <- rmarkers[idx, 73:76]
+    Vita13a <- rmarkers[idx, 77:80]
+    Vita14a <- rmarkers[idx, 81:84]
+    Vita15a <- rmarkers[idx, 85:88]
+    Vita17a <- rmarkers[idx, 89:92]
     Vita18a <- rmarkers[idx, 93:96]
     VitaXa <- rmarkers[idx, 97:100]
     VitaXb <- rmarkers[idx, 101:104]
     ml <- lm(longevity ~ sex + site + cohort + treatment + 
-             Vita1a + Vita1b + Vita1c + Vita2a + Vita2b + Vita3a + Vita3b + Vita4a + Vita5a + Vita6a + Vita6b +
-             Vita9a + Vita9c + Vita9d + Vita10a + Vita11a + Vita11b + Vita12a +Vita13a + Vita14a + Vita15a + 
-             Vita17a + Vita17b + Vita18a + VitaXa + VitaXb, data = adata)
+             Vita1a + Vita1b + Vita1c + Vita2a + Vita2b + Vita2c + Vita3a + Vita3b + Vita4a + Vita5a + 
+             Vita6a + Vita6b + Vita9a + Vita9b + Vita9c + Vita10a + Vita11a + Vita11b + Vita12a + Vita13a + 
+             Vita14a + Vita15a + Vita17a + Vita18a + VitaXa + VitaXb, data = adata)
     ma <- anova(ml)
 
     # Mean square methods (Adapted from: Falconer 1989 & Lynch & Walsh 1998)
