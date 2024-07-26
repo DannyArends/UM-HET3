@@ -13,7 +13,7 @@ gtsp <- pull.genoprob(mcross)
 sex <- pull.pheno(mcross)[, "sex"]
 
 # Include animals older than 365 days
-above <- which(pull.pheno(mcross)[, "longevity"] > 365)
+above <- which(pull.pheno(mcross)[, "longevity"] >= 365)
 
 gtsp <- gtsp[above,]
 sex <- sex[above]
@@ -122,10 +122,10 @@ xx <- colorRampPalette(c("#fc8d59", "#ffffbf", "#91bfdb"))( 1+(max(group) - min(
 group.cols <- xx[1+ (group - min(group))]
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-pdf(paste0("Figure_5_ML_longevity_COUNT.pdf"), width = 12, height = 6)
+#pdf(paste0("Figure_5_ML_longevity_COUNT.pdf"), width = 12, height = 6)
   layout(matrix(1:2, ncol = 2), width = c(2,0.3), height = c(1,1))
   par(mai=c(1, 1, 1, 0))
-  hist(mRa, breaks = seq(min(mRa)-0.5, (max(mRa)+0.5), 1), col = group.cols, las = 2, xaxt = 'n',
+  aa <- hist(mRa, breaks = seq(min(mRa)-0.5, (max(mRa)+0.5), 1), col = group.cols, las = 2, xaxt = 'n',
        xlab = "# of (Increasing - Decreasing) alleles", 
        main = "Lifespan versus Haplotype Count")
   axis(1, at = seq(-10,10, 5), seq(-10,10, 5))
@@ -135,12 +135,12 @@ pdf(paste0("Figure_5_ML_longevity_COUNT.pdf"), width = 12, height = 6)
   plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = '')
   text(x=1.5, y = seq(0, 1, l=5), labels = round(seq(min(group),max(group),l=5),0))
   rasterImage(legend_image, 0, 0, 1,1)
-dev.off()
+#dev.off()
 
 #plot(pull.pheno(mcross)[iix, "longevity"] ~ mRp2[iix])
 
 
-pdf(paste0("Figure_5_ML_longevity_EFFECT.pdf"), width = 12, height = 6)
+#pdf(paste0("Figure_5_ML_longevity_EFFECT.pdf"), width = 12, height = 6)
   plot(mRp2, observed, pch=19, cex=0.4, col = c("hotpink", "blue")[sex + 1], main = "Lifespan versus Haplotype Effect", xlab = "Estimated haplotype effect", ylab = "Lifespan", yaxt = "n")
   abline(lm(observed[sex==0] ~ mRp2[sex==0]), col = "hotpink", lwd=2, untf=T)
   abline(lm(observed[sex==1] ~ mRp2[sex==1]), col = "blue", lwd=2, untf=T)
@@ -148,8 +148,17 @@ pdf(paste0("Figure_5_ML_longevity_EFFECT.pdf"), width = 12, height = 6)
   cor(observed[sex==1], mRp2[sex==1])
   axis(2, seq(365, 1500, 4*15), seq(365, 1500, 4*15), las=2)
   legend("topleft", c("Female", "Male"), col = c("hotpink", "blue"), pch=19)
-dev.off()
+#dev.off()
 
+# Males
+Yf <- mRp2[sex==1] + mean(observed[sex==1])
+lm(observed[sex==1] ~ Yf)
+anova(lm(observed[sex==1] ~ Yf))
+
+# FeMales
+Yf <- mRp2[sex==0] + mean(observed[sex==0])
+lm(observed[sex==0] ~ Yf)
+anova(lm(observed[sex==0] ~ Yf))
 
 pdf(paste0("Figure_5_ML_longevity_EFFECT.pdf"), width = 28, height = 10)
 par(cex=2)

@@ -1,5 +1,7 @@
+library(biomaRt)
 library(clusterProfiler)
 library(org.Mm.eg.db)
+library(ReactomePA)
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
@@ -7,7 +9,6 @@ regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, r
 GPCRs <- read.table("May2024/GPCRs.txt", sep = "\t", header=TRUE)
 
 ### Get whole genome
-library(biomaRt)
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
 mlist <- getBM(attributes = c("ensembl_gene_id", "entrezgene_id", "external_gene_name", "gene_biotype", 
                                      "chromosome_name", "start_position", "end_position", "strand", "description", "mgi_description"), mart = mart)
@@ -23,10 +24,12 @@ mlist <- mlist[-isGM, ]
 isRIKEN <- grep("^RIKEN", mlist[,"mgi_description"])
 genome <- mlist[-isRIKEN, ]
 
-getEntrez <- function(ensembl) { return(as.character(na.omit(genome[which(genome[,"ensembl_gene_id"] %in% ensembl), "entrezgene_id"]))) }
+## Convert from ensembl ID to entrez ID
 
+getEntrez <- function(ensembl) { return(as.character(na.omit(genome[which(genome[,"ensembl_gene_id"] %in% ensembl), "entrezgene_id"]))) }
 wholeGenome <- unique(genome[,"ensembl_gene_id"])
 
+## Load our data
 protein_coding <- vector("list", nrow(regions))
 prioritized <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
@@ -43,8 +46,10 @@ for(x in 1:nrow(regions)){
   if(length(olf)> 0) protein_coding[[x]] <- prioritized[[x]][-olf,]
 }
 
+## Leave one region out
 enrichments <- vector("list", nrow(regions))
 KEGGs <- vector("list", nrow(regions))
+REACTOMEs <- vector("list", nrow(regions))
 BGs <- vector("list", nrow(regions))
 FGs <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
@@ -57,21 +62,29 @@ for(x in 1:nrow(regions)){
   }
   BGs[[x]] <- bg
   FGs[[x]] <- fg
-  enrichments[[x]] <- enrichGO(fg, "org.Mm.eg.db", ont = "BP", keyType="ENSEMBL", pvalueCutoff = 0.05, universe = wholeGenome)
-  KEGGs[[x]] <- enrichKEGG(gene = getEntrez(fg), organism = 'mmu', pvalueCutoff = 0.05, universe = getEntrez(wholeGenome))
+  # Gene Ontology
+  enrichments[[x]] <- enrichGO(fg, "org.Mm.eg.db", ont = "BP", keyType="ENSEMBL", pvalueCutoff = 0.2, universe = wholeGenome)
   enrichments[[x]] <- enrichments[[x]][, 1:8]
+
+  # Kegg
+  KEGGs[[x]] <- enrichKEGG(gene = getEntrez(fg), organism = 'mmu', pvalueCutoff = 0.2, universe = getEntrez(wholeGenome))
   KEGGs[[x]] <- KEGGs[[x]][, 1:9]
+
+  # Reactome
+  REACTOMEs[[x]] <- enrichPathway(gene = getEntrez(fg), organism = "mouse", pvalueCutoff = 0.2, universe = getEntrez(wholeGenome))
+  REACTOMEs[[x]] <- REACTOMEs[[x]][, 1:7]
   cat("Finished with",x,"\n")
 }
 
 names(enrichments) <- rownames(regions)
 names(KEGGs) <- rownames(regions)
+names(REACTOMEs) <- rownames(regions)
+
 any(table(unlist(lapply(enrichments,rownames))) == 26)
 any(table(unlist(lapply(KEGGs,rownames))) == 26)
+any(table(unlist(lapply(REACTOMEs,rownames))) == 26)
 
-lapply(lapply(enrichments,rownames), function(x){"GO:0052695" %in% x})
 
-
-kk <- 
-
+edox <- setReadable(aa, 'org.Mm.eg.db', 'ENTREZID')
+cnetplot(edox, circular = TRUE, colorEdge = TRUE)
 

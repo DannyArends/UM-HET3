@@ -92,7 +92,7 @@ for(x in sequ){
 
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-pdf(paste0("Extra_Heritability.pdf"), width = 14, height = 10)
+#pdf(paste0("Extra_Heritability.pdf"), width = 14, height = 10)
   plot(c(365, 1100), y = c(0, 0.75), xlab = "Cutoff age", ylab = "Broad sense haplotype heritability", 
        main = "Heritability - 26 Vita regions", t = "n", yaxt="n", xaxt="n", yaxs = "i")
   for(x in sequ){
@@ -105,6 +105,6 @@ pdf(paste0("Extra_Heritability.pdf"), width = 14, height = 10)
   }
   axis(1, at = seq(365, 1100, 4*15), seq(365, 1100, 4*15))
   axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
-dev.off()
+#dev.off()
 
 

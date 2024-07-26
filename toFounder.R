@@ -115,7 +115,7 @@ for (m in m4wayX) { # Only two posibilities are observed in the founder conversi
   if(sum(fvcf[pm, founders] == "1/1") == 1){ # One founder
     if (fvcf[pm, "BALB_cJ"] == "1/1") {
       gts4way[m, which(gtC[m,] == "0/0" & males)] <-  "BD"
-      gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "AD"
+      gts4way[m, which(gtC[m,] == "0/1" & males)] <-  "AD" # Should have been ??? XX ???
       gts4way[m, which(gtC[m,] == "1/1" & males)] <-  "AD"
       gts4way[m, which(gtC[m,] == "0/0" & females)] <-  "BC"
       gts4way[m, which(gtC[m,] == "0/1" & females)] <-  "AC"
