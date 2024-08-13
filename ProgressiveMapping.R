@@ -30,7 +30,7 @@ lods.cM <- c()
 minAge <- c()
 for(x in msequence){
   cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
-                      sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
+                      sex = as.factor(pull.pheno(mcross)[, "sex"]), 
                       site = as.factor(pull.pheno(mcross)[, "site"]),
                       cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                       treatment = as.factor(pull.pheno(mcross)[, "treatment"]))

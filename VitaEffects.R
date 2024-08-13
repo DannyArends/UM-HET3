@@ -136,6 +136,15 @@ names(all) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","
                 "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
                 "Vita17a","Vita18a","VitaXa","VitaXb")
 
+setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+
+lods.m.All <- read.table("progressiveMapping_males.txt", sep = "\t", check.names=FALSE)
+#lods.m.All <- lods.m.All[c(TRUE,FALSE,FALSE), ]
+lods.f.All <- read.table("progressiveMapping_females.txt", sep = "\t", check.names=FALSE)
+#lods.f.All <- lods.f.All[c(TRUE,FALSE,FALSE), ]
+lods.c.All <- read.table("progressiveMapping_all.txt", sep = "\t", check.names=FALSE)
+
+
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures/Vita Loci")
 
 for(ii in 1:length(all)[1]){
@@ -156,75 +165,116 @@ for(ii in 1:length(all)[1]){
   rownames(remaining) <- paste0("day", msequence)
   rownames(errors) <- paste0("day", msequence)
 
-  pdf(paste0(name, ".eff.pdf"), width = 36, height = 12)
+  pdf(paste0(name, ".eff.new.pdf"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   op <- par(cex = 2)
-  plot(c(365, 1100), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
-         ylab = "Difference in Expectancy (days)", main = paste0(name," Combined"), xaxs = "i", las=2, xaxt="n", yaxt="n")
-  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
-  axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
-  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
-  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
+  plot(c(365, 1100), c(-40, 27.5), t = 'n', xlab = "Truncation Age [d]", yaxs = "i",
+         ylab = "Actuarial Effect Size [d]", main = paste0(name," Combined"), xaxs = "i", cex.main = 1.4, cex.lab = 1.4, las=2, xaxt="n", yaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000),cex.axis = 1.4)
+  axis(1, at = c(500, 700, 900, 1100), c("", "", "", ""))
+  aa <- seq(-50, 50, 5)
+  aa[which(1:length(aa) %% 2 == 0)] <- ""
+  axis(2, at = seq(-50, 50, 5), aa, las=2,cex.axis = 1.4)
+  #abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  #abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
   # Combined
-  points(msequence, remaining[,2], t = 'l', col = col.main[1], lwd=2)
+  points(msequence, remaining[,2], t = 'l', col = col.main[1], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,2] + errors[,1], rev(remaining[,2] - errors[,1])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,3], t = 'l', col = col.main[2], lwd=2)
+  points(msequence, remaining[,3], t = 'l', col = col.main[2], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,3] + errors[,2], rev(remaining[,3] - errors[,2])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,4], t = 'l', col = col.main[3], lwd=2)
+  points(msequence, remaining[,4], t = 'l', col = col.main[3], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,4] + errors[,3], rev(remaining[,4] - errors[,3])), col = col.alpha[3], border = NA)
 
-  points(msequence, remaining[,5], t = 'l', col = col.main[4], lwd=2)
+  points(msequence, remaining[,5], t = 'l', col = col.main[4], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,5] + errors[,4], rev(remaining[,5] - errors[,4])), col = col.alpha[4], border = NA)
+
+  #rect(0, -50, 1200, -30, col = "white", border=NA)
+  abline(h = -40 + 4.65, lty = 1, col = "green")
+  abline(h = -40 + 3.95, lty = 1, col = "orange")
+  abline(h = -40 + 3, lty = 1, col = "red")
+  points(msequence, lods.c.All[, all[ii]] - 40, t = "l", lwd=2)
+  axis(4, at = seq(-40, -32, 2), seq(0, 8, 2), las = 2,  cex.axis =1.1)
 
   #abline(v=c(935, 1055))
   legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
+  box()
+
+  mtext('LOD', side=4, line=0.7, at=-26, cex = 2.8)
+
 
   # Females
-  plot(c(365, 1100), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
-        ylab = "Difference in Expectancy (days)", main = paste0(name," Females"), xaxs = "i", las=2, xaxt="n", yaxt="n")
-  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
-  axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
-  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
-  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
+  plot(c(365, 1100), c(-40, 27.5), t = 'n', xlab = "Truncation Age [d]", yaxs = "i",
+        ylab = "", main = paste0(name," Females"), xaxs = "i", cex.main = 1.4, cex.lab = 1.4, las=2, xaxt="n", yaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000), cex.axis = 1.4)
+  axis(1, at = c(500, 700, 900, 1100), c("", "", "", ""))
+  aa <- seq(-50, 50, 5)
+  aa[which(1:length(aa) %% 2 == 0)] <- ""
+  axis(2, at = seq(-50, 50, 5), aa, las=2, cex.axis = 1.4)
+  #abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  #abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
-  points(msequence, remaining[,7], t = 'l', col = col.main[1], lwd=2)
+  points(msequence, remaining[,7], t = 'l', col = col.main[1], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,7] + errors[,5], rev(remaining[,7] - errors[,5])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,8], t = 'l', col = col.main[2], lwd=2)
+  points(msequence, remaining[,8], t = 'l', col = col.main[2], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,8] + errors[,6], rev(remaining[,8] - errors[,6])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,9], t = 'l', col = col.main[3], lwd=2)
+  points(msequence, remaining[,9], t = 'l', col = col.main[3], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,9] + errors[,7], rev(remaining[,9] - errors[,7])), col = col.alpha[3], border = NA)
 
-  points(msequence, remaining[,10], t = 'l', col = col.main[4], lwd=2)
+  points(msequence, remaining[,10], t = 'l', col = col.main[4], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,10] + errors[,8], rev(remaining[,10] - errors[,8])), col = col.alpha[4], border = NA)
   #abline(v=1040)
+
+  #rect(0, -50, 1200, -30, col = "white", border=NA)
+  abline(h = -40 + 4.65, lty = 1, col = "green")
+  abline(h = -40 + 3.95, lty = 1, col = "orange")
+  abline(h = -40 + 3, lty = 1, col = "red")
+  points(msequence, lods.f.All[, all[ii]] - 40, t = "l", lwd=2)
+  axis(4, at = seq(-40, -32, 2), seq(0, 8, 2), las = 2,  cex.axis =1.1)
+
   legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
+  box()
+
+  mtext('LOD', side=4, line=0.7, at=-26, cex = 2.8)
 
   # Males
-  plot(c(365, 1100), c(-40, 25), t = 'n', xlab = "Lifespan Cut-off Age (days)", 
-         ylab = "Difference in Expectancy (days)", main = paste0(name," Males"), xaxs = "i", las=2, xaxt="n", yaxt="n")
-  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000))
-  axis(2, at = seq(-50, 50, 5), seq(-50, 50, 5), las=2)
-  abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
-  abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
+  plot(c(365, 1100), c(-40, 27.5), t = 'n', xlab = "Truncation Age [d]", yaxs = "i",
+         ylab = "", main = paste0(name," Males"), xaxs = "i", cex.main = 1.4, cex.lab = 1.4, las=2, xaxt="n", yaxt="n")
+  axis(1, at = c(400, 600, 800, 1000), c(400, 600, 800, 1000), cex.axis = 1.4)
+  axis(1, at = c(500, 700, 900, 1100), c("", "", "", ""))
+  aa <- seq(-50, 50, 5)
+  aa[which(1:length(aa) %% 2 == 0)] <- ""
+  axis(2, at = seq(-50, 50, 5), aa, las=2,cex.axis = 1.4)
+  #abline(v = seq(400, 1100, 50), lty=2, col="lightgray")
+  #abline(h = seq(-50, 50, 10), lty=2, col="lightgray")
 
-  points(msequence, remaining[,12], t = 'l', col = col.main[1], lwd=2)
+  points(msequence, remaining[,12], t = 'l', col = col.main[1], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,12] + errors[,9], rev(remaining[,12] - errors[,9])), col = col.alpha[1], border = NA)
 
-  points(msequence, remaining[,13], t = 'l', col = col.main[2], lwd=2)
+  points(msequence, remaining[,13], t = 'l', col = col.main[2], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,13] + errors[,10], rev(remaining[,13] - errors[,10])), col = col.alpha[2], border = NA)
 
-  points(msequence, remaining[,14], t = 'l', col = col.main[3], lwd=2)
+  points(msequence, remaining[,14], t = 'l', col = col.main[3], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,14] + errors[,11], rev(remaining[,14] - errors[,11])), col = col.alpha[3], border = NA)
 
-  points(msequence, remaining[,15], t = 'l', col = col.main[4], lwd=2)
+  points(msequence, remaining[,15], t = 'l', col = col.main[4], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,15] + errors[,12], rev(remaining[,15] - errors[,12])), col = col.alpha[4], border = NA)
 
+  #rect(0, -50, 1200, -30, col = "white", border=NA)
+  abline(h = -40 + 4.65, lty = 1, col = "green")
+  abline(h = -40 + 3.95, lty = 1, col = "orange")
+  abline(h = -40 + 3, lty = 1, col = "red")
+  points(msequence, lods.m.All[, all[ii]] - 40, t = "l", lwd=2)
+  axis(4, at = seq(-40, -32, 2), seq(0, 8, 2), las = 2,  cex.axis =1.1)
+
   legend("top", c("CH", "CD", "BH", "BD"), col = col.main, lwd=2, bg = "white", ncol=4, bty = "n")
+  box()
+
+  mtext('LOD', side=4, line=0.7, at=-26, cex = 2.8)
 
   dev.off()
 }
