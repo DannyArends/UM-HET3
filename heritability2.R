@@ -25,7 +25,7 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
 
-sequ <-seq(365, 1100, 15)
+sequ <-seq(20, 1100, 15)
 reps <- 1:50
 
 mm <- vector("list", length(sequ))
@@ -107,4 +107,26 @@ setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_I
   axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
 #dev.off()
 
+
+
+mR <- c()
+for(x in sequ){
+  x <- round(apply(mm[[as.character(x)]][5:30,],1, mean),3)
+  mR <- rbind(mR, x)
+}
+mR[mR < 0] <- 0
+rownames(mR) <- sequ
+colnames(mR) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
+                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
+                "Vita17a","Vita18a","VitaXa","VitaXb")
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/H2/")
+pdf("H2_Combined.pdf", width = 28, height = 12)
+  op <- par(mar = c(4,10,2,2))
+  op <- par(cex = 1.5)
+  image(1:nrow(mR), 1:ncol(mR), mR, xaxt="n", yaxt = "n", xlab = "Cut", ylab = "", main = "H2 Mean square methods (Combined)")
+  axis(1, at = (1:nrow(mR))[c(TRUE, FALSE)], sequ[c(TRUE, FALSE)])
+  axis(2, at = 1:ncol(mR), colnames(mR), las=2)
+  box()
+dev.off()
 

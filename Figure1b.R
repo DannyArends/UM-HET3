@@ -50,18 +50,28 @@ library(svglite)
 tp <- "> 365"
 #timepoints c(365, 560, 875, 1025)
 
-pdf("Figure_1B_TPS_365.pdf", width = 36, height = 12)
-  #par(cex=2)
-  #par(cex.axis=1.5)
-  plot(c(1497316549 + 10000000, 1651373135 - 30000000), y = c(0, 6), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "Longevity (365 days)")
-  for(x in c("9")){
-    points(subset[which(subset[,1] == x),"cpos"], lods.cM[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "black",lwd=2)
-    points(subset[which(subset[,1] == x),"cpos"], lods.mM[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "blue",lwd=2)
-    points(subset[which(subset[,1] == x),"cpos"], lods.fM[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "hotpink",lwd=2)
-    points(subset[which(subset[,1] == x),"cpos"], lods.cI[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "orange",lwd=2, lty=3)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files")
+pdf("4Chromosomes_Fig3_DifferentTPs.pdf", width = 36, height = 12)
+  par(cex=2)
+  par(cex.axis=1.5)
+  plot(c(0, 777655628), y = c(0, 10), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "Longevity (365 days)")
+  for(x in c("1","2", "3", "4")){
+    if(x == "1") tp <- "> 365"
+    if(x == "2") tp <- "> 365"
+    if(x == "3") tp <- "> 1085"
+    if(x == "4") tp <- "> 695"
+    points(subset[which(subset[,1] == x),"cpos"], lods.cM[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "black",lwd=6)
+    points(subset[which(subset[,1] == x),"cpos"], lods.mM[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "blue",lwd=6)
+    points(subset[which(subset[,1] == x),"cpos"], lods.fM[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "red",lwd=6)
+    points(subset[which(subset[,1] == x),"cpos"], lods.cI[tp, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "forestgreen",lwd=6)
   }
+  text(chr.mids[1:4], rep(9,4), c("T365", "T365", "T1085", "T695"))
   abline(h = 3.65, lty=2, col = "green")
   axis(1, at = chr.mids, paste0("", c(1:19, "X")), cex.axis=1.2, las=1)
-  legend("topleft", c("All", "Males", "Females", "Interaction"), lwd=2, lty=c(1,1,1,3), col = c("black", "blue", "hotpink", "orange"))
+  legend("topleft", c("All", "Males", "Females", "Interaction"), lwd=6, lty=c(1,1,1,1), col = c("black", "blue", "red", "forestgreen"))
 dev.off()
+
+
+c4 <- which(subset[,1] == "4")
+c3 <- which(subset[,1] == "3")
 

@@ -21,7 +21,7 @@ map <- cbind(Chr = chrs, Pos = positions)
 rownames(map) <- colnames(pull.geno(mcross))
 
 # Our Progressive Mapping Sequence
-msequence <- seq(365, 1100, 15)
+msequence <- seq(365, 365, 15)
 markers <- unique(unlist(lapply(strsplit(colnames(gtsp), ":"), "[",1)))
 
 lods.cM <- c()
@@ -40,7 +40,7 @@ for(x in msequence){
   minAge <- c(minAge, min(cdata[, "longevity"]))
 
   lods.c <- c()
-  for(marker in colnames(pull.geno(mcross))){
+  for(marker in colnames(pull.geno(mcross))[1]){
     mp <- gtsM[, grep(marker, colnames(gtsM))]
     lm.null <- lm(longevity ~ sex + site + cohort + treatment + mp + 0, data = cdata)
     lm.alt <- lm(longevity ~ sex + site + cohort + treatment + mp + mp:sex + 0, data = cdata)
@@ -54,7 +54,7 @@ for(x in msequence){
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.cM,2), "progressiveMapping_INT.txt", sep = "\t", quote=FALSE)
+#write.table(round(lods.cM,2), "progressiveMapping_INT.txt", sep = "\t", quote=FALSE)
 
 
 

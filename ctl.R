@@ -6,6 +6,8 @@ setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 # Use a different clor scheme (blue - red)
 #
 
+### TODO: CTL for Males and Females separately
+
 library(qtl)
 mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
@@ -20,7 +22,7 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     adjBw6 = NA,
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
-idx <- which(cdata[, "longevity"] >= 365 & !is.na(cdata[, "bw6"]))
+idx <- which(cdata[, "longevity"] >= (365/2) & !is.na(cdata[, "bw6"]))
 cdata <- cdata[idx,]
 gtsp <- gtsp[idx,]
 
@@ -73,7 +75,7 @@ allN <- allN[-ii,]
 
 write.table(allCor, file="correlations_Long_BW6.txt",sep="\t", quote=FALSE)
 
-## Chromosome 2, 6, and 10
+## correlation differences to P-value / LOD scores
 pM <- c()
 pC <- c()
 for(x in 1:nrow(allCor)){

@@ -18,21 +18,22 @@ gtsp <- pull.genoprob(mcross)
 phe <- pull.pheno(mcross)[, "longevity"]
 sex <- pull.pheno(mcross)[, "sex"]
 
-males <- phe[sex == 1 & phe >= 365]
-females <- phe[sex == 0 & phe >= 365]
+males <- phe[sex == 1 & phe >= 20]
+females <- phe[sex == 0 & phe >= 20]
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-pdf("Figure_1_KM.pdf", width = 12, height = 12)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
+pdf("Figure_1_KM.pdf", width = 16, height = 12)
 par(cex=2)
 par(cex.axis=1.2)
-plot(c(365, 1456), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve")
-for(x in 365:1456){
+plot(c(20, 1456), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve", xaxt = "n")
+for(x in 20:1456){
   n.n <- length(which(males >= x))
   n.r <- length(which(females >= x))
   points(x, (n.n/length(males))* 100, pch=18, col = "blue")
   points(x, (n.r/length(females))* 100, pch=18, col = "pink")
 }
-axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
+axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las = 2)
+axis(1, at = seq(0, 1500, 100), seq(0, 1500, 100), las = 2)
 legend("topright", c("Males", "Females"), col = c("blue", "hotpink"), pch=18)
 dev.off()
 
@@ -40,8 +41,8 @@ pdf("Figure_1_EC.pdf", width = 12, height = 12)
 par(cex=2)
 par(cex.axis=1.2)
 
-plot(c(365, 1100), c(-35, 35), t = "n", ylab = "Difference in Expectancy (days)", xlab = "Lifespan Cut-off Age (days)", yaxt="n", main = "Effect Curve")
-msequence <- seq(365, 1100, 15)
+plot(c(42, 1100), c(-50, 50), t = "n", ylab = "Difference in Expectancy (days)", xlab = "Lifespan Cut-off Age (days)", yaxt="n", main = "Effect Curve")
+msequence <- seq(42, 1100, 15)
 std <- function(x) sd(x)/sqrt(length(x))
 mm <- c()
 for(d in msequence){
@@ -61,7 +62,7 @@ points(msequence, mm[,3], t = 'l', col = "hotpink", lwd=2)
 polygon(c(msequence, rev(msequence)), c(mm[,3] + mm[,4], rev(mm[,3] - mm[,4])), col = rgb(1, 0.41, 0.7,0.5), border = NA)
 
 legend("topright", c("Males", "Females"), col = c("blue", "hotpink"), pch=18)
-axis(2, at = seq(-100, 100, 5), seq(-100, 100, 5), las=2)
+axis(2, at = seq(-100, 100, 10), seq(-100, 100, 10), las=2)
 dev.off()
 
 

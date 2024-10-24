@@ -10,7 +10,7 @@ lods.cI <- lods.cI[c(TRUE,FALSE,FALSE), ]
 map <- read.table("genetic_map.txt", sep = "\t")
 threshold <- 2.5
 
-chrs <- c(1:19, "X")
+chrs <- c(1:19)
 gap <- 10000000
 chrs.length <- as.numeric(unlist(lapply(chrs, function(x){ max(map[map[, "Chr"] == x,"Pos"]) })))
 names(chrs.length) <- chrs
@@ -21,12 +21,14 @@ y.min <- 0
 x.min <- 1
 x.max <- length(table(map[, "Chr"]))
 
-colz.c <- c("white", brewer.pal(9, "Greens")[-c(1:4)])
+colz.c <- c(rgb(0,0,0,0), rgb(0.6,0.6,1.0,1), brewer.pal(9, "Reds")[-c(1:4)])
 
-thresholds <- c(0, 2, 3.65, 4.25, 4.95, 5.95, 100)
+thresholds <- c(0, 2.42, 2.72, 3.65, 4.25, 4.95, 5.95, 100)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-pdf(paste0("Figure_2_Haplo_x_Sex.pdf"), width = 24, height = 12)
+## TODO: Add the effect of Male / Females to the plot or add them as effect-size
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/")
+pdf(paste0("Figure_NEW_Haplo_x_Sex.pdf"), width = 24, height = 12)
 
 plot(c(1, l.x), c(1, 1+nrow(lods.cI)), t = 'n', xlab = "", xaxt='n', ylab="", yaxt='n', xaxs="i", yaxs="i", main = "Haplotype x Sex interaction")
 abline(h = 1:nrow(lods.cI))

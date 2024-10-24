@@ -13,7 +13,7 @@ gtsp <- pull.genoprob(mcross)
 sex <- pull.pheno(mcross)[, "sex"]
 
 # Include animals older than 365 days
-above <- which(pull.pheno(mcross)[, "longevity"] >= 365)
+above <- which(pull.pheno(mcross)[, "longevity"] >= 20) # TODO: CHANGE to 20 days
 
 gtsp <- gtsp[above,]
 sex <- sex[above]
@@ -23,7 +23,7 @@ sex <- pull.pheno(mcross)[above, "sex"]
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
 # Read the effects at top marker
-regions <- read.table("regions_4way_merged_May24_effects.txt", sep="\t", header=TRUE, row.names=1)
+regions <- read.table("regions_4way_merged_Oct24_effects.txt", sep="\t", header=TRUE, row.names=1)
 regions[,"Top"] <- gsub(",", "", regions[,"Top"])
 
 as.DNI <- function(regions, col = "BALB.C3H"){
@@ -118,11 +118,11 @@ group.ac <-group.ac[which(group.n > 25)]
 
 mRa <- mRp[which(mRp %in% group.ac)]
 
-xx <- colorRampPalette(c("#fc8d59", "#ffffbf", "#91bfdb"))( 1+(max(group) - min(group)) )
+xx <- colorRampPalette(c("#fc8d59", "white", "#91bfdb"))( 1+(max(group) - min(group)) )
 group.cols <- xx[1+ (group - min(group))]
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-#pdf(paste0("Figure_5_ML_longevity_COUNT.pdf"), width = 12, height = 6)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
+pdf(paste0("Figure_6_ML_longevity_COUNT.pdf"), width = 12, height = 6)
   layout(matrix(1:2, ncol = 2), width = c(2,0.3), height = c(1,1))
   par(mai=c(1, 1, 1, 0))
   aa <- hist(mRa, breaks = seq(min(mRa)-0.5, (max(mRa)+0.5), 1), col = group.cols, las = 2, xaxt = 'n',
@@ -135,20 +135,50 @@ setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_I
   plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = '')
   text(x=1.5, y = seq(0, 1, l=5), labels = round(seq(min(group),max(group),l=5),0))
   rasterImage(legend_image, 0, 0, 1,1)
-#dev.off()
+dev.off()
 
 #plot(pull.pheno(mcross)[iix, "longevity"] ~ mRp2[iix])
 
 
-#pdf(paste0("Figure_5_ML_longevity_EFFECT.pdf"), width = 12, height = 6)
-  plot(mRp2, observed, pch=19, cex=0.4, col = c("hotpink", "blue")[sex + 1], main = "Lifespan versus Haplotype Effect", xlab = "Estimated haplotype effect", ylab = "Lifespan", yaxt = "n")
+pdf(paste0("Figure_6_ML_longevity_EFFECT.pdf"), width = 12, height = 12)
+  plot(c(-200, 200), y = c(0, 1500), pch=19, t = "n", main = "Lifespan versus Haplotype Effect", xlab = "Estimated haplotype effect", ylab = "Lifespan", yaxt = "n", xaxt="n")
+  points(mRp2, observed, col = c("hotpink", "blue")[sex + 1], pch = c(16, 15)[sex + 1], cex=0.5)
   abline(lm(observed[sex==0] ~ mRp2[sex==0]), col = "hotpink", lwd=2, untf=T)
   abline(lm(observed[sex==1] ~ mRp2[sex==1]), col = "blue", lwd=2, untf=T)
   cor(observed[sex==0], mRp2[sex==0])
   cor(observed[sex==1], mRp2[sex==1])
-  axis(2, seq(365, 1500, 4*15), seq(365, 1500, 4*15), las=2)
-  legend("topleft", c("Female", "Male"), col = c("hotpink", "blue"), pch=19)
-#dev.off()
+  axis(1, seq(-200, 200, 50), seq(-200, 200, 50), las=2)
+  axis(2, seq(0, 1500, 100), seq(0, 1500, 100), las=2)
+  legend("topleft", c("Female Beta=0.52 r=0.141", "Male Beta=0.77 r=0.200"), col = c("hotpink", "blue"), pch = c(15, 16))
+dev.off()
+
+# op <- par(mfrow=c(2,1))
+#boxplot(mRp2 ~ sex + cut(observed, breaks = seq(0, 1500,100)), col = c("hotpink", "blue"))
+library(vioplot)
+pdf(paste0("Figure_7_ML_longevity_BOXPLOT_H.pdf"), width = 12, height = 20)
+op <- par(mar = c(4,10,2,2))
+plot(y = c(1,10), x = c(-200, 150), t="n", xaxt ="n", yaxt = "n",ylab = "", xlab = "Estimated haplotype effect")
+for(x in 1:10){
+  iix <- which(as.numeric(cut(observed[sex == 0], breaks = seq(0, 1500,150))) == x)
+  vioplot(mRp2[sex == 0][iix], at = x -0.15, col = c("hotpink"), add = TRUE, wex=.4, yaxt= "n", horizontal = TRUE)
+  if(x == 1 || x == 2 || x == 9 || x == 10) points(y=rep(x-0.2, length(mRp2[sex == 0][iix])), x = mRp2[sex == 0][iix], pch = 1, col = "black")
+
+  iix <- which(as.numeric(cut(observed[sex == 1], breaks = seq(0, 1500,150))) == x)
+  vioplot(mRp2[sex == 1][iix], at = x +0.15, col = c("blue"), add = TRUE, wex=.4, yaxt= "n", horizontal = TRUE)
+  if(x == 1 || x == 2 || x == 9|| x == 10) points(y=rep(x+0.2, length(mRp2[sex == 1][iix])), x = mRp2[sex == 1][iix], pch = 0, col = "black")
+}
+
+xas <- c("0,150", "150,300", "300,450","450,600", "600,750", "750,900", "900,1050", "1050,1200", "1200,1350",
+  "1350,1500")
+axis(1, seq(-200,200,25), seq(-200,200,25),las=2)
+axis(2, at = 1:10, xas, las = 2)
+dev.off()
+
+
+  boxplot(mRp2[sex == 1] ~ cut(observed[sex == 1], at = (1:15)+0.4, breaks = seq(0, 1500,100)), col = c("blue"), add = TRUE, boxwex=.2)
+
+
+
 
 # Males
 Yf <- mRp2[sex==1] + mean(observed[sex==1])
