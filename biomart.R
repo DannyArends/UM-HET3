@@ -4,59 +4,52 @@ library(biomaRt)
 
 bio.mart <- useMart("ENSEMBL_MART_ENSEMBL", host="https://nov2020.archive.ensembl.org", dataset="mmusculus_gene_ensembl")
 
-regions <- c( "1:0:24042124",                   # Vita1a
-              "1:7969906:34173196",             # Vita1b
-              "1:111859457:133622154",          # Vita1c
+regions <- c( "1:0:7969906",                    # Vita1a n
+              "1:7969906:34173196",             # Vita1b n
+              "1:87986124:143770506",           # Vita1c n
 
-              "2:111134233:120612428",          # Vita2a
-              "2:132808839:140168146",          # Vita2b
-              "2:154229551:158377039",          # Vita2c
+              "2:71846197:99777113",            # Vita2a n
+              "2:92975818:125083168",           # Vita2b n
+              "2:122685194:180055272",          # Vita2c n
 
-              "3:42232742:121463445",           # Vita3a
-              "3:68084635:121463445",           # Vita3b
+              "3:42232742:121463445",           # Vita3a n
+              "3:68084635:121463445",           # Vita3b n
 
-              "4:46120492:55012301",            # Vita4a
-              "4:66839598:86583085",            # Vita4b
-              "4:144622766:156860686",          # Vita4c
+              "4:30761996:63272545",            # Vita4a n
 
-              "5:36613621:90217582",            # Vita5a
+              "5:36613621:90217582",            # Vita5a n
 
-              "6:48656204:62673982",            # Vita6a
-              "6:97252294:119943820",           # Vita6b
+              "6:97252294:122290952",           # Vita6a n
+              "6:132762500:149736546",          # Vita6b n
 
-              "8:25964832:55830812",            # Vita8a
+              "9:13442519:39046745",            # Vita9a n
+              "9:95323685:116536254",           # Vita9b n
+              "9:108054895:124359700",          # Vita9c n
 
-              "9:13442519:39046745",            # Vita9a
-              "9:54904313:58081975",            # Vita9b
-              "9:95323685:124029281",           # Vita9c
-              "9:124029281:124359700",          # Vita9d
+              "10:56745317:100488594",          #Vita10a n
 
-              "10:56745317:100488594",          #Vita10a
+              "11:0:30104580",                  #Vita11a n
+              "11:59009193:109367495",          #Vita11b n
 
-              "11:0:30104580",                  #Vita11a
-              "11:59009193:109367495",          #Vita11b
+              "12:99576264:120129022",          #Vita12a n
 
-              "12:99576264:112855820",          #Vita12a
+              "13:76135291:104111134",          #Vita13a n
 
-              "13:4574227:22278588",            #Vita13a
-              "13:76135291:106345461",          #Vita13b
+              "14:78415875:118874224",          #Vita14a n
 
-              "14:78415875:118874224",          #Vita14a
+              "15:62405371:88420584",           #Vita15a n
 
-              "15:55481391:84914043",           #Vita15a
+              "17:8288690:48308023",            #Vita17a n
 
-              "17:0:26542857",                  #Vita17a
-              "17:8288690:25122899",            #Vita17b
-              "17:53679006:78682893",           #Vita17c
+              "18:38240954:70827226",           #Vita18a n
 
-              "18:46508371:90720763",           #Vita18a
+              "X:0:69830745",                   #VitaXa n
+              "X:150646933:169476592")          #VitaXb n
 
-              "X:0:69830745",                   #VitaXa
-              "X:150646933:169476592")          #VitaXb
+names(regions) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
+                    "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
+                    "Vita17a","Vita18a","VitaXa","VitaXb")
 
-names(regions) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita4b","Vita4c","Vita5a","Vita6a","Vita6b",
-                    "Vita8a","Vita9a","Vita9b","Vita9c","Vita9d","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita13b","Vita14a","Vita15a",
-                    "Vita17a","Vita17b","Vita17c","Vita18a","VitaXa","VitaXb")
 
 res <- vector("list", length(regions))
 cnt <- 1
@@ -109,21 +102,21 @@ execute <- function(x, intern = FALSE, execute = TRUE){
 callSNPs <- function(bamfiles, region = "chr1:124548738-184926264", output = "") {
   bamstr = paste0(bamfiles, collapse = " ") # Collapse all the bam files in a single string
   bcftools = "/home/danny/Github/bcftools/bcftools" # Location of BCFtools executable
-  reference = "/naszb2/Mouse/Reference_Genomes/GRCm38_68/GRCm38_68.fa" #Reference genome
+  reference = "~/NAS/Mouse/Reference_Genomes/GRCm38_68/GRCm38_68.fa" #Reference genome
 
   cmd1 <- paste0(bcftools, " mpileup -q 30 -Ou -r ",region," -a FORMAT/DP -f ", reference, " ", bamstr)
   cmd2 <- paste0(bcftools, " call -mv -Ov ")
-  cmd3 <- paste0(bcftools, " view -i '%QUAL>=30 && INFO/DP>10' - -o ~/March14/", output, ".snps.vcf")
+  cmd3 <- paste0(bcftools, " view -i 'QUAL>=30 && INFO/DP>10' - -o ~/May2024/", output, ".snps.vcf")
   execute(paste0(cmd1, " | ", cmd2, " | ", cmd3))
   invisible("")
 }
 
-bamfiles <- c("/naszb2/Mouse/DNA/Sequencing/UM-HET3/BALBBYJ_M_S2_L002_default_GRCm38_68.sorted.bam",
-              "/naszb2/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/C57BL_6NJ.bam",
-              "/naszb2/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/C3H_HeJ.bam",
-              "/naszb2/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/DBA_2J.bam")
+bamfiles <- c("~/NAS/Mouse/DNA/Sequencing/UM-HET3/BALBBYJ_M_S2_L002_default_GRCm38_68.sorted.bam",
+              "~/NAS/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/C57BL_6NJ.bam",
+              "~/NAS/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/C3H_HeJ.bam",
+              "~/NAS/old_naszb/Mouse/DNA/Sequencing/MouseGenomeProject/REL-1604-BAM/DBA_2J.bam")
 
-for(r in names(regions)[c(1,7)]){
+for(r in names(regions)){
   rr <- unlist(strsplit(regions[r],":"))
   if(rr[2] == 0) rr[2] <- 1
   reg <- paste0(rr[1],":", rr[2], "-", rr[3])
@@ -134,53 +127,51 @@ for(r in names(regions)[c(1,7)]){
 
 
 
-setwd("~/March14")
+setwd("~/May2024")
 
 files <- list.files(pattern = "\\.vcf$")
 
 for(file in files){
-## Do VEP predictions for all Files from david
-cat(paste0("/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/", file, " --everything -o /home/danny/March14/", gsub("vcf","vep", file), "\n"))
+## Do VEP predictions for all vcf files generated
+cat(paste0("/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/", file, " --everything -o /home/danny/May2024/", gsub("vcf","vep", file), "\n"))
 }
 
 # Commands generated
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita10a.snps.vcf --everything -o /home/danny/March14/Vita10a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita11a.snps.vcf --everything -o /home/danny/March14/Vita11a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita11b.snps.vcf --everything -o /home/danny/March14/Vita11b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita12a.snps.vcf --everything -o /home/danny/March14/Vita12a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita13a.snps.vcf --everything -o /home/danny/March14/Vita13a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita13b.snps.vcf --everything -o /home/danny/March14/Vita13b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita14a.snps.vcf --everything -o /home/danny/March14/Vita14a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita15a.snps.vcf --everything -o /home/danny/March14/Vita15a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita17a.snps.vcf --everything -o /home/danny/March14/Vita17a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita17b.snps.vcf --everything -o /home/danny/March14/Vita17b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita17c.snps.vcf --everything -o /home/danny/March14/Vita17c.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita18a.snps.vcf --everything -o /home/danny/March14/Vita18a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita1b.snps.vcf --everything -o /home/danny/March14/Vita1b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita1c.snps.vcf --everything -o /home/danny/March14/Vita1c.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita2a.snps.vcf --everything -o /home/danny/March14/Vita2a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita2b.snps.vcf --everything -o /home/danny/March14/Vita2b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita2c.snps.vcf --everything -o /home/danny/March14/Vita2c.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita3b.snps.vcf --everything -o /home/danny/March14/Vita3b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita4a.snps.vcf --everything -o /home/danny/March14/Vita4a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita4b.snps.vcf --everything -o /home/danny/March14/Vita4b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita4c.snps.vcf --everything -o /home/danny/March14/Vita4c.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita5a.snps.vcf --everything -o /home/danny/March14/Vita5a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita6a.snps.vcf --everything -o /home/danny/March14/Vita6a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita6b.snps.vcf --everything -o /home/danny/March14/Vita6b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita8a.snps.vcf --everything -o /home/danny/March14/Vita8a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9a.snps.vcf --everything -o /home/danny/March14/Vita9a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9b.snps.vcf --everything -o /home/danny/March14/Vita9b.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9c.snps.vcf --everything -o /home/danny/March14/Vita9c.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita9d.snps.vcf --everything -o /home/danny/March14/Vita9d.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/VitaXa.snps.vcf --everything -o /home/danny/March14/VitaXa.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/VitaXb.snps.vcf --everything -o /home/danny/March14/VitaXb.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita10a.snps.vcf --everything -o /home/danny/May2024/Vita10a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita11a.snps.vcf --everything -o /home/danny/May2024/Vita11a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita11b.snps.vcf --everything -o /home/danny/May2024/Vita11b.snps.vep
 
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita1a.snps.vcf --everything -o /home/danny/March14/Vita1a.snps.vep &
-/home/danny/Github/ensembl-vep/vep --species mus_musculus --offline -i /home/danny/March14/Vita3a.snps.vcf --everything -o /home/danny/March14/Vita3a.snps.vep &
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita12a.snps.vcf --everything -o /home/danny/May2024/Vita12a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita13a.snps.vcf --everything -o /home/danny/May2024/Vita13a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita14a.snps.vcf --everything -o /home/danny/May2024/Vita14a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita15a.snps.vcf --everything -o /home/danny/May2024/Vita15a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita17a.snps.vcf --everything -o /home/danny/May2024/Vita17a.snps.vep
+
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita18a.snps.vcf --everything -o /home/danny/May2024/Vita18a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita1a.snps.vcf --everything -o /home/danny/May2024/Vita1a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita1b.snps.vcf --everything -o /home/danny/May2024/Vita1b.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita1c.snps.vcf --everything -o /home/danny/May2024/Vita1c.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita2a.snps.vcf --everything -o /home/danny/May2024/Vita2a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita2b.snps.vcf --everything -o /home/danny/May2024/Vita2b.snps.vep
+
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita2c.snps.vcf --everything -o /home/danny/May2024/Vita2c.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita3a.snps.vcf --everything -o /home/danny/May2024/Vita3a.snps.vep
+
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita3b.snps.vcf --everything -o /home/danny/May2024/Vita3b.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita4a.snps.vcf --everything -o /home/danny/May2024/Vita4a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita5a.snps.vcf --everything -o /home/danny/May2024/Vita5a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita6a.snps.vcf --everything -o /home/danny/May2024/Vita6a.snps.vep
+
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita6b.snps.vcf --everything -o /home/danny/May2024/Vita6b.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita9a.snps.vcf --everything -o /home/danny/May2024/Vita9a.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita9b.snps.vcf --everything -o /home/danny/May2024/Vita9b.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/Vita9c.snps.vcf --everything -o /home/danny/May2024/Vita9c.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/VitaXa.snps.vcf --everything -o /home/danny/May2024/VitaXa.snps.vep
+/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/May2024/VitaXb.snps.vcf --everything -o /home/danny/May2024/VitaXb.snps.vep
 
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/March14")
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/SNPVEPFeb23")
 files <- list.files(pattern = "\\.vep$")
 
 mvepdata <- c()
@@ -194,7 +185,7 @@ dim(mvepdata)
 mvepdata <- mvepdata[grep("missense_variant", mvepdata[,"V7"]),]
 dim(mvepdata)
 
-for(r in regions){
+for(r in regions[1:2]){
   chr <- strsplit(r, ":")[[1]][1]; sta <- strsplit(r, ":")[[1]][2]; sto <- strsplit(r, ":")[[1]][3]
   ms <- strsplit(gsub("chr", "", mvepdata[,2]), ":")
   chrs <- unlist(lapply(ms, "[", 1))

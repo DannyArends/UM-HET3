@@ -10,7 +10,7 @@ mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
 # Writing out 
-iix <- which(pull.pheno(mcross)[,"longevity"] > 365)
+iix <- which(pull.pheno(mcross)[,"longevity"] >= 365)
 write.table(pull.pheno(mcross)[iix,"GenoID"], "Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
 
 # Create the map object
@@ -23,14 +23,14 @@ rownames(map) <- colnames(pull.geno(mcross))
 write.table(map, "genetic_map.txt", sep = "\t", quote=FALSE)
 
 # Our Progressive Mapping Sequence
-msequence <- seq(365, 1100, 15)
+msequence <- seq(20, 1100, 15)
 markers <- unique(unlist(lapply(strsplit(colnames(gtsp), ":"), "[",1)))
 
 lods.cM <- c()
 minAge <- c()
 for(x in msequence){
   cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
-                      sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
+                      sex = as.factor(pull.pheno(mcross)[, "sex"]), 
                       site = as.factor(pull.pheno(mcross)[, "site"]),
                       cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                       treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
@@ -56,7 +56,28 @@ for(x in msequence){
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.cM,2), "progressiveMapping_all_oeps.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "progressiveMapping_all.txt", sep = "\t", quote=FALSE)
+
+subset <- map[which(as.numeric(map[,1]) %in% 1:4),]
+subset <- cbind(subset, cpos = NA)
+gap <- 10000000
+chr.start <- c(0)
+chr.mids <- c()
+cp <- 0
+for(x in 1:4){
+  cl <- max(as.numeric(subset[which(subset[,1] == x),2]))
+  chr.start <- c(chr.start, cl + cp + gap)
+  subset[which(subset[,1] == x), "cpos"] <- as.numeric(subset[which(subset[,1] == x), 2]) + cp
+  chr.mids <- c(chr.mids, chr.start[x] + cl/2)
+  cp = cl + cp + gap
+}
+
+plot(c(0, max(chr.start)), y = c(0, 7), t = 'n', ylab = "LOD", xlab = "Chr",xaxt="n", las=2)
+for(x in 1:4){
+  points(subset[which(subset[,1] == x),"cpos"], lods.cM[, rownames(subset)[which(subset[,1] == x)]], t = 'l')
+}
+
+axis(1, at = chr.mids, paste0("Chr", 1:4))
 
 png("ProgressiveMapping_UMHET3.png", width = 1400, height = 1050)
 
@@ -192,9 +213,9 @@ rownames(lods.mM) <- paste0("> ", msequence)
 rownames(lods.fM) <- paste0("> ", msequence)
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.mM,2), "progressiveMapping_males.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.fM,2), "progressiveMapping_females.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.cM,2), "progressiveMapping_all.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.mM,2), "progressiveMapping_males20D.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.fM,2), "progressiveMapping_females20D.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "progressiveMapping_all20D.txt", sep = "\t", quote=FALSE)
 
 threshold <- 3.65
 
@@ -295,6 +316,28 @@ getEffect(mcross, gtsp, marker = "17_34460077", timepoint = 695, sex = 1, model 
 
 
 
-
-
-
+### REDO !!!
+getEffect(mcross, gtsp, marker = "1_3010272", timepoint = 860)
+getEffect(mcross, gtsp, marker = "1_24042124", timepoint = 695)
+getEffect(mcross, gtsp, marker = "1_120474787", timepoint = 365, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "2_89844287", timepoint = 140, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "2_112712327", timepoint = 800)
+getEffect(mcross, gtsp, marker = "2_139956785", timepoint = 545, sex = 0, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "3_83838529", timepoint = 1070, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "3_92135706", timepoint = 560, sex = 0, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "4_52524395", timepoint = 650, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "5_67573068", timepoint = 1085, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "6_107382038", timepoint = 455, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "6_132762500", timepoint = 320, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "9_29939029", timepoint = 95, sex = 0, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "9_104091597", timepoint = 1025)
+getEffect(mcross, gtsp, marker = "9_124056586", timepoint = 785, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "10_72780332", timepoint = 980)
+getEffect(mcross, gtsp, marker = "11_5628810", timepoint = 635, sex = 1, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "11_82178599", timepoint = 1040, sex = 0, model = "longevity ~ site + cohort + treatment")
+getEffect(mcross, gtsp, marker = "12_112855820", timepoint = 635)
+getEffect(mcross, gtsp, marker = "13_89689878", timepoint = 395)
+getEffect(mcross, gtsp, marker = "14_101437457", timepoint = 860)
+getEffect(mcross, gtsp, marker = "15_74248242", timepoint = 905)
+getEffect(mcross, gtsp, marker = "17_32883804", timepoint = 665)
+getEffect(mcross, gtsp, marker = "18_60822951", timepoint = 365)

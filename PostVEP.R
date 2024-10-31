@@ -1,11 +1,13 @@
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
-regions <- read.table("regions_4way_merged_March23.txt", sep="\t", header=FALSE, row.names=1)
+regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
 colnames(regions) <- c("Chr", "Proximal", "Distal")
 
 library(biomaRt)
 
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/May2024")
 
 mlist <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
@@ -19,8 +21,11 @@ for(x in 1:nrow(regions)){
   isRIKEN <- grep("^RIKEN", mlist[[x]][,"mgi_description"])
   if(length(isRIKEN) > 0) mlist[[x]] <- mlist[[x]][-isRIKEN,]
 
-  isNA <- which(is.na(mm[, "description"]))
-  if(length(isNA) > 0){ mm <- mm[-isNA,] }
+  isNA <- which(is.na(mlist[[x]][, "description"]))
+  if(length(isNA) > 0){ mlist[[x]] <- mlist[[x]][-isNA,] }
+
+  write.table(mlist[[x]][which(mlist[[x]][, "gene_biotype"] == "protein_coding"),], 
+              paste0("genes/protein_coding_genes_", rownames(regions)[x], ".txt"),sep="\t",quote=FALSE)
 }
 names(mlist) <- rownames(regions)
 
@@ -41,21 +46,35 @@ nSum <- apply(mm,1,sum)
 
 mmF <- cbind(HIGA = 0, HI = 0, MOGA = 0, MO = 0, SUM = nSum, mm)
 
-
 for(x in 1:nrow(regions)){
-  mVEP <- read.csv(paste0("March14/",rownames(regions)[x], ".snps.vep"),sep="\t", skip=80, header=FALSE)
-  
-  mGenAge <- read.csv(paste0("genes/all/",rownames(regions)[x], ".txt"), sep="\t", header=TRUE, row.names = 1)
-  
+  mVEP <- read.csv(paste0("",rownames(regions)[x], ".snps.vep"),sep="\t", skip=86, header=FALSE)
+  mGenAge <- read.csv(paste0("genes/all/",rownames(regions)[x], "_genAge.txt"), sep="\t", header=TRUE, row.names = 1)
   colnames(mVEP) <- c("Uploaded_variation","Location","Allele","Gene","Feature","Feature_type","Consequence",
                       "cDNA_position","CDS_position","Protein_position","Amino_acids","Codons","Existing_variation","Extra")
-  isInteresting <- c(grep("HIGH", mVEP[,"Extra"]), grep("MODERATE", mVEP[,"Extra"]))
-  genes <- unique(mVEP[isInteresting, "Gene"])
-  mSub <- mVEP[isInteresting,]
 
-  mm <- matrix(NA, length(genes), 13, dimnames = list(genes, c("external_gene_name", "Impact", "inGenAge", "chromosome_name", "start_position", "end_position", 
-                                                               "strand", "gene_biotype", "description", "genAge", "nLocations", "nFeatures", "variations")))
+  cat("loaded\n")
+
+  isInteresting <- c(grep("HIGH", mVEP[,"Extra"]), grep("MODERATE", mVEP[,"Extra"]))
+  mSub <- mVEP[isInteresting,]
+  genes <- unique(mlist[[x]][which(mlist[[x]][, "gene_biotype"] == "protein_coding"),1])
+
+  conversion <- getBM(attributes = c("entrezgene_id", "ensembl_gene_id", "external_gene_name"), 
+                      filters = "ensembl_gene_id", values = unique(genes), mart = mart)
+  mSub <- cbind(mSub, "ensembl_gene_id" = NA)
+  for(y in 1:nrow(mSub)){
+    splitt <- strsplit(mSub[y, "Extra"], ";")
+    n <- grep("SYMBOL=", splitt[[1]])
+    g <- gsub("SYMBOL=", "", splitt[[1]][n])
+    iix <- which(conversion[,3] == g)
+    if(length(iix) == 1){
+      mSub[y, "ensembl_gene_id"] <- conversion[which(conversion[,3] == g), 2]
+    }
+  }
+  cat("conversion added\n")
+
+  mm <- matrix(NA, length(genes), 13, dimnames = list(genes, c("external_gene_name", "Impact", "inGenAge", "chromosome_name", "start_position", "end_position", "strand", "gene_biotype", "description", "genAge", "nLocations", "nFeatures", "variations")))
   for(gene in genes){
+    #cat("Doing gene",gene,"\n")
     inmList <- which(mlist[[x]][,1] == gene)
     if(length(inmList) == 1){
       mm[gene, "external_gene_name"] <- mlist[[x]][inmList,"external_gene_name"]
@@ -66,25 +85,28 @@ for(x in 1:nrow(regions)){
       mm[gene, "gene_biotype"] <- mlist[[x]][inmList,"gene_biotype"]
       mm[gene, "description"] <- mlist[[x]][inmList,"description"]
     }
-    mm[gene, "nLocations"] <- length(unique(mSub[which(mSub[, "Gene"] == gene),"Location"]))
-    mm[gene, "nFeatures"] <- length(unique(mSub[which(mSub[, "Gene"] == gene),"Feature"]))
-    mm[gene, "variations"] <- paste0(mSub[which(mSub[, "Gene"] == gene),"Consequence"], collapse=";")
-    
-    isHIGH <- any(grepl("HIGH", mSub[which(mSub[, "Gene"] == gene),"Extra"]))
-    if(isHIGH){
-      mm[gene, "Impact"] <- "HIGH"
-    }else{
-      mm[gene, "Impact"] <- "MODERATE"
-    }
-    
+    #cat("Step1\n")
+    mm[gene, "nLocations"] <- length(unique(mSub[which(mSub[, "ensembl_gene_id"] == gene),"Location"]))
+    mm[gene, "nFeatures"] <- length(unique(mSub[which(mSub[, "ensembl_gene_id"] == gene),"Feature"]))
+    mm[gene, "variations"] <- paste0(mSub[which(mSub[, "ensembl_gene_id"] == gene),"Consequence"], collapse=";")
+    #cat("Step2\n")
+    isHIGH <- any(grepl("HIGH", mSub[which(mSub[, "ensembl_gene_id"] == gene),"Extra"]))
+    isMODERATE <- any(grepl("MODERATE", mSub[which(mSub[, "ensembl_gene_id"] == gene),"Extra"]))
+
+    mm[gene, "Impact"] <- "NONE"
+    if(isMODERATE) mm[gene, "Impact"] <- "MODERATE"
+    if(isHIGH) mm[gene, "Impact"] <- "HIGH"
+
+    #cat("Step3\n")
     if(gene %in% rownames(mGenAge)){
       mm[gene, "inGenAge"] <- "YES"
       mm[gene, "genAge"] <- mGenAge[gene, "genAge"]
     }else{
       mm[gene, "inGenAge"] <- "NO"
     }
+    #cat("Step4\n")
   }
-  
+  cat("Summarizing\n")
   # Filter some (Riken, Gm, is.NA)
   hasRIKEN <- grep("RIKEN cDNA", mm[, "description"])
   if(length(hasRIKEN) > 0){ mm <- mm[-hasRIKEN,] }
@@ -97,9 +119,10 @@ for(x in 1:nrow(regions)){
   colnames(mm)[4] <- "chr"
   colnames(mm)[5] <- "start"
   colnames(mm)[6] <- "stop"
-  write.table(cbind(ensembl_gene_id = rownames(mm), mm), file = paste0("RegionsMarch14/",rownames(regions)[x], ".summary.txt"), 
+  cat("Writing\n")
+  write.table(cbind(ensembl_gene_id = rownames(mm), mm), file = paste0("summary/",rownames(regions)[x], ".summary.txt"), 
               sep = "\t", quote = FALSE,na="", row.names=FALSE)
-  mmF[rownames(regions)[x], "MO"] <- nrow(mm)
+  mmF[rownames(regions)[x], "MO"] <- length(which(mm[,"Impact"] != "NONE"))
   mmF[rownames(regions)[x], "HI"] <- length(which(mm[,"Impact"] == "HIGH"))
   mmF[rownames(regions)[x], "MOGA"] <- length(which(mm[,"inGenAge"] == "YES"))
   mmF[rownames(regions)[x], "HIGA"] <- length(which(mm[,"Impact"] == "HIGH" & mm[,"inGenAge"] == "YES"))

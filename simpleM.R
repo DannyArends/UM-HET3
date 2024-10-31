@@ -7,7 +7,7 @@ library(qtl)
 mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 
 days <- as.numeric(pull.pheno(mcross)[, "longevity"])
-idx <- which(days > 365)
+idx <- which(days >= 365)
 mgeno <- pull.geno(fill.geno(mcross))
 numgeno <- t(mgeno[idx,])
 
