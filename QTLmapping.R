@@ -1,4 +1,4 @@
-setwd("D:/Ddrive/Github/UM-HET3")
+setwd("C:/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("C:/Github/UM-HET3/files")
 
