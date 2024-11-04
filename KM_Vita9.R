@@ -73,10 +73,10 @@ sqrt(cumsum(res.C3$n.event / (res.C3$n.risk * (res.C3$n.risk - res.C3$n.event)))
 #plot(c(365, 1250), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve (Vita9C - ALL)")
 for(x in 365:1456) {
   n.C3 <- length(which(cdata[C3, "adjLongevity"] >= x))
-  n.D2 <- length(which(cdata[D2, "adjLongevity"]  >= x))
-
+ 
   points(x, (n.C3/length(C3))* 1, pch=19, cex=0.2, col = "purple")
- # points(x, (n.D2/length(D2))* 100, pch=19, cex=0.2, col = "green")
+  points(x, (n.D2/length(D2))* 100, pch=19, cex=0.2, col = "green")
 }
 axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
 legend("topright", c("C3", "D2"), col = c("red", "green"), pch=18)
+
