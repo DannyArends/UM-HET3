@@ -14,17 +14,18 @@ colz.c2 <- colorRampPalette(c("white", "plum2"))(15)
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
 
+# TODO: Make these images SEX-Specific
 
-pdf(paste0("Figure_4_GxG_Interaction_combined.pdf"), width = 24, height = 12)
+#pdf(paste0("Figure_4_GxG_Interaction_combined.pdf"), width = 24, height = 12)
 plot(c(1.5, 25.5), c(1.5, 25.5), t = "n", xaxt='n', yaxt='n', xlab="",ylab="", xaxt="n", yaxt="n",bty="n")
-axis(1, at = 1:26, rownames(lodM),las=2)
-axis(2, at = 1:26, rev(rownames(lodM)),las=2)
+axis(1, at = 1:26, rownames(lodM.m),las=2)
+axis(2, at = 1:26, rev(rownames(lodM.m)),las=2)
 for(x in 1:26){
   for(y in 1:26){
     xp <- x
     yp <- 27 - y
-    m1 <- gsub("Vita", "", rownames(lodM)[x])
-    m2 <- gsub("Vita", "", colnames(lodM)[y])
+    m1 <- gsub("Vita", "", rownames(lodM.m)[x])
+    m2 <- gsub("Vita", "", colnames(lodM.m)[y])
     m1 <- substr(m1, 1, nchar(m1)-1)
     m2 <- substr(m2, 1, nchar(m2)-1)
     if(x > y && !is.na(lodM.m[x,y])){
@@ -46,8 +47,8 @@ for(x in 1:26){
   for(y in 1:26){
     xp <- x
     yp <- 27 - y
-    m1 <- gsub("Vita", "", rownames(lodM)[x])
-    m2 <- gsub("Vita", "", colnames(lodM)[y])
+    m1 <- gsub("Vita", "", rownames(lodM.m)[x])
+    m2 <- gsub("Vita", "", colnames(lodM.m)[y])
     m1 <- substr(m1, 1, nchar(m1)-1)
     m2 <- substr(m2, 1, nchar(m2)-1)
     if(!is.na(lodM.m[x,y])){
@@ -109,9 +110,10 @@ pheAdj[names(adj)] <- round(adj)
 cdata <- cbind(pheAdj, cdata)
 cdata <- cdata[which(!is.na(cdata[, "gts1"]) & !is.na(cdata[, "gts2"])),]
 std <- function(x) sd(x)/sqrt(length(x))
-col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
+col.main <- c("#01A654", "#1750A3", "#714F99", "#EE3129")
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 col.alpha <- add.alpha(col.main, 0.1)
+col.alpha2 <- add.alpha(col.main, 0.3)
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
 #pdf(paste0("Figure_3_Vita4a_vs_Vita10a.pdf"), width = 8, height = 8)
@@ -141,37 +143,443 @@ axis(1, at = 1:4, c("CH", "CD", "BH", "BD"))
 
 ### OLD
 
-### TODO: Add LOD scores for this specific interaction
-msequence <- seq(365, 1100, 15)
+### TODO: Vita1b & Vita9a
+### TODO: Vita1c & Vita3b
 
-for(x in msequence){
-  pdf(paste0("INT_Vita4a_vs_Vita10a_Cut",x,".pdf"), width = 8, height = 8)
-  cdata <- cdata[which(cdata[, "pheAdj"] > x),]
-  plot(c(1,4), c(mean(cdata[, "pheAdj"])-50, mean(cdata[, "pheAdj"])+50), t = "n", main = paste0("Interaction Vita4a & Vita10a (>=",x," days)"), 
-       xlab = "Haplotype Vita4a", ylab = "Adjusted Longevity (days)", xaxt="n")
-  off <- -0.15
-  j <- 1
-  for(v1 in c("AC", "AD", "BC", "BD")){
-    i <- 1
-    vals <- c()
-    errs <- c()
-    for(v2 in c("AC", "AD", "BC", "BD")){
-      values <- cdata[which(cdata[, "gts1"] == v1 & cdata[, "gts2"] == v2), "pheAdj"]
-      #vioplot(values, at = i + off, add = TRUE, wex=0.1, col = col.main[j])
-      vals <- c(vals, mean(values))
-      errs <- c(errs, std(values))
-      i <- i + 1
-    }
-    points(vals, col=col.main[j], t = "b",pch=20)
-    polygon(c(1:4, 4:1), c(vals + errs, rev(vals - errs)), col = col.alpha[j], border = NA)
-    off <- off + 0.1
-    j <- j + 1
-  }
-  axis(1, at = 1:4, c("CH", "CD", "BH", "BD"))
-  legend("bottomleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=1, pch = 20, title = "Vita10a")
-  dev.off()
+all <- c("1_3010272", "1_24042124", "1_120474787", "2_89844287", "2_112712327", "2_148442635","3_83838529", "3_92135706", "4_52524395",
+         "5_67573068", "6_107382038", "6_132762500", "9_29939029", "9_104091597", "9_124056586", "10_72780332", "11_5628810", "11_82178599",
+         "12_112855820", "13_89689878", "14_101437457", "15_74248242", "17_32883804", "18_60822951")
+
+names(all) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
+                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
+                "Vita17a","Vita18a")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+lodM.m <- read.table(paste0("vita_interactions_2way_females.txt"), sep = "\t")
+lodM.f <- read.table(paste0("vita_interactions_2way_males.txt"), sep = "\t")
+
+males <- unlist(lodM.m[lower.tri(lodM.m)])
+females <-unlist(lodM.f[lower.tri(lodM.f)])
+
+same <- (abs(males - females) < 0.5)
+m <- (males - females > 0.5)
+f <- (females - males > 0.5)
+
+colz <- rep("#00A651", length(males))
+colz[which(m)] <- "#00AEEF"
+colz[which(f)] <- "#FF3333"
+colz[which((males^2 + females^2) < 5)] <- "black"
+
+ii <- which(colz == "#00A651" | colz == "#00AEEF" | colz == "#FF3333")
+idx <- sort(males[ii], dec = TRUE, index.return = TRUE)$ix
+mmm <- males[ii][idx]
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+pdf(paste0("SexByEpistasis_Cor.pdf"), width = 24, height = 24)
+
+plot(males, females, pch = 19, col = colz,
+     xlab = "LOD males", ylab = "LOD females", main = "GxG correlation between LODs")
+
+abline(h = 3.8, lty=2)
+abline(v = 3.8, lty=2)
+for(x in mmm){
+  p1 <- names(which(apply(lodM.m == x,1,any, na.rm=TRUE)))
+  p2 <- names(which(apply(lodM.m == x,2,any, na.rm=TRUE)))
+  text(lodM.m[p1,p2], lodM.f[p1,p2], gsub("Vita", "", paste0(p1, "-",p2)))
+  #cat(p1, " ", p2, "=", x,"\n")
 }
-#dev.off()
+dev.off()
+
+### TODO: Make GxG plots for all T42 GxG interaction pairs
+
+cor.test(unlist(lodM.m[lower.tri(lodM.m)])[ii], unlist(lodM.f[lower.tri(lodM.f)])[ii], method = "spearman")
+
+for(timepoint in c(42, 365, 740, 905)){
+  for(mX1 in 1:(length(all)-1)){
+    for(mX2 in mX1:length(all)){
+      m1 <- names(all)[mX1]
+      m2 <- names(all)[mX2]
+      if(m1 == m2) next;
+
+      if(lodM.m[m2,m1] >= 3.8 || lodM.f[m2,m1] >= 3.8){
+
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+      pdf(paste0("GxG_",timepoint,"_",m1,"_",m2, "_new.pdf"), width = 18, height = 8)
+
+      marker1 <- all[m1]
+      marker2 <- all[m2]
+
+
+      mp1 <- gtsp[, grep(marker1, colnames(gtsp))]
+      gts1 <- unlist(lapply(lapply(lapply(apply(mp1,1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+        if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+      }))
+
+      mp2 <- gtsp[, grep(marker2, colnames(gtsp))]
+      gts2 <- unlist(lapply(lapply(lapply(apply(mp2,1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+        if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+      }))
+
+      cdata <- data.frame(longevity = pull.pheno(mcross)[, "longevity"], 
+                          sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
+                          site = as.factor(pull.pheno(mcross)[, "site"]),
+                          cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
+                          treatment = as.factor(pull.pheno(mcross)[, "treatment"]),
+                          gts1 = gts1, gts2 = gts2)
+
+      cdata <- cdata[which(cdata[, "longevity"] > timepoint),]
+      cdata <- cdata[which(!is.na(cdata[, "gts1"]) & !is.na(cdata[, "gts2"])),]
+
+      mSm <- rbind(c(0, 20, 1),
+        c(21, 50, 2),
+        c(51, 100, 3),
+        c(101, 150, 4),
+        c(151, 500, 5))
+
+      pSize <- function(x){ return(mSm[mSm[,1] < x & mSm[,2] > x,3]) }
+
+      op <- par(mfrow = c(1,3))
+      par(cex=4)
+      par(cex.axis=2)
+      par(cex.main=2)
+      par(cex.sub=2)
+      par(cex.lab=1.5)
+      ### Combined
+      op <- par(mfrow = c(1,3))
+      op <- par(mar = c(5.1, 4.1, 4.1, 0.1))
+      xdata <- cdata
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+      lodMS <- read.table(paste0("vita_interactions_2way_combined_tp",timepoint,".txt"), sep = "\t")
+
+      plot(c(1,4), c(-80, +80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Combined)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=3.75, y = 75, labels = bquote(Combined), cex=2)
+      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
+      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
+      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
+      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+
+      off <- -0.15
+      j <- 1
+      for(v1 in c("AC", "AD", "BC", "BD")){
+        i <- 1
+        vals <- c()
+        errs <- c()
+        sizes <- c()
+        v1M <- xdata[which(xdata[, "gts1"] == v1), "longevity"]
+        for(v2 in c("AC", "AD", "BC", "BD")){
+          values <- xdata[which(xdata[, "gts1"] == v1 & xdata[, "gts2"] == v2), "longevity"]
+          #vioplot(values, at = i + off, add = TRUE, wex=0.1, col = col.main[j])
+          vals <- c(vals, mean(values))
+          errs <- c(errs, std(values))
+          sizes <- c(sizes, pSize(length(values)))
+          cat(m1, " ", m2, "size:", length(values), "\n")
+          i <- i + 1
+        }
+        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        off <- off + 0.1
+        j <- j + 1
+      }
+      axis(1, at = 1, bquote(bold("CH")), col.axis= col.main[1])
+      axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
+      axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
+      axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+      axis(2, at = seq(-80,80,20), seq(-80,80,20), las=2)
+      legend("bottomleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=1, pch = 20, title = m2, cex=1.5,bg = "white")
+      legend("bottomright", c("0-20", "21-50", "51-100", "101-150", ">=151"), pch = 20, pt.cex = 1:5, cex=1.5,bg = "white")
+
+      ### Female
+      xdata <- cdata[which(cdata[, "sex"] == 0),]
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+      lodMS <- read.table(paste0("vita_interactions_2way_females_tp",timepoint,".txt"), sep = "\t")
+      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Females)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=3.8, y = 75, labels = bquote(Females), cex=2)
+      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
+      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
+      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
+      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+
+      off <- -0.15
+      j <- 1
+      for(v1 in c("AC", "AD", "BC", "BD")){
+        i <- 1
+        vals <- c()
+        errs <- c()
+        sizes <- c()
+        v1M <- xdata[which(xdata[, "gts1"] == v1), "longevity"]
+        for(v2 in c("AC", "AD", "BC", "BD")){
+          values <- xdata[which(xdata[, "gts1"] == v1 & xdata[, "gts2"] == v2), "longevity"]
+          #vioplot(values, at = i + off, add = TRUE, wex=0.1, col = col.main[j])
+          vals <- c(vals, mean(values))
+          errs <- c(errs, std(values))
+          sizes <- c(sizes, pSize(length(values)))
+          cat(m1, " ", m2, "size:", length(values), "\n")
+          i <- i + 1
+        }
+        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        off <- off + 0.1
+        j <- j + 1
+      }
+
+
+      axis(1, at = 1, bquote(bold("CH")), col.axis= col.main[1])
+      axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
+      axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
+      axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+
+      axis(2, at = seq(-80,80,20), rep("",9), las=2)
+      #legend("bottomleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=1, pch = 20, title = m2)
+
+      ## Males
+      xdata <- cdata[which(cdata[, "sex"] == 1),]
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+      lodMS <- read.table(paste0("vita_interactions_2way_males_tp",timepoint,".txt"), sep = "\t")
+      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Males)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=3.85, y = 75, labels = bquote(Males), cex=2)
+      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
+      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
+      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
+      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+
+      off <- -0.15
+      j <- 1
+      for(v1 in c("AC", "AD", "BC", "BD")){
+        i <- 1
+        vals <- c()
+        errs <- c()
+        sizes <- c()
+        v1M <- xdata[which(xdata[, "gts1"] == v1), "longevity"]
+        for(v2 in c("AC", "AD", "BC", "BD")){
+          values <- xdata[which(xdata[, "gts1"] == v1 & xdata[, "gts2"] == v2), "longevity"]
+          #vioplot(values, at = i + off, add = TRUE, wex=0.1, col = col.main[j])
+          vals <- c(vals, mean(values))
+          errs <- c(errs, std(values))
+          sizes <- c(sizes, pSize(length(values)))
+          i <- i + 1
+        }
+        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        off <- off + 0.1
+        j <- j + 1
+      }
+      axis(1, at = 1, bquote(bold("CH")), col.axis= col.main[1])
+      axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
+      axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
+      axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+
+      axis(2, at = seq(-80,80,20), rep("",9), las=2)
+
+      dev.off()
+      }
+    }
+  }
+}
+
+### DO the green dots
+combos <- rbind(
+            c("Vita2a", "Vita17a"),
+            c("Vita11a", "Vita14a"),
+            c("Vita4a", "Vita10a"),
+            c("Vita10a", "Vita11a"),
+            c("Vita3a", "Vita6b"),
+            c("Vita11b", "Vita13a"),
+            c("Vita11a", "Vita13a"),
+            c("Vita11a", "Vita15a"),
+            c("Vita2c", "Vita18a"),
+            c("Vita3b", "Vita4a"),
+            c("Vita1b", "Vita10a"),
+            c("Vita1c", "Vita13a"),
+            c("Vita6a", "Vita12a"))
+
+
+for(timepoint in c(42, 365, 740, 905)){
+  for(pp in 1:nrow(combos)){
+      m1 = combos[pp,1]
+      m2 = combos[pp,2]
+
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny/GreenDots")
+      pdf(paste0("Green_Dot_GxG_",timepoint,"_",m1,"_",m2, ".pdf"), width = 18, height = 8)
+
+      marker1 <- all[m1]
+      marker2 <- all[m2]
+
+
+      mp1 <- gtsp[, grep(marker1, colnames(gtsp))]
+      gts1 <- unlist(lapply(lapply(lapply(apply(mp1,1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+        if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+      }))
+
+      mp2 <- gtsp[, grep(marker2, colnames(gtsp))]
+      gts2 <- unlist(lapply(lapply(lapply(apply(mp2,1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+        if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+      }))
+
+      cdata <- data.frame(longevity = pull.pheno(mcross)[, "longevity"], 
+                          sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
+                          site = as.factor(pull.pheno(mcross)[, "site"]),
+                          cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
+                          treatment = as.factor(pull.pheno(mcross)[, "treatment"]),
+                          gts1 = gts1, gts2 = gts2)
+
+      cdata <- cdata[which(cdata[, "longevity"] > timepoint),]
+      cdata <- cdata[which(!is.na(cdata[, "gts1"]) & !is.na(cdata[, "gts2"])),]
+
+      mSm <- rbind(c(0, 20, 1),
+        c(21, 50, 2),
+        c(51, 100, 3),
+        c(101, 150, 4),
+        c(151, 500, 5))
+
+      pSize <- function(x){ return(mSm[mSm[,1] < x & mSm[,2] > x,3]) }
+
+      op <- par(mfrow = c(1,3))
+      par(cex=4)
+      par(cex.axis=2)
+      par(cex.main=2)
+      par(cex.sub=2)
+      par(cex.lab=1.5)
+      ### Combined
+      op <- par(mfrow = c(1,3))
+      op <- par(mar = c(5.1, 4.1, 4.1, 0.1))
+      xdata <- cdata
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+      lodMS <- read.table(paste0("vita_interactions_2way_combined_tp",timepoint,".txt"), sep = "\t")
+
+      plot(c(1,4), c(-80, +80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Combined)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=3.75, y = 75, labels = bquote(Combined), cex=2)
+      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
+      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
+      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
+      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+
+      off <- -0.15
+      j <- 1
+      for(v1 in c("AC", "AD", "BC", "BD")){
+        i <- 1
+        vals <- c()
+        errs <- c()
+        sizes <- c()
+        v1M <- xdata[which(xdata[, "gts1"] == v1), "longevity"]
+        for(v2 in c("AC", "AD", "BC", "BD")){
+          values <- xdata[which(xdata[, "gts1"] == v1 & xdata[, "gts2"] == v2), "longevity"]
+          #vioplot(values, at = i + off, add = TRUE, wex=0.1, col = col.main[j])
+          vals <- c(vals, mean(values))
+          errs <- c(errs, std(values))
+          sizes <- c(sizes, pSize(length(values)))
+          cat(m1, " ", m2, "size:", length(values), "\n")
+          i <- i + 1
+        }
+        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        off <- off + 0.1
+        j <- j + 1
+      }
+      axis(1, at = 1, bquote(bold("CH")), col.axis= col.main[1])
+      axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
+      axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
+      axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+      axis(2, at = seq(-80,80,20), seq(-80,80,20), las=2)
+      legend("bottomleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=1, pch = 20, title = m2, cex=1.5,bg = "white")
+      legend("bottomright", c("0-20", "21-50", "51-100", "101-150", ">=151"), pch = 20, pt.cex = 1:5, cex=1.5,bg = "white")
+
+      ### Female
+      xdata <- cdata[which(cdata[, "sex"] == 0),]
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+      lodMS <- read.table(paste0("vita_interactions_2way_females_tp",timepoint,".txt"), sep = "\t")
+      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Females)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=3.8, y = 75, labels = bquote(Females), cex=2)
+      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
+      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
+      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
+      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+
+      off <- -0.15
+      j <- 1
+      for(v1 in c("AC", "AD", "BC", "BD")){
+        i <- 1
+        vals <- c()
+        errs <- c()
+        sizes <- c()
+        v1M <- xdata[which(xdata[, "gts1"] == v1), "longevity"]
+        for(v2 in c("AC", "AD", "BC", "BD")){
+          values <- xdata[which(xdata[, "gts1"] == v1 & xdata[, "gts2"] == v2), "longevity"]
+          #vioplot(values, at = i + off, add = TRUE, wex=0.1, col = col.main[j])
+          vals <- c(vals, mean(values))
+          errs <- c(errs, std(values))
+          sizes <- c(sizes, pSize(length(values)))
+          cat(m1, " ", m2, "size:", length(values), "\n")
+          i <- i + 1
+        }
+        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        off <- off + 0.1
+        j <- j + 1
+      }
+
+
+      axis(1, at = 1, bquote(bold("CH")), col.axis= col.main[1])
+      axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
+      axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
+      axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+
+      axis(2, at = seq(-80,80,20), rep("",9), las=2)
+      #legend("bottomleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=1, pch = 20, title = m2)
+
+      ## Males
+      xdata <- cdata[which(cdata[, "sex"] == 1),]
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+      lodMS <- read.table(paste0("vita_interactions_2way_males_tp",timepoint,".txt"), sep = "\t")
+      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Males)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=3.85, y = 75, labels = bquote(Males), cex=2)
+      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
+      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
+      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
+      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+
+      off <- -0.15
+      j <- 1
+      for(v1 in c("AC", "AD", "BC", "BD")){
+        i <- 1
+        vals <- c()
+        errs <- c()
+        sizes <- c()
+        v1M <- xdata[which(xdata[, "gts1"] == v1), "longevity"]
+        for(v2 in c("AC", "AD", "BC", "BD")){
+          values <- xdata[which(xdata[, "gts1"] == v1 & xdata[, "gts2"] == v2), "longevity"]
+          #vioplot(values, at = i + off, add = TRUE, wex=0.1, col = col.main[j])
+          vals <- c(vals, mean(values))
+          errs <- c(errs, std(values))
+          sizes <- c(sizes, pSize(length(values)))
+          i <- i + 1
+        }
+        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        off <- off + 0.1
+        j <- j + 1
+      }
+      axis(1, at = 1, bquote(bold("CH")), col.axis= col.main[1])
+      axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
+      axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
+      axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+
+      axis(2, at = seq(-80,80,20), rep("",9), las=2)
+
+      dev.off()
+  }
+}
+
 
 
 
