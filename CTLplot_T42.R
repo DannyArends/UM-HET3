@@ -114,7 +114,7 @@ for(i in 1:length(all)){
 }
 
 doPoints <- function(gts, stepsize = 2, col = 1, sex = c(0,1)) {
-  for(ii in seq(20, 60, stepsize)){
+  for(ii in seq(12, 60, stepsize)){
     iR <- which(cdata[gts, "adjBw6"] > ii & cdata[gts, "adjBw6"] < ii + stepsize & cdata[gts,"sex"] %in% sex)
     mm <- mean(cdata[gts[iR], "adjLongevity"])
     ms <- sd(cdata[gts[iR], "adjLongevity"]) / sqrt(length(iR))
@@ -142,14 +142,14 @@ for(i in 1:length(all)){
   col.main <- adjustcolor( col.main, alpha.f = 0.6)
 
   setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-  pdf(paste0("Figure_3_CTL_",names(all)[i],"_bin3_v2.pdf"), width = 36, height = 12)
+  pdf(paste0("CTL_",names(all)[i],"_d42_bin2_v2.pdf"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   par(cex=1.5)
   par(cex.axis=1.2)
 
-    stepsize = 3
+    stepsize = 2
 
-    plot(c(20, 48), c(500, 1100), t = "n", xlab = "Adjusted bodyweight (6mo)", ylab = "Adjusted longevity", 
+    plot(c(12, 26), c(500, 1100), t = "n", xlab = "Adjusted bodyweight (42d)", ylab = "Adjusted longevity", 
          main = paste0("CTL [All] @ ", x), yaxt = "n")
 
     doPoints(CH, stepsize, 1)
@@ -160,7 +160,7 @@ for(i in 1:length(all)){
     axis(2, at = seq(500, 1100, 100), seq(500, 1100, 100), las=2)
     legend("topright", c("CH", "CD", "BH", "BD"), col = col.main, pch=19, bg = "white", ncol=4, bty = "n")
 
-    plot(c(20, 48), c(500, 1100), t = "n", xlab = "Adjusted bodyweight (6mo)", ylab = "Adjusted longevity", 
+    plot(c(12, 26), c(500, 1100), t = "n", xlab = "Adjusted bodyweight (42d)", ylab = "Adjusted longevity", 
          main = paste0("CTL [Males] @ ", x), yaxt = "n")
 
     doPoints(CH, stepsize, 1,1)
@@ -171,7 +171,7 @@ for(i in 1:length(all)){
     axis(2, at = seq(500, 1100, 100), seq(500, 1100, 100), las=2)
     legend("topright", c("CH", "CD", "BH", "BD"), col = col.main, pch=19, bg = "white", ncol=4, bty = "n")
 
-    plot(c(20, 48), c(500, 1100), t = "n", xlab = "Adjusted bodyweight (6mo)", ylab = "Adjusted longevity", 
+    plot(c(12, 26), c(500, 1100), t = "n", xlab = "Adjusted bodyweight (42d)", ylab = "Adjusted longevity", 
          main = paste0("CTL [Females] @ ", x), yaxt = "n")
 
     doPoints(CH, stepsize, 1, 0)
