@@ -190,6 +190,7 @@ colnames(mR) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a"
                 "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
                 "Vita17a","Vita18a","VitaXa","VitaXb")
 
+#TODO from 42 days
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_Tables_Files/07_Heritability_Figures")
 pdf("H2_Male.pdf", width = 28, height = 12)
   op <- par(mar = c(4,10,2,2))
@@ -202,7 +203,7 @@ dev.off()
 
 
 
-
+#TODO from 42 days
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_Tables_Files/07_Heritability_Figures")
 pdf(paste0("Extra_Heritability_Female_Env.pdf"), width = 14, height = 10)
   plot(c(365, 1100), y = c(0, 0.75), xlab = "Cutoff age", ylab = "Broad sense haplotype heritability", 
