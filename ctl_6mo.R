@@ -23,7 +23,7 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     adjBw6 = NA,
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
-idx <- which(cdata[, "longevity"] >= 365 & !is.na(cdata[, "bw6"]))
+idx <- which(cdata[, "longevity"] >= 185 & !is.na(cdata[, "bw6"]))
 cdata <- cdata[idx,]
 gtsp <- gtsp[idx,]
 
@@ -32,6 +32,156 @@ cdata[, "adjLongevity"] <- round(as.numeric(coef(lm.null.long)["(Intercept)"]) +
 
 lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
+
+###Soma1a
+mp <- gtsp[, grep("1_3010274", colnames(gtsp))]
+gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+  if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+}))
+CH <- which(gts == "AC" & cdata[, "sex"] %in% 0)
+BH <- which(gts == "BC" & cdata[, "sex"] %in% 0)
+CD <- which(gts == "AD" & cdata[, "sex"] %in% 0)
+BD <- which(gts == "BD" & cdata[, "sex"] %in% 0)
+if(length(CH) > 100) cCH <- lm(cdata[CH, "adjLongevity"] ~ cdata[CH, "adjBw6"]+1);
+if(length(BH) > 100) cBH <- lm(cdata[BH, "adjLongevity"] ~ cdata[BH, "adjBw6"]+1);
+if(length(CD) > 100) cCD <- lm(cdata[CD, "adjLongevity"] ~ cdata[CD, "adjBw6"]+1);
+if(length(BD) > 100) cBD <- lm(cdata[BD, "adjLongevity"] ~ cdata[BD, "adjBw6"]+1);
+
+
+cor(cdata[CH, "adjLongevity"], cdata[CH, "adjBw6"], method = "spearman")
+cor(cdata[BH, "adjLongevity"], cdata[BH, "adjBw6"], method = "spearman")
+cor(cdata[CD, "adjLongevity"], cdata[CD, "adjBw6"], method = "spearman")
+cor(cdata[BD, "adjLongevity"], cdata[BD, "adjBw6"], method = "spearman")
+
+###Soma3a
+mp <- gtsp[, grep("3_159581164", colnames(gtsp))]
+gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+  if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+}))
+
+lm(cdata[cdata[, "sex"] %in% 1, "adjLongevity"] ~ cdata[cdata[, "sex"] %in% 1, "adjBw6"]);
+
+CH <- which(gts == "AC" & cdata[, "sex"] %in% 0)
+BH <- which(gts == "BC" & cdata[, "sex"] %in% 0)
+CD <- which(gts == "AD" & cdata[, "sex"] %in% 0)
+BD <- which(gts == "BD" & cdata[, "sex"] %in% 0)
+if(length(CH) > 100) cCH <- lm(cdata[CH, "adjLongevity"] ~ cdata[CH, "adjBw6"]+1);
+if(length(BH) > 100) cBH <- lm(cdata[BH, "adjLongevity"] ~ cdata[BH, "adjBw6"]+1);
+if(length(CD) > 100) cCD <- lm(cdata[CD, "adjLongevity"] ~ cdata[CD, "adjBw6"]+1);
+if(length(BD) > 100) cBD <- lm(cdata[BD, "adjLongevity"] ~ cdata[BD, "adjBw6"]+1);
+
+
+###Soma13a
+mp <- gtsp[, grep("13_53167285", colnames(gtsp))]
+gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+  if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+}))
+CH <- which(gts == "AC" & cdata[, "sex"] %in% 1)
+BH <- which(gts == "BC" & cdata[, "sex"] %in% 1)
+CD <- which(gts == "AD" & cdata[, "sex"] %in% 1)
+BD <- which(gts == "BD" & cdata[, "sex"] %in% 1)
+if(length(CH) > 100) cCH <- lm(cdata[CH, "adjLongevity"] ~ cdata[CH, "adjBw6"]+1);
+if(length(BH) > 100) cBH <- lm(cdata[BH, "adjLongevity"] ~ cdata[BH, "adjBw6"]+1);
+if(length(CD) > 100) cCD <- lm(cdata[CD, "adjLongevity"] ~ cdata[CD, "adjBw6"]+1);
+if(length(BD) > 100) cBD <- lm(cdata[BD, "adjLongevity"] ~ cdata[BD, "adjBw6"]+1);
+
+
+
+
+
+
+### Plot males and females
+toP <- function(allCor, allN){
+  ## correlation differences to P-value / LOD scores
+  pC <- c()
+  for(x in 1:nrow(allCor)){
+    pvs <- c()
+
+    # Compute the allele deltas relative to eachother
+    cor <- na.omit(allCor[x,])
+    z <- .5*log((1.0 + cor)/(1.0 - cor))
+    n <- allN[x,]
+    df <- n-(length(cor)-1)
+    sumOfSq <- sum(df * z^2)
+    sqOfSum <- sum(df * z)
+    denom <- sum(df)
+    Cv <- sumOfSq - (sqOfSum^2/ denom)
+    pC <- c(pC, pchisq(Cv, 1, 0, FALSE))
+  }
+  names(pC) <- rownames(allCor)
+  return(list(pC))
+}
+
+corM <- c()
+allN <- c()
+confL <- c()
+confU <- c()
+for(x in seq(185, 1100, 15)){
+  male <- which(cdata[, "sex"] %in% 0 & cdata[, "adjLongevity"] > x)
+  fema <- which(cdata[, "sex"] %in% 1 & cdata[, "adjLongevity"] > x)
+  cMale <- NA; cFema <- NA;
+
+  if(length(male) > 100){
+    cMale <- cor(cdata[male, "adjLongevity"], cdata[male, "adjBw6"], use = "pair", method = "spearman");
+    confMale <- cor.test(cdata[male, "adjLongevity"], cdata[male, "adjBw6"], use = "pair", method = "pearson", conf.level = 0.50);
+  }
+  if(length(fema) > 100){
+    cFema <- cor(cdata[fema, "adjLongevity"], cdata[fema, "adjBw6"], use = "pair", method = "spearman");
+    confFema <- cor.test(cdata[fema, "adjLongevity"], cdata[fema, "adjBw6"], use = "pair", method = "pearson", conf.level = 0.50);
+  }
+  allN <- rbind(allN, c(length(male), length(fema)))
+  corM <- rbind(corM, c(cMale, cFema))
+
+  confL <- rbind(confL, c(round(as.numeric(unlist(confMale)["conf.int1"]),2),
+                          round(as.numeric(unlist(confFema)["conf.int1"]),2)))
+  confU <- rbind(confU, c(round(as.numeric(unlist(confMale)["conf.int2"]),2),
+                          round(as.numeric(unlist(confFema)["conf.int2"]),2)))
+  # Adjust Conf
+  for(x in 1:nrow(corM)){
+    for(y in 1:ncol(corM)){
+      mid <- corM[x, y]
+      adj <- (confU[x,y] - confL[x, y]) / 2
+
+      confU[x,y] <- mid + adj
+      if(is.na(confU[x,y])) confU[x,y] <- 0
+      confL[x,y] <- mid - adj
+      if(is.na(confL[x,y])) confL[x,y] <- 0
+    }
+  }
+}
+ttt <-toP(corM, allN)
+lods <- round(-log10(ttt[[1]]),2)
+
+col.main <- c("#FF3333", "#00AEEF")
+add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
+col.alpha2 <- add.alpha(col.main, 0.1)
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+pdf(paste0("CTL_MF_6months.pdf"), width = 14, height = 12)
+op <- par(cex = 2)
+
+  plot(c(42, 1100), c(-0.5, 0.2), t = "n", xlab = "Truncation age (days)", ylab = "Correlation BW185 to Tage", 
+       main = "Correlation Male/Female 6months BW",yaxt = "n", yaxs = "i")
+
+  points(seq(185, 1100, 15), corM[,1], t = "l", col = col.main[1], lwd = 2)
+  polygon(c(seq(185, 1100, 15), rev(seq(185, 1100, 15))), c(confL[,1], rev(confU[,1])),col = col.alpha2[1], border=NA)
+
+  points(seq(185, 1100, 15), corM[,2], t = "l", col = col.main[2], lwd = 2)
+  polygon(c(seq(185, 1100, 15), rev(seq(185, 1100, 15))), c(confL[,2], rev(confU[,2])),col = col.alpha2[2], border=NA)
+
+  axis(2, at = seq(-.5, .1, .1), las=2)
+  axis(2, at = seq(-.5, .1, .05), rep("", length(seq(-.5, .1, .05))), las=2)
+  axis(1, at = seq(100, 1100, 100), rep("",length(seq(100, 1100, 100))))
+
+  abline(h = -0.5 + (2.75/50), lty=1, col = "lightgray")
+  points(seq(185, 1100, 15), (lods / 50) + -0.5, t = "l", lwd=2)
+  axis(4, at = c(-0.5 + 0.04, -0.5 + 0.08, -0.5 + 0.12, -0.5 + 0.16), c(2,4,6,8), las = 2,  cex.axis =1.0)
+
+
+  legend("topleft", c("Female", "Male"), col = col.main, lwd=4, bg = "white", ncol=4, bty = "n")
+dev.off()
+
+### Continue
 
 bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw6"], use = "pair", method = "spearman")
 bCor.f <- cor(cdata[which(cdata[, "sex"] == 0), "adjLongevity"], cdata[which(cdata[, "sex"] == 0), "adjBw6"], use = "pair", method = "spearman")
@@ -148,27 +298,25 @@ for(chr in c(1:19, "X")){
   cp = cl + cp + gap
 }
 
-
-all <- c("1_3010274", "2_65326540", "3_159581164", "4_11234654", "5_34118900", "6_128506813",  "7_16072018", "8_95039510", "10_18144599", "13_53167285", "13_76135291", "15_3288506", "15_79892499", "15_99306167", "17_35023240")
-names(all) <- c("Bwle1a", "Bwle2a", "Bwle3a", "Bwle4a", "Bwle5a", "Bwle6a", "Bwle7a", "Bwle8a", "Bwle10a", "Bwle13a", "Bwle13b", "Bwle15a", "Bwle15b", "Bwle15c", "Bwle17a")
-
-write.table(cbind(res.c[[1]][all,],res.m[[1]][all,],res.f[[1]][all,]), file = "AllCors6Mo.txt", sep="\t", quote = FALSE)
-
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/__Tables")
+write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "CTL_BW6_T185_C.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "CTL_BW6_T185_M.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "CTL_BW6_T185_F.txt", sep="\t", quote = FALSE)
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
 pdf(paste0("CTL_mapping_6mo.pdf"), width = 36, height = 12)
 par(cex=2)
 par(cex.axis=1.5)
-plot(c(0, max(chr.start)), y = c(0, 8), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "CTL: Longevity (≥ 365 days) x Bodyweight 6 Months")
+plot(c(0, max(chr.start)), y = c(0, 12), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "CTL: Longevity (> 185 days) x Bodyweight 6 Months")
 for(x in c(1:19, "X")) {
-  points(subset[which(subset[,1] == x),"cpos"], -log10(p.c[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "black",lwd=2)
-  points(subset[which(subset[,1] == x),"cpos"], -log10(p.f[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "hotpink",lwd=2)
-  points(subset[which(subset[,1] == x),"cpos"], -log10(p.m[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "blue",lwd=2)
+  points(subset[which(subset[,1] == x),"cpos"], -log10(p.c[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "black",lwd=2, pch=20)
+  points(subset[which(subset[,1] == x),"cpos"], -log10(p.f[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#00AEEF",lwd=2, pch=20)
+  points(subset[which(subset[,1] == x),"cpos"], -log10(p.m[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#FF3333",lwd=2, pch=20)
 }
 abline(h = 2.75, lty=2, col = "darkolivegreen2", lwd=2)
 abline(h = 4, lty=2, col = "darkolivegreen4", lwd=2)
 axis(1, at = chr.mids, paste0("", c(1:19, "X")), cex.axis=1.2, las=1)
 legend("topleft", c("FDR 5%", "FDR 1%"), lwd=2, lty=c(2,2), col = c("darkolivegreen2", "darkolivegreen4"))
-legend("topright", c("Combined", "Females", "Males"), lwd=2, col = c("black", "hotpink", "blue"))
+legend("topright", c("Combined", "Females", "Males"), lwd=2, col = c("black", "#00AEEF", "#FF3333"))
 dev.off()
 

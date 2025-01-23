@@ -16,7 +16,7 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     adjBw6 = NA,
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
-idx <- which(cdata[, "longevity"] >= (365/2) & !is.na(cdata[, "bw6"]))
+idx <- which(cdata[, "longevity"] >= 0 & !is.na(cdata[, "bw6"]))
 cdata <- cdata[idx,]
 gtsp <- gtsp[idx,]
 
@@ -27,7 +27,7 @@ lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
 
 all <- c("1_3010274", "2_65326540", "3_159581164", "4_11234654", "5_34118900", "6_128506813",  "7_16072018", "8_95039510", "10_18144599", "13_53167285", "13_76135291", "15_3288506", "15_79892499", "15_99306167", "17_35023240")
-names(all) <- c("Bwle1a", "Bwle2a", "Bwle3a", "Bwle4a", "Bwle5a", "Bwle6a", "Bwle7a", "Bwle8a", "Bwle10a", "Bwle13a", "Bwle13b", "Bwle15a", "Bwle15b", "Bwle15c", "Bwle17a")
+names(all) <- c("Soma1a", "Soma2a", "Soma3a", "Soma4a", "Soma5a", "Soma6a", "Soma7a", "Soma8a", "Soma10a", "Soma13a", "Soma13b", "Soma15a", "Soma15b", "Soma15c", "Soma17a")
 
 genotypes <- c()
 for(marker in all){
@@ -80,10 +80,10 @@ for(m in names(all)){
     confL <- c()
     confU <- c()
     for(x in seq(185, 1100, 15)){
-      CH <- which(gts == "AC" & cdata[, "sex"] %in% sex & cdata[, "adjLongevity"] > x)
-      BH <- which(gts == "BC" & cdata[, "sex"] %in% sex & cdata[, "adjLongevity"] > x)
-      CD <- which(gts == "AD" & cdata[, "sex"] %in% sex & cdata[, "adjLongevity"] > x)
-      BD <- which(gts == "BD" & cdata[, "sex"] %in% sex & cdata[, "adjLongevity"] > x)
+      CH <- which(gts == "AC" & cdata[, "sex"] %in% sex & cdata[, "longevity"] >= x)
+      BH <- which(gts == "BC" & cdata[, "sex"] %in% sex & cdata[, "longevity"] >= x)
+      CD <- which(gts == "AD" & cdata[, "sex"] %in% sex & cdata[, "longevity"] >= x)
+      BD <- which(gts == "BD" & cdata[, "sex"] %in% sex & cdata[, "longevity"] >= x)
       cCH <- NA; cBH <- NA; cCD <- NA; cBD <- NA
 
       if(length(CH) > 100){
@@ -131,9 +131,9 @@ for(m in names(all)){
     ttt <-toP(corM, allN)
     lods <- round(-log10(ttt[[1]]),2)
 
-    col.main <- c("#01A654", "#1750A3", "#714F99", "#EE3129")
+  #  col.main <- c("#01A654", "#1750A3", "#714F99", "#EE3129")
+    col.main <- c("#00A654", "#B16BE6", "#004BAD", "#F02D27") # green, blue, purple, red
     add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
-    col.alpha <- add.alpha(col.main, 0.1)
     col.alpha2 <- add.alpha(col.main, 0.1)
 
     ylim <- -0.5
@@ -144,9 +144,12 @@ for(m in names(all)){
     if(length(sex) == 1 && sex == 1) pop <- "Male"
     main <- paste0(pop, " at ", m)
 
-    plot(c(185, 1100), c(ylim, 0.1), t = "n", xlab = "Truncation age (days)", ylab = "Correlation BW185 to Tage", 
+    plot(c(185, 1000), c(ylim, 0.1), t = "n", xlab = "Truncation age (days)", ylab = "Correlation BW183 to Tage", 
          main = main,yaxt = "n", yaxs = "i")
-
+    abline(v = 365, col = "gray")
+    #abline(h = -0.3, col = "gray")
+    #abline(h = -0.25, col = "gray")
+    #abline(h = -0.15, col = "gray")
     text(x=1000, y = ylim+0.1, labels = paste0("max LOD = ", max(lods)), cex=.8)
 
     points(seq(185, 1100, 15), corM[,1], t = "l", col = col.main[1], lwd = 2)
@@ -165,7 +168,7 @@ for(m in names(all)){
     axis(1, at = seq(100, 1100, 100), rep("",length(seq(100, 1100, 100))))
     abline(h = ylim + (2.75/50), lty=1, col = "lightgray")
     points(seq(185, 1100, 15), (lods / 50) + ylim, t = "l", lwd=2)
-    legend("topleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=4, bg = "white", ncol=4, bty = "n")
+    legend("topleft", c("CH", "BH", "CD", "BD")[c(1,3,2,4)], col = col.main[c(1,3,2,4)], lwd=4, bg = "white", ncol=4, bty = "n")
     axis(4, at = c(ylim + 0.04, ylim + 0.08), c(2,4), las = 2,  cex.axis =1.0)
   }
   dev.off()

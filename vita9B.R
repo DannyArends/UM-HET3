@@ -10,6 +10,7 @@ mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
 
 gtsp <- pull.genoprob(mcross)
 cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
@@ -45,20 +46,20 @@ BD <- which(cdata[, "gts"] == "BD")
 
 C3 <- c(CH, BH)
 D2 <- c(CD, BD)
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-#pdf(paste0("Figure_4_Vita9C_Combined.pdf"), width = 8, height = 8)
-
-plot(c(365, 1250), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve (Vita9C - ALL)")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+pdf(paste0("Figure_4_Vita9B_Combined.pdf"), width = 16, height = 8)
+op <- par(mfrow = c(1,2))
+plot(c(365, 1250), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve (Vita9B - ALL)")
 for(x in 365:1456) {
   n.C3 <- length(which(cdata[C3, "adjLongevity"] >= x))
   n.D2 <- length(which(cdata[D2, "adjLongevity"]  >= x))
 
-  points(x, (n.C3/length(C3))* 100, pch=19, cex=0.2, col = "red")
-  points(x, (n.D2/length(D2))* 100, pch=19, cex=0.2, col = "green")
+  points(x, (n.C3/length(C3))* 100, pch=19, cex=0.2, col = "#00A654")
+  points(x, (n.D2/length(D2))* 100, pch=19, cex=0.2, col = "#004BAD")
 }
 axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
-legend("topright", c("C3", "D2"), col = c("red", "green"), pch=18)
-#dev.off()
+legend("topright", c("C3", "D2"), col = c("#00A654", "#004BAD"), pch=18)
+
 
 ### 4 Haplotypes
 
@@ -85,6 +86,7 @@ for(x in 365:1456) {
 }
 axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
 legend("topright", c("CH", "CD", "BH", "BD"), col = col.main, pch=18)
+dev.off()
 
 getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1_3010274", model = "longevity ~ sex + site + cohort + treatment"){
   mp <- gtsprob[, grep(marker, colnames(gtsprob))]
@@ -114,12 +116,14 @@ getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1
   adj <- residuals(mlm) + mean(cdata[, "longevity"])
   pheAdj[names(adj)] <- adj
   OAmean <- mean(pheAdj[which(!is.na(gts))])
-  means <- c(mean(pheAdj[which(gts == "AC" | gts== "BC")]),mean(pheAdj[which(gts == "AD" | gts == "DB")])) - OAmean
+  means <- c(mean(pheAdj[which(gts == "AC" | gts== "BC")]),mean(pheAdj[which(gts == "AD" | gts == "BD")])) - OAmean
   std <- function(x) sd(x)/sqrt(length(x))
-  stderrs <- c(std(pheAdj[which(gts == "AC"| gts== "BC")]),std(pheAdj[which(gts == "AD"| gts == "DB")]))
+  stderrs <- c(std(pheAdj[which(gts == "AC"| gts== "BC")]),std(pheAdj[which(gts == "AD"| gts == "BD")]))
+  test <- t.test(pheAdj[which(gts == "AC" | gts== "BC")], pheAdj[which(gts == "AD" | gts == "BD")])
   return(list(
           c(round(OAmean,0), round(means,0)),
-          c(round(stderrs,2))
+          c(round(stderrs,2)),
+          test
         ))
 }
 
@@ -128,6 +132,7 @@ gtsp <- pull.genoprob(mcross)
 
 remaining <- c()
 errors <- c()
+lods <- c()
 msequence <- seq(20, 1100, 15)
 for(d in msequence){
   combined <- getEffect(mcross, gtsp, marker = pos, timepoint = d)
@@ -135,13 +140,14 @@ for(d in msequence){
   male <- getEffect(mcross, gtsp, marker = pos, timepoint = d, sex = 1, model = "longevity ~ site + cohort + treatment")
   remaining <- rbind(remaining, c(combined[[1]], female[[1]], male[[1]]))
   errors <- rbind(errors, c(combined[[2]], female[[2]], male[[2]]))
+  lods <- rbind(lods, c(combined[[3]]$p.value, female[[3]]$p.value, male[[3]]$p.value))
 }
 
 col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 col.alpha <- add.alpha(col.main, 0.1)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
+
 pdf(paste0("Vita9B_C3_D2_alleleEffects.pdf"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   op <- par(cex = 2)
@@ -164,6 +170,12 @@ pdf(paste0("Vita9B_C3_D2_alleleEffects.pdf"), width = 36, height = 12)
   points(msequence, remaining[,3], t = 'l', col = col.main[2], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,3] + errors[,2], rev(remaining[,3] - errors[,2])), col = col.alpha[2], border = NA)
   legend("top", c("C3", "D2"), col = col.main[1:2], lwd=4, bg = "white", ncol=2, bty = "n")
+
+  abline(h = -25 + 4.65, lty = 1, col = "green")
+  abline(h = -25 + 3.95, lty = 1, col = "orange")
+  abline(h = -25 + 3, lty = 1, col = "red")
+  points(seq(20, 1100, 15), -log10(lods[,1]) - 25, t = "l", lwd=2)
+  axis(4, at = seq(-40, -32, 2), seq(0, 8, 2), las = 2,  cex.axis =1.1)
   box()
 
   # Females
@@ -181,6 +193,12 @@ pdf(paste0("Vita9B_C3_D2_alleleEffects.pdf"), width = 36, height = 12)
   points(msequence, remaining[,6], t = 'l', col = col.main[2], lwd=3)
   polygon(c(msequence, rev(msequence)), c(remaining[,6] + errors[,4], rev(remaining[,6] - errors[,4])), col = col.alpha[2], border = NA)
   legend("top", c("C3", "D2"), col = col.main[1:2], lwd=4, bg = "white", ncol=2, bty = "n")
+
+  abline(h = -25 + 4.65, lty = 1, col = "green")
+  abline(h = -25 + 3.95, lty = 1, col = "orange")
+  abline(h = -25 + 3, lty = 1, col = "red")
+  points(seq(20, 1100, 15), -log10(lods[,2]) - 25, t = "l", lwd=2)
+  axis(4, at = seq(-40, -32, 2), seq(0, 8, 2), las = 2,  cex.axis =1.1)
   box()
 
   # Males
@@ -199,6 +217,12 @@ pdf(paste0("Vita9B_C3_D2_alleleEffects.pdf"), width = 36, height = 12)
   polygon(c(msequence, rev(msequence)), c(remaining[,9] + errors[,6], rev(remaining[,9] - errors[,6])), col = col.alpha[2], border = NA)
 
   legend("top", c("C3", "D2"), col = col.main[1:2], lwd=4, bg = "white", ncol=2, bty = "n")
+
+  abline(h = -25 + 4.65, lty = 1, col = "green")
+  abline(h = -25 + 3.95, lty = 1, col = "orange")
+  abline(h = -25 + 3, lty = 1, col = "red")
+  points(seq(20, 1100, 15), -log10(lods[,3]) - 25, t = "l", lwd=2)
+  axis(4, at = seq(-40, -32, 2), seq(0, 8, 2), las = 2,  cex.axis =1.1)
   box()
-#dev.off()
+dev.off()
 
