@@ -106,7 +106,7 @@ colnames(mE) <- c("Site", "Cohort", "Treatment")
 
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
 pdf("H2_Female.pdf", width = 20, height = 20)
 nf <- layout( matrix(c(1,2,2), ncol=1) )
 op <- par(mar = c(4,10,2,2))
@@ -129,11 +129,11 @@ axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
 legend("topleft", c("Female", "Environment"), fill = add.alpha(c("#FF3333", "#AFE1AF"), 0.4), border = c("#FF3333", "#AFE1AF"))
 
 
-combined <- cbind(mE, round(100 * mG))
+combined <- cbind(mE, round(100 * mG)[,ncol(mG):1])
 ms <- c(seq(0, .50, .01), seq(1, 30, 1))
 colz <- c(colorRampPalette(c("#FFFFFF","#AFE1AF"))(50), colorRampPalette(c("#FFFFFF","#FF3333"))(30))
 image(1:nrow(mG), 1:(ncol(mE) + ncol(mG)), combined, xaxt="n", 
-      yaxt = "n", xlab = "Tage (Days)", ylab = "Vita", main = "H2 Mean square methods (Females)",
+      yaxt = "n", xlab = "Tage (Days)", ylab = "", main = "H2 Mean square methods (Females)",
       breaks = ms, col = colz)
 
 axis(2, at = 1:ncol(combined), colnames(combined), las=2)
@@ -247,11 +247,11 @@ axis(1, at = seq(20, 1100, 4*15), seq(20, 1100, 4*15))
 axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
 legend("bottomleft", c("Male", "Environment"), fill = add.alpha(c("#00AEEF", "#AFE1AF"), 0.4), border = c("#00AEEF", "#AFE1AF"))
 
-combined <- cbind(mE, round(100 * mG))
+combined <- cbind(mE, round(100 * mG)[,ncol(mG):1])
 ms <- c(seq(0, .50, .01), seq(1, 30, 1))
 colz <- c(colorRampPalette(c("#FFFFFF","#AFE1AF"))(50), colorRampPalette(c("#FFFFFF","#00AEEF"))(30))
 image(1:nrow(mG), 1:(ncol(mE) + ncol(mG)), combined, xaxt="n", 
-      yaxt = "n", xlab = "Tage (Days)", ylab = "Vita", main = "H2 Mean square methods (Male)",
+      yaxt = "n", xlab = "Tage (Days)", ylab = "", main = "H2 Mean square methods (Male)",
       breaks = ms, col = colz)
 
 axis(2, at = 1:ncol(combined), colnames(combined), las=2)

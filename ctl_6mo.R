@@ -196,10 +196,15 @@ computeDiffCor <- function(mcross, gtsp, cdata, sex = c(0, 1), method = "pearson
     gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
       if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
     }))
-    CH <- which(gts == "AC" & cdata[, "sex"] %in% sex)
-    BH <- which(gts == "BC" & cdata[, "sex"] %in% sex)
-    CD <- which(gts == "AD" & cdata[, "sex"] %in% sex)
-    BD <- which(gts == "BD" & cdata[, "sex"] %in% sex)
+    if(grepl("X", marker)){
+      CH <- which(gts %in% c("AC", "AD") & cdata[, "sex"] %in% sex)
+      BH <- which(gts %in% c("BC", "BD") & cdata[, "sex"] %in% sex)
+    }else{
+      CH <- which(gts == "AC" & cdata[, "sex"] %in% sex)
+      BH <- which(gts == "BC" & cdata[, "sex"] %in% sex)
+      CD <- which(gts == "AD" & cdata[, "sex"] %in% sex)
+      BD <- which(gts == "BD" & cdata[, "sex"] %in% sex)
+    }
     cCH <- NA; cBH <- NA; cCD <- NA; cBD <- NA
     if(length(CH) > 100) cCH <- cor(cdata[CH, "adjLongevity"], cdata[CH, "adjBw6"], use = "pair", method = method);
     if(length(BH) > 100) cBH <- cor(cdata[BH, "adjLongevity"], cdata[BH, "adjBw6"], use = "pair", method = method);
