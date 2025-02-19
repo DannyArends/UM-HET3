@@ -41,12 +41,12 @@ for(chr in c(1:19, "X")){
   cp = cl + cp + gap
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-library(svglite)
-pdf("Figure_1_basicQTL.pdf", width = 36, height = 12)
-  par(cex=2)
-  par(cex.axis=1.5)
-  plot(c(0, max(chr.start)), y = c(0, 10), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "Longevity (≥ 365 days)")
+#setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
+#library(svglite)
+#pdf("Figure_1_basicQTL.pdf", width = 36, height = 12)
+#  par(cex=2)
+#  par(cex.axis=1.5)
+  plot(c(0, 50000000), y = c(0, 10), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "Longevity (≥ 365 days)")
   for(x in c(1:19, "X")){
     points(subset[which(subset[,1] == x),"cpos"], lods.cM[1, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "black",lwd=2)
     points(subset[which(subset[,1] == x),"cpos"], lods.mM[1, rownames(subset)[which(subset[,1] == x)]], t = 'l', col = "blue",lwd=2)
@@ -56,7 +56,7 @@ pdf("Figure_1_basicQTL.pdf", width = 36, height = 12)
   abline(h = 3.65, lty=2, col = "green")
   axis(1, at = chr.mids, paste0("", c(1:19, "X")), cex.axis=1.2, las=1)
   legend("topleft", c("All", "Males", "Females", "Interaction"), lwd=2, lty=c(1,1,1,3), col = c("black", "blue", "hotpink", "orange"))
-dev.off()
+#dev.off()
 
 
 

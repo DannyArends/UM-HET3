@@ -202,7 +202,7 @@ for(timepoint in c(42, 365, 740, 905)){
 
       if(lodM.m[m2,m1] >= 3.8 || lodM.f[m2,m1] >= 3.8){
 
-      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
       pdf(paste0("GxG_",timepoint,"_",m1,"_",m2, "_new.pdf"), width = 18, height = 8)
 
       marker1 <- all[m1]
@@ -242,25 +242,29 @@ for(timepoint in c(42, 365, 740, 905)){
       par(cex.axis=2)
       par(cex.main=2)
       par(cex.sub=2)
-      par(cex.lab=1.5)
+      par(cex.lab=2)
+
+
       ### Combined
       op <- par(mfrow = c(1,3))
-      op <- par(mar = c(5.1, 4.1, 4.1, 0.1))
+      op <- par(mar = c(5.1, 5.1, 4.1, 0.1))
       xdata <- cdata
       setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
       lodMS <- read.table(paste0("vita_interactions_2way_combined_tp",timepoint,".txt"), sep = "\t")
 
-      plot(c(1,4), c(-80, +80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Combined)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
-           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
-      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      plot(c(0.5, 4.5), c(-80, +80), t = "n", 
+           main = paste0("Interaction ",m1," & ",m2," (Combined)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0(m1, " Genotype"), ylab = "Expectancy (d)", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[.(timepoint)]))), cex=2)
       text(x=3.75, y = 75, labels = bquote(Combined), cex=2)
-      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
-      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
-      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
-      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+      rect(0.75, -80, 1.25, 70, col = col.alpha2[1], border = NA)
+      rect(1.75, -80, 2.25, 70, col = col.alpha2[2], border = NA)
+      rect(2.75, -80, 3.25, 70, col = col.alpha2[3], border = NA)
+      rect(3.75, -80, 4.25, 70, col = col.alpha2[4], border = NA)
 
       off <- -0.15
       j <- 1
+      minNs <- c()
       for(v1 in c("AC", "AD", "BC", "BD")){
         i <- 1
         vals <- c()
@@ -273,11 +277,20 @@ for(timepoint in c(42, 365, 740, 905)){
           vals <- c(vals, mean(values))
           errs <- c(errs, std(values))
           sizes <- c(sizes, pSize(length(values)))
+          minNs <- c(minNs, length(values))
           cat(m1, " ", m2, "size:", length(values), "\n")
           i <- i + 1
         }
-        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
-        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        min(minNs,na.rm=TRUE)
+        points(off + 1:4, vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+
+        points(off + 1:4, vals - mean(v1M) + errs, col=col.main[j], t = "p",pch="-")
+        points(off + 1:4, vals - mean(v1M) - errs, col=col.main[j], t = "p",pch="-")
+        for(x in 1:4){
+          points(c(off + (1:4)[x], off + (1:4)[x]), c(vals[x] - mean(v1M) - errs[x], vals[x] - mean(v1M) + errs[x]), col=col.main[j], t = "l")
+        }
+
+        #polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
         off <- off + 0.1
         j <- j + 1
       }
@@ -287,23 +300,25 @@ for(timepoint in c(42, 365, 740, 905)){
       axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
       axis(2, at = seq(-80,80,20), seq(-80,80,20), las=2)
       legend("bottomleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=1, pch = 20, title = m2, cex=1.5,bg = "white")
-      legend("bottomright", c("0-20", "21-50", "51-100", "101-150", ">=151"), pch = 20, pt.cex = 1:5, cex=1.5,bg = "white")
+      legend("bottomright", c("0-20", "21-50", "51-100", "101-150", ">=151"), pch = 20, pt.cex = 1:5, title = paste0("minN=", min(minNs,na.rm=TRUE)), cex=1.5,bg = "white")
 
       ### Female
       xdata <- cdata[which(cdata[, "sex"] == 0),]
       setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
       lodMS <- read.table(paste0("vita_interactions_2way_females_tp",timepoint,".txt"), sep = "\t")
-      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Females)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
-           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
-      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      plot(c(0.5, 4.5), c(-80, 80), t = "n", 
+           main = paste0("Interaction ",m1," & ",m2," (Females)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0(m1, " Genotype"), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[.(timepoint)]))), cex=2)
       text(x=3.8, y = 75, labels = bquote(Females), cex=2)
-      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
-      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
-      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
-      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+      rect(0.75, -80, 1.25, 70, col = col.alpha2[1], border = NA)
+      rect(1.75, -80, 2.25, 70, col = col.alpha2[2], border = NA)
+      rect(2.75, -80, 3.25, 70, col = col.alpha2[3], border = NA)
+      rect(3.75, -80, 4.25, 70, col = col.alpha2[4], border = NA)
 
       off <- -0.15
       j <- 1
+      minNs <- c()
       for(v1 in c("AC", "AD", "BC", "BD")){
         i <- 1
         vals <- c()
@@ -316,11 +331,19 @@ for(timepoint in c(42, 365, 740, 905)){
           vals <- c(vals, mean(values))
           errs <- c(errs, std(values))
           sizes <- c(sizes, pSize(length(values)))
+          minNs <- c(minNs, length(values))
           cat(m1, " ", m2, "size:", length(values), "\n")
           i <- i + 1
         }
-        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
-        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        points(off + 1:4, vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+
+        points(off + 1:4, vals - mean(v1M) + errs, col=col.main[j], t = "p",pch="-")
+        points(off + 1:4, vals - mean(v1M) - errs, col=col.main[j], t = "p",pch="-")
+        for(x in 1:4){
+          points(c(off + (1:4)[x], off + (1:4)[x]), c(vals[x] - mean(v1M) - errs[x], vals[x] - mean(v1M) + errs[x]), col=col.main[j], t = "l")
+        }
+
+        #polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
         off <- off + 0.1
         j <- j + 1
       }
@@ -330,6 +353,7 @@ for(timepoint in c(42, 365, 740, 905)){
       axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
       axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
       axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+      legend("bottomright", c("0-20", "21-50", "51-100", "101-150", ">=151"), pch = 20, pt.cex = 1:5, title = paste0("minN=", min(minNs,na.rm=TRUE)), cex=1.5,bg = "white")
 
       axis(2, at = seq(-80,80,20), rep("",9), las=2)
       #legend("bottomleft", c("CH", "CD", "BH", "BD"), col = col.main, lwd=1, pch = 20, title = m2)
@@ -338,17 +362,19 @@ for(timepoint in c(42, 365, 740, 905)){
       xdata <- cdata[which(cdata[, "sex"] == 1),]
       setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
       lodMS <- read.table(paste0("vita_interactions_2way_males_tp",timepoint,".txt"), sep = "\t")
-      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Males)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
-           xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
-      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      plot(c(0.5, 4.5), c(-80, 80), t = "n", 
+           main = paste0("Interaction ",m1," & ",m2," (Males)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+           xlab = paste0(m1, " Genotype"), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[.(timepoint)]))), cex=2)
       text(x=3.85, y = 75, labels = bquote(Males), cex=2)
-      rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
-      rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
-      rect(2.95, -80, 3.05, 70, col = col.alpha2[3], border = NA)
-      rect(3.95, -80, 4.05, 70, col = col.alpha2[4], border = NA)
+      rect(0.75, -80, 1.25, 70, col = col.alpha2[1], border = NA)
+      rect(1.75, -80, 2.25, 70, col = col.alpha2[2], border = NA)
+      rect(2.75, -80, 3.25, 70, col = col.alpha2[3], border = NA)
+      rect(3.75, -80, 4.25, 70, col = col.alpha2[4], border = NA)
 
       off <- -0.15
       j <- 1
+      minNs <- c()
       for(v1 in c("AC", "AD", "BC", "BD")){
         i <- 1
         vals <- c()
@@ -361,10 +387,18 @@ for(timepoint in c(42, 365, 740, 905)){
           vals <- c(vals, mean(values))
           errs <- c(errs, std(values))
           sizes <- c(sizes, pSize(length(values)))
+          minNs <- c(minNs, length(values))
           i <- i + 1
         }
-        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
-        polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
+        points(off + 1:4, vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+
+        points(off + 1:4, vals - mean(v1M) + errs, col=col.main[j], t = "p",pch="-")
+        points(off + 1:4, vals - mean(v1M) - errs, col=col.main[j], t = "p",pch="-")
+        for(x in 1:4){
+          points(c(off + (1:4)[x], off + (1:4)[x]), c(vals[x] - mean(v1M) - errs[x], vals[x] - mean(v1M) + errs[x]), col=col.main[j], t = "l")
+        }
+
+        #polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
         off <- off + 0.1
         j <- j + 1
       }
@@ -372,6 +406,8 @@ for(timepoint in c(42, 365, 740, 905)){
       axis(1, at = 2, bquote(bold("CD")), col.axis= col.main[2])
       axis(1, at = 3, bquote(bold("BH")), col.axis= col.main[3])
       axis(1, at = 4, bquote(bold("BD")), col.axis= col.main[4])
+
+      legend("bottomright", c("0-20", "21-50", "51-100", "101-150", ">=151"), pch = 20, pt.cex = 1:5, title = paste0("minN=", min(minNs,na.rm=TRUE)), cex=1.5,bg = "white")
 
       axis(2, at = seq(-80,80,20), rep("",9), las=2)
 
@@ -403,7 +439,7 @@ for(timepoint in c(42, 365, 740, 905)){
       m1 = combos[pp,1]
       m2 = combos[pp,2]
 
-      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny/GreenDots")
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/GreenDots")
       pdf(paste0("Green_Dot_GxG_",timepoint,"_",m1,"_",m2, ".pdf"), width = 18, height = 8)
 
       marker1 <- all[m1]
@@ -451,9 +487,10 @@ for(timepoint in c(42, 365, 740, 905)){
       setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
       lodMS <- read.table(paste0("vita_interactions_2way_combined_tp",timepoint,".txt"), sep = "\t")
 
-      plot(c(1,4), c(-80, +80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Combined)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+      plot(c(0.5, 4.5), c(-80, +80), t = "n", 
+           main = paste0("Interaction ",m1," & ",m2," (Combined)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
            xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
-      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[.(timepoint)]))), cex=2)
       text(x=3.75, y = 75, labels = bquote(Combined), cex=2)
       rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
       rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
@@ -477,7 +514,7 @@ for(timepoint in c(42, 365, 740, 905)){
           cat(m1, " ", m2, "size:", length(values), "\n")
           i <- i + 1
         }
-        points(vals - mean(v1M), col=col.main[j], t = "b",pch=20, cex=sizes)
+        points(vals - mean(v1M)+c(-0.1,-0.05,0.05,0.1), col=col.main[j], t = "b",pch=20, cex=sizes)
         polygon(c(1:4, 4:1), c(vals - mean(v1M) + errs, rev(vals - mean(v1M) - errs)), col = col.alpha[j], border = NA)
         off <- off + 0.1
         j <- j + 1
@@ -494,9 +531,10 @@ for(timepoint in c(42, 365, 740, 905)){
       xdata <- cdata[which(cdata[, "sex"] == 0),]
       setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
       lodMS <- read.table(paste0("vita_interactions_2way_females_tp",timepoint,".txt"), sep = "\t")
-      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Females)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+      plot(c(0.5, 4.5), c(-80, 80), t = "n", 
+           main = paste0("Interaction ",m1," & ",m2," (Females)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
            xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
-      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[.(timepoint)]))), cex=2)
       text(x=3.8, y = 75, labels = bquote(Females), cex=2)
       rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
       rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)
@@ -539,9 +577,10 @@ for(timepoint in c(42, 365, 740, 905)){
       xdata <- cdata[which(cdata[, "sex"] == 1),]
       setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
       lodMS <- read.table(paste0("vita_interactions_2way_males_tp",timepoint,".txt"), sep = "\t")
-      plot(c(1,4), c(-80, 80), t = "n", main = paste0("Interaction ",m1," & ",m2," (Males)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
+      plot(c(0.5, 4.5), c(-80, 80), t = "n", 
+           main = paste0("Interaction ",m1," & ",m2," (Males)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
            xlab = paste0("Haplotype ",m1), ylab = "", xaxt="n", yaxt="n", yaxs = "i")
-      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[42]))), cex=2)
+      text(x=1.4, y = 71, labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[.(timepoint)]))), cex=2)
       text(x=3.85, y = 75, labels = bquote(Males), cex=2)
       rect(0.95, -80, 1.05, 70, col = col.alpha2[1], border = NA)
       rect(1.95, -80, 2.05, 70, col = col.alpha2[2], border = NA)

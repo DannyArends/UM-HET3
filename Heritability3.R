@@ -25,14 +25,15 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
 
-sequ <-seq(20, 1100, 15)
+sequ <-seq(35, 1100, 15)
 reps <- 1:50
 
 mmF <- vector("list", length(sequ))
 names(mmF) <- sequ
 for(x in sequ){
   Hs <- c()
-  for(n in reps){
+  set.seed(42)
+  for(n in reps) {
     idx <- which(cdata[, "longevity"] >= x & cdata[, "sex"] == 0)
     idx <- sample(idx, length(idx) * .9)
     adata <- cdata[idx, ]
@@ -122,7 +123,7 @@ for(x in sequ){
   aa <- mmF[[as.character(x)]][1:3,]
   aa[aa < 0] <- 0
   boxplot(as.numeric(apply(aa,2,sum)), boxwex=20, at = x, add = TRUE, yaxt="n", 
-          col = add.alpha("#AFE1AF", 0.4), medcol="#AFE1AF", border="#AFE1AF", outpch = 19, outcex = .5)
+          col = add.alpha("#466D1D", 0.4), medcol="#607D3B", border="#607D3B", outpch = 19, outcex = .5)
 }
 axis(1, at = seq(20, 1100, 4*15), seq(20, 1100, 4*15))
 axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
@@ -130,8 +131,8 @@ legend("topleft", c("Female", "Environment"), fill = add.alpha(c("#FF3333", "#AF
 
 
 combined <- cbind(mE, round(100 * mG)[,ncol(mG):1])
-ms <- c(seq(0, .50, .01), seq(1, 30, 1))
-colz <- c(colorRampPalette(c("#FFFFFF","#AFE1AF"))(50), colorRampPalette(c("#FFFFFF","#FF3333"))(30))
+ms <- c(c(0.0, 0.01, 0.02 ,0.04, 0.08, 0.16, 0.32, 0.64), c(1,2,4,8,16,32))
+colz <- c(colorRampPalette(c("#FFFFFF","#7B57A4"))(7), colorRampPalette(c("#FFFFFF","#FF3333"))(6))
 image(1:nrow(mG), 1:(ncol(mE) + ncol(mG)), combined, xaxt="n", 
       yaxt = "n", xlab = "Tage (Days)", ylab = "", main = "H2 Mean square methods (Females)",
       breaks = ms, col = colz)
@@ -146,6 +147,7 @@ mmM <- vector("list", length(sequ))
 names(mmM) <- sequ
 for(x in sequ){
   Hs <- c()
+  set.seed(42)
   for(n in reps){
     idx <- which(cdata[, "longevity"] >= x & cdata[, "sex"] == 1)
     idx <- sample(idx, length(idx) * .9)
@@ -241,15 +243,15 @@ for(x in sequ){
   aa <- mmM[[as.character(x)]][1:3,]
   aa[aa < 0] <- 0
   boxplot(as.numeric(apply(aa,2,sum)), boxwex=20, at = x, add = TRUE, yaxt="n", 
-          col = add.alpha("#AFE1AF", 0.4), medcol="#AFE1AF", border="#AFE1AF", outpch = 19, outcex = .5)
+          col = add.alpha("#466D1D", 0.4), medcol="#607D3B", border="#607D3B", outpch = 19, outcex = .5)
 }
 axis(1, at = seq(20, 1100, 4*15), seq(20, 1100, 4*15))
 axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
 legend("bottomleft", c("Male", "Environment"), fill = add.alpha(c("#00AEEF", "#AFE1AF"), 0.4), border = c("#00AEEF", "#AFE1AF"))
 
 combined <- cbind(mE, round(100 * mG)[,ncol(mG):1])
-ms <- c(seq(0, .50, .01), seq(1, 30, 1))
-colz <- c(colorRampPalette(c("#FFFFFF","#AFE1AF"))(50), colorRampPalette(c("#FFFFFF","#00AEEF"))(30))
+ms <- c(c(0.0, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64), c(1,2,4,8,16,32))
+colz <- c(colorRampPalette(c("#FFFFFF","#486E33"))(7), colorRampPalette(c("#FFFFFF","#00AEEF"))(6))
 image(1:nrow(mG), 1:(ncol(mE) + ncol(mG)), combined, xaxt="n", 
       yaxt = "n", xlab = "Tage (Days)", ylab = "", main = "H2 Mean square methods (Male)",
       breaks = ms, col = colz)

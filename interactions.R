@@ -73,7 +73,7 @@ for(tp in timepoints){
 
 ### Males and Females
 for(sex in names(sexes)){
-  for(tp in timepoints){
+  for(tp in timepoints[1]){
     gtsp <- pull.genoprob(mcross)
     cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
                         sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
@@ -119,5 +119,68 @@ for(sex in names(sexes)){
     write.table(lodM, paste0("vita_interactions_2way_",sex,"_tp", tp,".txt"), sep = "\t", quote=FALSE)
   }
 }
+
+
+
+### DO the green dots
+combos <- rbind(
+            c("Vita2a", "Vita17a"),
+            c("Vita11a", "Vita14a"),
+            c("Vita4a", "Vita10a"),
+            c("Vita10a", "Vita11a"),
+            c("Vita3a", "Vita6b"),
+            c("Vita11b", "Vita13a"),
+            c("Vita11a", "Vita13a"),
+            c("Vita11a", "Vita15a"),
+            c("Vita2c", "Vita18a"),
+            c("Vita3b", "Vita4a"),
+            c("Vita1b", "Vita10a"),
+            c("Vita1c", "Vita13a"),
+            c("Vita6a", "Vita12a"))
+
+for(x in 1:nrow(combos)){
+  m1 <- combos[x,1]
+  m2 <- combos[x,2]
+  tp <- timepoints[4]
+
+  gtsp <- pull.genoprob(mcross)
+  cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
+                      sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
+                      site = as.factor(pull.pheno(mcross)[, "site"]),
+                      cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
+                      treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
+
+  idx <- which(cdata[, "sex"] == 0 & cdata[, "longevity"] > tp)
+
+  cdata <- cdata[idx, ]
+  gtsp <- gtsp[idx, ]
+  mp1 <- gtsp[, grep(all[m1], colnames(gtsp))]
+  mp2 <- gtsp[, grep(all[m2], colnames(gtsp))]
+  lm.F <- lm(longevity ~  site + cohort + treatment + mp1[,-4] * mp2[,-4] + 0, data = cdata)
+  in.F <- coef(lm.F)[19:27]
+
+
+  gtsp <- pull.genoprob(mcross)
+  cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
+                      sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
+                      site = as.factor(pull.pheno(mcross)[, "site"]),
+                      cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
+                      treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
+
+  idx <- which(cdata[, "sex"] == 1 & cdata[, "longevity"] > tp)
+
+  cdata <- cdata[idx, ]
+  gtsp <- gtsp[idx, ]
+  mp1 <- gtsp[, grep(all[m1], colnames(gtsp))]
+  mp2 <- gtsp[, grep(all[m2], colnames(gtsp))]
+  lm.M <- lm(longevity ~  site + cohort + treatment + mp1[,-4] * mp2[,-4] + 0, data = cdata)
+  in.M <- coef(lm.M)[19:27]
+
+  ii <- which(abs(in.F) > 5 & abs(in.M) > 5)
+  aa <- cbind(in.F[ii], in.M[ii], sign(in.F[ii]) == sign(in.M[ii]))
+
+  cat(m1,m2, round(sum(aa[,3]) / length(ii),2), "\n")
+}
+
 
 

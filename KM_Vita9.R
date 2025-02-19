@@ -21,8 +21,8 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
 #idx <- which(cdata[, "longevity"] >= 365 & cdata[, "sex"] == 0) # females
-#idx <- which(cdata[, "longevity"] >= 365 & cdata[, "sex"] == 1) # males
-idx <- which(cdata[, "longevity"] >= 365)
+idx <- which(cdata[, "longevity"] >= 20 & cdata[, "sex"] == 1) # males
+#idx <- which(cdata[, "longevity"] >= 365)
 cdata <- cdata[idx,]
 gtsp <- gtsp[idx,]
 
@@ -36,7 +36,7 @@ gts <- unlist(lapply(lapply(lapply(apply(mp,1,function(x){which(x > 0.85)}),name
 
 cdata <- cbind(cdata, gts)
 cdata <- cdata[!is.na(cdata[, "gts"]),]
-cdata <- cdata[which(cdata[, "adjLongevity"] >= 365),]
+cdata <- cdata[which(cdata[, "adjLongevity"] >= 20),]
 
 CH <- which(cdata[, "gts"] == "AC")
 CD <- which(cdata[, "gts"] == "AD")
@@ -70,13 +70,61 @@ points(tp, lower, t = "l", col = "green")
 
 sqrt(cumsum(res.C3$n.event / (res.C3$n.risk * (res.C3$n.risk - res.C3$n.event))))
 
-#plot(c(365, 1250), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve (Vita9C - ALL)")
-for(x in 365:1456) {
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
+pdf(paste0("Vita9B-Males-2Haplotypes-HvsD.pdf"), width = 24, height = 24)
+
+op <- par(cex = 2)
+par(mar = c(5, 5, 4, 3))
+plot(c(20, 1250), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve (Vita9B - Males)")
+for(x in 20:1456) {
   n.C3 <- length(which(cdata[C3, "adjLongevity"] >= x))
+  n.D2 <- length(which(cdata[D2, "adjLongevity"] >= x))
  
-  points(x, (n.C3/length(C3))* 1, pch=19, cex=0.2, col = "purple")
-  points(x, (n.D2/length(D2))* 100, pch=19, cex=0.2, col = "green")
+  points(x, (n.C3/length(C3))* 100, pch=19, cex=0.2, col = "deeppink")
+  points(x, (n.D2/length(D2))* 100, pch=19, cex=0.2, col = "burlywood")
 }
 axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
-legend("topright", c("C3", "D2"), col = c("red", "green"), pch=18)
+legend("topright", c("H", "D"), col = c("deeppink", "burlywood"), pch=18)
+dev.off()
+
+
+Ca <- c(CH, CD)
+Ba <- c(BH, BD)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
+pdf(paste0("Vita9B-Males-2Haplotypes-CvsB.pdf"), width = 24, height = 24)
+
+op <- par(cex = 2)
+par(mar = c(5, 5, 4, 3))
+plot(c(20, 1250), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve (Vita9B - Males)")
+for(x in 20:1456) {
+  n.Ca <- length(which(cdata[Ca, "adjLongevity"] >= x))
+  n.Ba <- length(which(cdata[Ba, "adjLongevity"] >= x))
+ 
+  points(x, (n.Ca/length(Ca))* 100, pch=19, cex=0.2, col = "cyan3")
+  points(x, (n.Ba/length(Ba))* 100, pch=19, cex=0.2, col = "darkviolet")
+}
+axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
+legend("topright", c("C", "B"), col = c("cyan3", "darkviolet"), pch=18)
+dev.off()
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
+pdf(paste0("Vita9B-Males-4Genotypes.pdf"), width = 24, height = 24)
+op <- par(cex = 2)
+par(mar = c(5, 5, 4, 3))
+col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
+plot(c(20, 1250), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve (Vita9B - Males)")
+for(x in 20:1456) {
+  n.CH <- length(which(cdata[CH, "adjLongevity"] >= x))
+  n.CD <- length(which(cdata[CD, "adjLongevity"] >= x))
+  n.BH <- length(which(cdata[BH, "adjLongevity"] >= x))
+  n.BD <- length(which(cdata[BD, "adjLongevity"] >= x))
+ 
+  points(x, (n.CH/length(CH))* 100, pch=19, cex=0.2, col = col.main[1])
+  points(x, (n.CD/length(CD))* 100, pch=19, cex=0.2, col = col.main[2])
+  points(x, (n.BH/length(BH))* 100, pch=19, cex=0.2, col = col.main[3])
+  points(x, (n.BD/length(BD))* 100, pch=19, cex=0.2, col = col.main[4])
+}
+axis(2, at = c(0,25,50,75,100), c(0,25,50,75,100), las=2)
+legend("topright", c("CH", "CD", "BH", "BD"), col = col.main, pch=18)
+dev.off()
 
