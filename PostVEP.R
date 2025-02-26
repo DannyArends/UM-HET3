@@ -1,13 +1,14 @@
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
-regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
-colnames(regions) <- c("Chr", "Proximal", "Distal")
+regions <- read.table("regions_4way_2025.txt", sep="\t", header=FALSE, row.names=1)
+colnames(regions) <- c("Chr", "Proximal", "Top", "Distal")
+
 
 library(biomaRt)
 
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/May2024")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/2025")
 
 mlist <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
@@ -122,6 +123,8 @@ for(x in 1:nrow(regions)){
   cat("Writing\n")
   write.table(cbind(ensembl_gene_id = rownames(mm), mm), file = paste0("summary/",rownames(regions)[x], ".summary.txt"), 
               sep = "\t", quote = FALSE,na="", row.names=FALSE)
+  write.table(cbind(region = rownames(regions)[x], cbind(ensembl_gene_id = rownames(mm), mm)), file = paste0("summary/combined.summary.txt"), 
+              sep = "\t", quote = FALSE,na="", row.names=FALSE, append = TRUE, col.names = FALSE)
   mmF[rownames(regions)[x], "MO"] <- length(which(mm[,"Impact"] != "NONE"))
   mmF[rownames(regions)[x], "HI"] <- length(which(mm[,"Impact"] == "HIGH"))
   mmF[rownames(regions)[x], "MOGA"] <- length(which(mm[,"inGenAge"] == "YES"))

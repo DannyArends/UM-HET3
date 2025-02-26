@@ -5,7 +5,11 @@ library(ReactomePA)
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
-regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
+regions <- read.table("regions_4way_2025.txt", sep="\t", header=FALSE, row.names=1)
+colnames(regions) <- c("Chr", "Proximal", "Top", "Distal")
+regions <- regions[which(!(rownames(regions) %in% c("Vita17a", "VitaXa", "VitaXb"))),]
+
+
 GPCRs <- read.table("May2024/GPCRs.txt", sep = "\t", header=TRUE)
 
 ### Get whole genome
@@ -33,17 +37,25 @@ wholeGenome <- unique(genome[,"ensembl_gene_id"])
 protein_coding <- vector("list", nrow(regions))
 prioritized <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
-  protein_coding[[x]] <- read.csv(paste0("May2024/genes/protein_coding_genes_", rownames(regions)[x], ".txt"), sep = "\t")
+  protein_coding[[x]] <- read.csv(paste0("2025/genes/protein_coding_genes_", rownames(regions)[x], ".txt"), sep = "\t")
   iix <- which(protein_coding[[x]][, "ensembl_gene_id"] %in% GPCRs[,"Ensembl.Gene.ID..Mouse."])
   protein_coding[[x]] <- protein_coding[[x]][-iix,]
   olf <- grep("^Olf", protein_coding[[x]][,"external_gene_name"])
   if(length(olf)> 0) protein_coding[[x]] <- protein_coding[[x]][-olf,]
 
-  prioritized[[x]] <- read.csv(paste0("May2024/summary/", rownames(regions)[x], ".summary.txt"), sep = "\t")
+  # Distance max 2 Mb from top
+  d <- abs(((protein_coding[[x]][, "start_position"] + protein_coding[[x]][, "end_position"]) / 2) - regions[x, "Top"])
+  protein_coding[[x]] <- protein_coding[[x]][which(d < 1000000),]
+
+  prioritized[[x]] <- read.csv(paste0("2025/summary/", rownames(regions)[x], ".summary.txt"), sep = "\t")
   iix <- which(prioritized[[x]][, "ensembl_gene_id"] %in% GPCRs[,"Ensembl.Gene.ID..Mouse."])
   prioritized[[x]] <- prioritized[[x]][-iix,]
   olf <- grep("^Olf", prioritized[[x]][,"name"])
   if(length(olf)> 0) protein_coding[[x]] <- prioritized[[x]][-olf,]
+
+  # Distance max 2 Mb from top
+  d <- abs(((prioritized[[x]][, "start"] + prioritized[[x]][, "stop"]) / 2) - regions[x, "Top"])
+  prioritized[[x]] <- prioritized[[x]][which(d < 1000000),]
 }
 
 ## Leave one region out
@@ -63,15 +75,15 @@ for(x in 1:nrow(regions)){
   BGs[[x]] <- bg
   FGs[[x]] <- fg
   # Gene Ontology
-  enrichments[[x]] <- enrichGO(fg, "org.Mm.eg.db", ont = "BP", keyType="ENSEMBL", pvalueCutoff = 0.2, universe = wholeGenome)
+  enrichments[[x]] <- enrichGO(FGs[[x]], "org.Mm.eg.db", ont = "BP", keyType="ENSEMBL", pvalueCutoff = 0.2, universe = BGs[[x]])
   enrichments[[x]] <- enrichments[[x]][, 1:8]
 
   # Kegg
-  KEGGs[[x]] <- enrichKEGG(gene = getEntrez(fg), organism = 'mmu', pvalueCutoff = 0.2, universe = getEntrez(wholeGenome))
+  KEGGs[[x]] <- enrichKEGG(gene = getEntrez(FGs[[x]]), organism = 'mmu', pvalueCutoff = 0.2, universe = getEntrez(BGs[[x]]))
   KEGGs[[x]] <- KEGGs[[x]][, 1:9]
 
   # Reactome
-  REACTOMEs[[x]] <- enrichPathway(gene = getEntrez(fg), organism = "mouse", pvalueCutoff = 0.2, universe = getEntrez(wholeGenome))
+  REACTOMEs[[x]] <- enrichPathway(gene = getEntrez(FGs[[x]]), organism = "mouse", pvalueCutoff = 0.2, universe = getEntrez(BGs[[x]]))
   REACTOMEs[[x]] <- REACTOMEs[[x]][, 1:7]
   cat("Finished with",x,"\n")
 }
@@ -80,11 +92,8 @@ names(enrichments) <- rownames(regions)
 names(KEGGs) <- rownames(regions)
 names(REACTOMEs) <- rownames(regions)
 
-any(table(unlist(lapply(enrichments,rownames))) == 26)
-any(table(unlist(lapply(KEGGs,rownames))) == 26)
-any(table(unlist(lapply(REACTOMEs,rownames))) == 26)
+any(table(unlist(lapply(enrichments,rownames))) == nrow(regions))
+any(table(unlist(lapply(KEGGs,rownames))) == nrow(regions))
+any(table(unlist(lapply(REACTOMEs,rownames))) == nrow(regions))
 
-
-edox <- setReadable(aa, 'org.Mm.eg.db', 'ENTREZID')
-cnetplot(edox, circular = TRUE, colorEdge = TRUE)
 

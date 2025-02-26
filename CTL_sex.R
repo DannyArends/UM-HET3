@@ -27,6 +27,8 @@ cdata[, "adjLongevity"] <- round(as.numeric(coef(lm.null.long)["(Intercept)"]) +
 lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
 
+lm(cdata[which(cdata[, "sex"] == 0), "adjLongevity"] ~ cdata[which(cdata[, "sex"] == 0), "adjBw6"]+1);
+
 corM <- c()
 allN <- c()
 confL <- c()

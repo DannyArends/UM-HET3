@@ -35,7 +35,7 @@ for(x in msequence){
                       cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                       treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
 
-  idx <- which(cdata[, "longevity"] >= x)
+  idx <- which(cdata[, "longevity"] >= x & cdata[, "sex"] == 1)
   cdata <- cdata[idx,]
   gtsM <- gtsp[idx,]
 

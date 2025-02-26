@@ -10,7 +10,7 @@ regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, r
 colnames(regions) <- c("Chr", "Proximal", "Distal")
 
 library(biomaRt)
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/May2024")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/2025")
 
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
 for(x in 1:nrow(regions)){
@@ -69,7 +69,7 @@ for(x in 1:nrow(regions)){
 #Done Vita5a in GenAge: 14 / 213 total Features: 252 
 #Done Vita6a in GenAge: 13 / 143 total Features: 162 
 #Done Vita6b in GenAge: 12 / 121 total Features: 144 
-#Done Vita9a  in GenAge: 14 / 278 total Features: 328 
+#Done Vita9a in GenAge: 14 / 278 total Features: 328 
 #Done Vita9b in GenAge: 15 / 259 total Features: 291 
 #Done Vita9c in GenAge: 10 / 206 total Features: 234 
 #Done Vita10a in GenAge: 48 / 421 total Features: 475 
@@ -83,5 +83,6 @@ for(x in 1:nrow(regions)){
 #Done Vita18a in GenAge: 17 / 178 total Features: 213 
 #Done VitaXa in GenAge: 22 / 313 total Features: 422 
 #Done VitaXb in GenAge: 11 / 111 total Features: 132 
+
 
 
