@@ -63,6 +63,10 @@ toP <- function(allCor, allN){
   return(list(pC))
 }
 
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/SOMA effects")
+
+all <- c("1_3010274", "1_86216552", "2_13600088", "3_87974845", "3_159581164", "4_23295512", "4_74811205", "4_99296141", "6_8006720", "6_138658041",  "7_16072018", "7_120086292","8_71684276", "8_111333705","9_51116640", "10_18144599", "11_5628810", "11_95726223", "12_113361188", "13_89689878", "14_57978950", "14_118874224", "15_3288506", "16_74899626", "17_26542857", "19_3403302", "19_53851357")
+names(all) <- c("Soma1a", "Soma1b", "Soma2a", "Soma3a", "Soma3b", "Soma4a", "Soma4b", "Soma4c", "Soma6a", "Soma6b", "Soma7a", "Soma7b", "Soma8a", "Soma8b", "Soma9a", "Soma10a", "Soma11a", "Soma11b", "Soma12a", "Soma13a", "Soma14a", "Soma14b", "Soma15a", "Soma16a", "Soma17a", "Soma19a", "Soma19b")
 
 
 for(m in names(all)){

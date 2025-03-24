@@ -1,4 +1,3 @@
-timepoints c(365, 560, 875, 1025)
 #Vita2c (females)
 #Vita9b (males)
 

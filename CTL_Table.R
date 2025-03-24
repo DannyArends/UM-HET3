@@ -7,13 +7,16 @@ mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
+#Sample names
+snames <- as.character(pull.pheno(mcross)[, "GenoID"])
+
 #42 days
-bw <- read.table("42day_bodyweight.txt",sep="\t",na.strings=c("", "NA", "x"), header=TRUE, row.names=1)
+bw <- read.csv("ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
+bw <- bw[which(bw[, "DA2024"] == 1),]
 
 #12 months
 trait <- read.csv("ITP_10003.csv", header = TRUE, comment.char = "#", skip=10, row.names=2,na.strings = c("NA", "", "x"))
 trait <- trait[which(trait[, "DA2024"] == 1),]
-snames <- as.character(pull.pheno(mcross)[, "GenoID"])
 
 adjustPHE <- function(cdata, days = 0, column = "bw42", out = c("is42", "adjBw42", "adjLs42")){
   iz <- cdata[, "longevity"] >= days & !is.na(cdata[, column])
@@ -32,7 +35,7 @@ gtsp <- pull.genoprob(mcross)
 cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
                     sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
                     site = as.factor(pull.pheno(mcross)[, "site"]),
-                    bw42 = bw[pull.pheno(mcross)[, "GenoID"],"BW_42d"],
+                    bw42 = as.numeric(bw[snames, "Value"]),
                     bw6 = as.numeric(pull.pheno(mcross)[, "bw6"]),
                     bw12 = as.numeric(trait[snames, "Value"]),
                     bw18 = as.numeric(pull.pheno(mcross)[, "bw18"]),
@@ -75,7 +78,7 @@ sex <- c("C", "M", "M", "M", "M", "M", "C", "F", "C", "F", "M", "M", "C", "C", "
 adata <- cbind(t(t(cbind(names(all), all)[,-1])), tp, sex)
 
 ### All SOMA
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/__Tables")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
 cat("", file = "SomaEffectsInDaysPGram.txt", append = FALSE)
 for(x in 1:nrow(adata)){
   mp <- gtsp[, grep(adata[x, 1], colnames(gtsp))]

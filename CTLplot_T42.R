@@ -7,14 +7,19 @@ mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
-bw <- read.table("42day_bodyweight.txt",sep="\t",na.strings=c("", "NA", "x"), header=TRUE, row.names=1)
+#Sample names
+snames <- as.character(pull.pheno(mcross)[, "GenoID"])
+
+#42 days
+bw <- read.csv("ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
+bw <- bw[which(bw[, "DA2024"] == 1),]
 
 gtsp <- pull.genoprob(mcross)
 cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
                     adjLongevity = NA, 
                     sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
                     site = as.factor(pull.pheno(mcross)[, "site"]),
-                    bw6 = bw[pull.pheno(mcross)[, "GenoID"],"BW_42d"],
+                    bw6 = as.numeric(bw[snames,"Value"]),
                     adjBw6 = NA,
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
@@ -27,6 +32,13 @@ cdata[, "adjLongevity"] <- round(as.numeric(coef(lm.null.long)["(Intercept)"]) +
 
 lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
+
+females <- which(cdata[, "sex"] == 0)
+males <- which(cdata[, "sex"] == 1)
+
+cor(cdata[, "adjLongevity"], cdata[, "adjBw6"], method = "spearman", use = "pair")
+cor(cdata[females, "adjLongevity"], cdata[females, "adjBw6"], method = "spearman", use = "pair")
+cor(cdata[males, "adjLongevity"], cdata[males, "adjBw6"], method = "spearman", use = "pair")
 
 
 all <- c("4_154254581", "11_5628810")

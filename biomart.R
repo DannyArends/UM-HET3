@@ -106,7 +106,7 @@ callSNPs <- function(bamfiles, region = "chr1:124548738-184926264", output = "")
 
   cmd1 <- paste0(bcftools, " mpileup -q 30 -Ou -r ",region," -a FORMAT/DP -f ", reference, " ", bamstr)
   cmd2 <- paste0(bcftools, " call -mv -Ov ")
-  cmd3 <- paste0(bcftools, " view -i 'QUAL>=30 && INFO/DP>10' - -o ~/2025/", output, ".snps.vcf")
+  cmd3 <- paste0(bcftools, " view -i 'QUAL>=30 && INFO/DP>10' - -o ~/wholeGenome/", output, ".snps.vcf")
   execute(paste0(cmd1, " | ", cmd2, " | ", cmd3))
   invisible("")
 }

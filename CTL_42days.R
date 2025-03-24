@@ -13,26 +13,43 @@ mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
-bw <- read.table("42day_bodyweight.txt",sep="\t",na.strings=c("", "NA", "x"), header=TRUE, row.names=1)
+#Sample names
+snames <- as.character(pull.pheno(mcross)[, "GenoID"])
+
+bwA <- read.csv("bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
+
+
+#42 days
+bw <- read.csv("ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
+bw <- bw[which(bw[, "DA2024"] == 1),]
 
 gtsp <- pull.genoprob(mcross)
 cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
                     adjLongevity = NA, 
                     sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
                     site = as.factor(pull.pheno(mcross)[, "site"]),
-                    bw6 = bw[pull.pheno(mcross)[, "GenoID"],"BW_42d"],
-                    adjBw6 = NA,
+                    bw42 = as.numeric(bw[snames,"Value"]),
+                    adjBw42 = NA,
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
-idx <- which(cdata[, "longevity"] >= 0 & !is.na(cdata[, "bw6"]))
+
+rownames(cdata) <- snames
+
+noData <- snames[which(is.na(cdata[, "bw42"]))]
+addData <- noData[which(noData %in% rownames(bwA))]
+
+#Add the data from Rich to the data we had
+cdata[addData, "bw42"] <- bwA[addData, "W42d"]
+
+idx <- which(cdata[, "longevity"] >= 0 & !is.na(cdata[, "bw42"]))
 cdata <- cdata[idx,]
 gtsp <- gtsp[idx,]
 
 lm.null.long <- lm(longevity ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjLongevity"] <- round(as.numeric(coef(lm.null.long)["(Intercept)"]) + residuals(lm.null.long),2)
 
-lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
-cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
+lm.null.bw42 <- lm(bw42 ~ sex + site + cohort + treatment, data = cdata)
+cdata[, "adjBw42"] <- round(as.numeric(coef(lm.null.bw42)["(Intercept)"]) + residuals(lm.null.bw42), 2)
 
 ### Plot males and females
 toP <- function(allCor, allN){
@@ -66,12 +83,12 @@ for(x in seq(0, 1100, 15)){
   cMale <- NA; cFema <- NA;
 
   if(length(male) > 100){
-    cMale <- cor(cdata[male, "adjLongevity"], cdata[male, "adjBw6"], use = "pair", method = "spearman");
-    confMale <- cor.test(cdata[male, "adjLongevity"], cdata[male, "adjBw6"], use = "pair", method = "pearson", conf.level = 0.50);
+    cMale <- cor(cdata[male, "adjLongevity"], cdata[male, "adjBw42"], use = "pair", method = "spearman");
+    confMale <- cor.test(cdata[male, "adjLongevity"], cdata[male, "adjBw42"], use = "pair", method = "pearson", conf.level = 0.50);
   }
   if(length(fema) > 100){
-    cFema <- cor(cdata[fema, "adjLongevity"], cdata[fema, "adjBw6"], use = "pair", method = "spearman");
-    confFema <- cor.test(cdata[fema, "adjLongevity"], cdata[fema, "adjBw6"], use = "pair", method = "pearson", conf.level = 0.50);
+    cFema <- cor(cdata[fema, "adjLongevity"], cdata[fema, "adjBw42"], use = "pair", method = "spearman");
+    confFema <- cor.test(cdata[fema, "adjLongevity"], cdata[fema, "adjBw42"], use = "pair", method = "pearson", conf.level = 0.50);
   }
   allN <- rbind(allN, c(length(male), length(fema)))
   corM <- rbind(corM, c(cMale, cFema))
@@ -100,7 +117,7 @@ col.main <- c("#FF3333", "#00AEEF")
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 col.alpha2 <- add.alpha(col.main, 0.1)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
 pdf(paste0("CTL_MF_42days.pdf"), width = 14, height = 12)
 op <- par(cex = 2)
 
@@ -127,9 +144,9 @@ dev.off()
 ### Continue
 
 
-bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw6"], use = "pair", method = "spearman")
-bCor.f <- cor(cdata[which(cdata[, "sex"] == 0), "adjLongevity"], cdata[which(cdata[, "sex"] == 0), "adjBw6"], use = "pair", method = "spearman")
-bCor.m <- cor(cdata[which(cdata[, "sex"] == 1), "adjLongevity"], cdata[which(cdata[, "sex"] == 1), "adjBw6"], use = "pair", method = "spearman")
+bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw42"], use = "pair", method = "spearman")
+bCor.f <- cor(cdata[which(cdata[, "sex"] == 0), "adjLongevity"], cdata[which(cdata[, "sex"] == 0), "adjBw42"], use = "pair", method = "spearman")
+bCor.m <- cor(cdata[which(cdata[, "sex"] == 1), "adjLongevity"], cdata[which(cdata[, "sex"] == 1), "adjBw42"], use = "pair", method = "spearman")
 
 computeDiffCor <- function(mcross, gtsp, cdata, sex = c(0, 1), method = "pearson"){
   allCor <- c()
@@ -144,10 +161,10 @@ computeDiffCor <- function(mcross, gtsp, cdata, sex = c(0, 1), method = "pearson
     CD <- which(gts == "AD" & cdata[, "sex"] %in% sex)
     BD <- which(gts == "BD" & cdata[, "sex"] %in% sex)
     cCH <- NA; cBH <- NA; cCD <- NA; cBD <- NA
-    if(length(CH) > 100) cCH <- cor(cdata[CH, "adjLongevity"], cdata[CH, "adjBw6"], use = "pair", method = method);
-    if(length(BH) > 100) cBH <- cor(cdata[BH, "adjLongevity"], cdata[BH, "adjBw6"], use = "pair", method = method);
-    if(length(CD) > 100) cCD <- cor(cdata[CD, "adjLongevity"], cdata[CD, "adjBw6"], use = "pair", method = method);
-    if(length(BD) > 100) cBD <- cor(cdata[BD, "adjLongevity"], cdata[BD, "adjBw6"], use = "pair", method = method);
+    if(length(CH) > 100) cCH <- cor(cdata[CH, "adjLongevity"], cdata[CH, "adjBw42"], use = "pair", method = method);
+    if(length(BH) > 100) cBH <- cor(cdata[BH, "adjLongevity"], cdata[BH, "adjBw42"], use = "pair", method = method);
+    if(length(CD) > 100) cCD <- cor(cdata[CD, "adjLongevity"], cdata[CD, "adjBw42"], use = "pair", method = method);
+    if(length(BD) > 100) cBD <- cor(cdata[BD, "adjLongevity"], cdata[BD, "adjBw42"], use = "pair", method = method);
 
     allCor <- rbind(allCor, c(cCH, cBH, cCD, cBD))
     allN <- rbind(allN, c(length(CH), length(BH), length(CD), length(BD)))
@@ -241,13 +258,13 @@ for(chr in c(1:19, "X")){
   cp = cl + cp + gap
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/__Tables")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
 write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "CTL_BW42_T42_C.txt", sep="\t", quote = FALSE)
 write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "CTL_BW42_T42_M.txt", sep="\t", quote = FALSE)
 write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "CTL_BW42_T42_F.txt", sep="\t", quote = FALSE)
 
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
 pdf(paste0("CTL_mapping_42day.pdf"), width = 36, height = 12)
 par(cex=2)
 par(cex.axis=1.5)

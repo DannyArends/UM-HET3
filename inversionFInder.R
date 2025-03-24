@@ -48,13 +48,13 @@ for(x in 1:(length(markers) - 8)){
     gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
       if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
     }))
-    ## Maternal / Paternal
-    gts[gts == "AC"] <- "A"; gts[gts == "AD"] <- "A"
-    gts[gts == "BC"] <- "B"; gts[gts == "BD"] <- "B"
+    ## Maternal
+    #gts[gts == "AC"] <- "A"; gts[gts == "AD"] <- "A"
+    #gts[gts == "BC"] <- "B"; gts[gts == "BD"] <- "B"
 
-    ## Maternal / Paternal
-    #gts[gts == "AC"] <- "C"; gts[gts == "AD"] <- "D"
-    #gts[gts == "BC"] <- "C"; gts[gts == "BD"] <- "D"
+    ## Paternal
+    gts[gts == "AC"] <- "C"; gts[gts == "AD"] <- "D"
+    gts[gts == "BC"] <- "C"; gts[gts == "BD"] <- "D"
 
     ## BXD
     #gts[gts == "AC"] <- "C"; gts[gts == "AD"] <- "D"
@@ -71,5 +71,10 @@ for(x in 1:(length(markers) - 8)){
 
 cbind(markers[as.numeric(which(nn < 0.001))], markers[8+as.numeric(which(nn < 0.001))])
 
+aa <- scanone(mcross)
+p <- c()
+for(x in 1:(nrow(aa)-8)){
+  p <- c(p, aa[x+8,2]-aa[x,2])
+}
 
-
+555
