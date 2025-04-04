@@ -1,3 +1,7 @@
+#
+# Make all of them for 42, 12mo, 18mo & 24mo
+#
+#
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -26,8 +30,14 @@ cdata[, "adjLongevity"] <- round(as.numeric(coef(lm.null.long)["(Intercept)"]) +
 lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
 
-all <- c("1_3010274", "2_65326540", "3_159581164", "4_11234654", "5_34118900", "6_128506813",  "7_16072018", "8_95039510", "10_18144599", "13_53167285", "13_76135291", "15_3288506", "15_79892499", "15_99306167", "17_35023240")
-names(all) <- c("Soma1a", "Soma2a", "Soma3a", "Soma4a", "Soma5a", "Soma6a", "Soma7a", "Soma8a", "Soma10a", "Soma13a", "Soma13b", "Soma15a", "Soma15b", "Soma15c", "Soma17a")
+all <- c("1_3010272","1_86216552","2_13600088", "2_60201233","2_161871392","3_87974845","3_159581164","4_30761996","4_107374161","6_8006720",
+         "6_138658041","7_16072018","7_120086292","8_71684276","8_126505019","9_51116640","10_18144599","11_97448477","12_71677220",
+         "12_118179607","13_19367506","13_98521647","14_30957748", "14_101437466","15_3288506","16_75758401","17_26542857",
+         "18_52488251","19_3403302","19_53851357")
+names(all) <- c("Soma1a","Soma1b","Soma2a","Soma2b","Soma2c","Soma3a","Soma3b","Soma4a","Soma4b","Soma6a","Soma6b","Soma7a","Soma7b","Soma8a",
+                "Soma8b","Soma9a","Soma10a","Soma11a","Soma12a","Soma12b","Soma13a","Soma13b","Soma14a","Soma14b","Soma15a","Soma16a",
+                "Soma17a","Soma18a","Soma19a","Soma19b")
+
 
 genotypes <- c()
 for(marker in all){
@@ -63,18 +73,22 @@ toP <- function(allCor, allN){
   return(list(pC))
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/SOMA effects")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/SOMA Effects_185_day")
 
-all <- c("1_3010274", "1_86216552", "2_13600088", "3_87974845", "3_159581164", "4_23295512", "4_74811205", "4_99296141", "6_8006720", "6_138658041",  "7_16072018", "7_120086292","8_71684276", "8_111333705","9_51116640", "10_18144599", "11_5628810", "11_95726223", "12_113361188", "13_89689878", "14_57978950", "14_118874224", "15_3288506", "16_74899626", "17_26542857", "19_3403302", "19_53851357")
-names(all) <- c("Soma1a", "Soma1b", "Soma2a", "Soma3a", "Soma3b", "Soma4a", "Soma4b", "Soma4c", "Soma6a", "Soma6b", "Soma7a", "Soma7b", "Soma8a", "Soma8b", "Soma9a", "Soma10a", "Soma11a", "Soma11b", "Soma12a", "Soma13a", "Soma14a", "Soma14b", "Soma15a", "Soma16a", "Soma17a", "Soma19a", "Soma19b")
-
+all <- c("1_3010272","1_86216552","2_13600088", "2_60201233","2_161871392","3_87974845","3_159581164","4_30761996","4_107374161","6_8006720",
+         "6_138658041","7_16072018","7_120086292","8_71684276","8_126505019","9_51116640","10_18144599","11_97448477","12_71677220",
+         "12_118179607","13_19367506","13_98521647","14_30957748", "14_101437466","15_3288506","16_75758401","17_26542857",
+         "18_52488251","19_3403302","19_53851357")
+names(all) <- c("Soma1a","Soma1b","Soma2a","Soma2b","Soma2c","Soma3a","Soma3b","Soma4a","Soma4b","Soma6a","Soma6b","Soma7a","Soma7b","Soma8a",
+                "Soma8b","Soma9a","Soma10a","Soma11a","Soma12a","Soma12b","Soma13a","Soma13b","Soma14a","Soma14b","Soma15a","Soma16a",
+                "Soma17a","Soma18a","Soma19a","Soma19b")
 
 for(m in names(all)){
-  pdf(paste0(m, "_BW185_actuarial.pdf"), width = 28+14, height = 12)
+  pdf(paste0(m, "_BW185_actuarial.pdf"), width = (28+14) * .8, height = 12)
   op <- par(mfrow=c(1,3))
   op <- par(cex = 2)
-  par(mar = c(5, 5, 4, 3))
-  for(s in list(c(0,1), 1, 0)){
+  par(mar = c(5, 4, 4, 2))
+  for(s in list(c(0,1), 0, 1)){
     selected <- all[m]
     gts <- genotypes[, selected]
     sex <- s
@@ -140,21 +154,26 @@ for(m in names(all)){
     add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
     col.alpha2 <- add.alpha(col.main, 0.1)
 
-    ylim <- -0.5
-    if(length(sex) == 1 && sex == 0) ylim <- -0.35
+    ylim <- -0.45
+    if(length(sex) == 1 && sex == 0) ylim <- -0.45
 
-    pop <- "Combined"
-    if(length(sex) == 1 && sex == 0) pop <- "Female"
-    if(length(sex) == 1 && sex == 1) pop <- "Male"
-    main <- paste0(pop, " at ", m)
+    pop <- " Combined"
+    if(length(sex) == 1 && sex == 0) pop <- " Female"
+    if(length(sex) == 1 && sex == 1) pop <- " Male"
 
-    plot(c(185, 1000), c(ylim, 0.1), t = "n", xlab = "Truncation age (days)", ylab = "Correlation BW183 to Tage", 
-         main = main,yaxt = "n", yaxs = "i")
-    abline(v = 365, col = "gray")
+#### labels = bquote(atop(bold(bolditalic(.(m1)) ~ x ~ bolditalic(.(m2))), bold(at ~ T[.(timepoint)])))
+
+    plot(c(185, 1000), c(ylim, 0.2), t = "n", xlab = "", ylab = "", 
+         main = "", yaxt = "n", yaxs = "i")
+    title(bquote(atop(bold(bolditalic(.(m)) ~ .(pop)))), line = 0.2, cex = 1.5)
+    title(ylab=bquote(atop(bold("BW185 vs. T-age Correlation"))), line=1.75)
+    title(xlab=bquote(atop(bold("Truncation age [d]"))), line=3.5)
+
+    #abline(v = 365, col = "gray")
     #abline(h = -0.3, col = "gray")
     #abline(h = -0.25, col = "gray")
     #abline(h = -0.15, col = "gray")
-    text(x=1000, y = ylim+0.1, labels = paste0("max LOD = ", max(lods)), cex=.8)
+    text(x=900, y = ylim+0.1, labels = paste0("max LOD = ", max(lods)), cex=.8)
 
     points(seq(185, 1100, 15), corM[,1], t = "l", col = col.main[1], lwd = 2)
     polygon(c(seq(185, 1100, 15), rev(seq(185, 1100, 15))), c(confL[,1], rev(confU[,1])),col = col.alpha2[1], border=NA)
@@ -167,8 +186,8 @@ for(m in names(all)){
 
     points(seq(185, 1100, 15), corM[,4], t = "l", col = col.main[4], lwd = 2)
     polygon(c(seq(185, 1100, 15), rev(seq(185, 1100, 15))), c(confL[,4], rev(confU[,4])),col = col.alpha2[4], border=NA)
-    axis(2, at = seq(-.5, .1, .1), las=2)
-    axis(2, at = seq(-.5, .1, .05), rep("", length(seq(-.5, .1, .05))), las=2)
+    axis(2, at = seq(-.5, .2, .1), las=2)
+    axis(2, at = seq(-.5, .2, .05), rep("", length(seq(-.5, .2, .05))), las=2)
     axis(1, at = seq(100, 1100, 100), rep("",length(seq(100, 1100, 100))))
     abline(h = ylim + (2.75/50), lty=1, col = "lightgray")
     points(seq(185, 1100, 15), (lods / 50) + ylim, t = "l", lwd=2)

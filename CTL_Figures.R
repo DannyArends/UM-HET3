@@ -16,7 +16,7 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     adjBw6 = NA,
                     cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
-idx <- which(cdata[, "longevity"] >= 365 & !is.na(cdata[, "bw6"]))
+idx <- which(cdata[, "longevity"] >= 185 & !is.na(cdata[, "bw6"]))
 cdata <- cdata[idx,]
 gtsp <- gtsp[idx,]
 

@@ -148,6 +148,8 @@ bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw42"], use = "pair", method = 
 bCor.f <- cor(cdata[which(cdata[, "sex"] == 0), "adjLongevity"], cdata[which(cdata[, "sex"] == 0), "adjBw42"], use = "pair", method = "spearman")
 bCor.m <- cor(cdata[which(cdata[, "sex"] == 1), "adjLongevity"], cdata[which(cdata[, "sex"] == 1), "adjBw42"], use = "pair", method = "spearman")
 
+marker <- "2_60201233"
+
 computeDiffCor <- function(mcross, gtsp, cdata, sex = c(0, 1), method = "pearson"){
   allCor <- c()
   allN <- c()
@@ -161,10 +163,10 @@ computeDiffCor <- function(mcross, gtsp, cdata, sex = c(0, 1), method = "pearson
     CD <- which(gts == "AD" & cdata[, "sex"] %in% sex)
     BD <- which(gts == "BD" & cdata[, "sex"] %in% sex)
     cCH <- NA; cBH <- NA; cCD <- NA; cBD <- NA
-    if(length(CH) > 100) cCH <- cor(cdata[CH, "adjLongevity"], cdata[CH, "adjBw42"], use = "pair", method = method);
-    if(length(BH) > 100) cBH <- cor(cdata[BH, "adjLongevity"], cdata[BH, "adjBw42"], use = "pair", method = method);
-    if(length(CD) > 100) cCD <- cor(cdata[CD, "adjLongevity"], cdata[CD, "adjBw42"], use = "pair", method = method);
-    if(length(BD) > 100) cBD <- cor(cdata[BD, "adjLongevity"], cdata[BD, "adjBw42"], use = "pair", method = method);
+    if(length(CH) > 50) cCH <- cor(cdata[CH, "adjLongevity"], cdata[CH, "adjBw42"], use = "pair", method = method);
+    if(length(BH) > 50) cBH <- cor(cdata[BH, "adjLongevity"], cdata[BH, "adjBw42"], use = "pair", method = method);
+    if(length(CD) > 50) cCD <- cor(cdata[CD, "adjLongevity"], cdata[CD, "adjBw42"], use = "pair", method = method);
+    if(length(BD) > 50) cBD <- cor(cdata[BD, "adjLongevity"], cdata[BD, "adjBw42"], use = "pair", method = method);
 
     allCor <- rbind(allCor, c(cCH, cBH, cCD, cBD))
     allN <- rbind(allN, c(length(CH), length(BH), length(CD), length(BD)))

@@ -4,26 +4,35 @@ library(vioplot)
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
-lodM.f <- read.table("vita_interactions_2way_females.txt", sep = "\t")
-lodM.m <- read.table("vita_interactions_2way_males.txt", sep = "\t")
+all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
+         "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
+         "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
+         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085", "X_150646933")
+
+names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
+                "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
+                "Vita15b", "Vita17a", "Vita18a", "VitaXa", "VitaXb")
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
+lodM.m <- read.table(paste0("vita_interactions_2way_females_tp42.txt"), sep = "\t")
+lodM.f <- read.table(paste0("vita_interactions_2way_males_tp42.txt"), sep = "\t")
 
 colz.c <- colorRampPalette(c("white", "lightskyblue3"))(15)
 colz.c2 <- colorRampPalette(c("white", "plum2"))(15)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/")
 
 # TODO: Make these images SEX-Specific
 
-#pdf(paste0("Figure_4_GxG_Interaction_combined.pdf"), width = 24, height = 12)
-plot(c(1.5, 25.5), c(1.5, 25.5), t = "n", xaxt='n', yaxt='n', xlab="",ylab="", xaxt="n", yaxt="n",bty="n")
-axis(1, at = 1:26, rownames(lodM.m),las=2)
-axis(2, at = 1:26, rev(rownames(lodM.m)),las=2)
-for(x in 1:26){
-  for(y in 1:26){
+pdf(paste0("Figure_4_GxG_Interaction_combined.pdf"), width = 24, height = 12)
+plot(c(1.5, 29.5), c(1.5, 29.5), t = "n", xaxt='n', yaxt='n', xlab="",ylab="", xaxt="n", yaxt="n",bty="n")
+axis(1, at = 1:30, rownames(lodM.m),las=2)
+axis(2, at = 1:30, rev(rownames(lodM.m)),las=2)
+for(x in 1:30){
+  for(y in 1:30){
     xp <- x
-    yp <- 27 - y
+    yp <- 31 - y
     m1 <- gsub("Vita", "", rownames(lodM.m)[x])
     m2 <- gsub("Vita", "", colnames(lodM.m)[y])
     m1 <- substr(m1, 1, nchar(m1)-1)
@@ -43,10 +52,10 @@ box()
 #abline(h = c(4,7,9,10,11,13,16,17,19,20,21,22,23,24,25,27) - 0.5, lwd=1, lty=2)
 #abline(v = c(3,6,8,9,10,12,15,16,18,19,20,21,22,23,24,26) + 0.5, lwd=1, lty=2)
 
-for(x in 1:26){
-  for(y in 1:26){
+for(x in 1:30){
+  for(y in 1:30){
     xp <- x
-    yp <- 27 - y
+    yp <- 31 - y
     m1 <- gsub("Vita", "", rownames(lodM.m)[x])
     m2 <- gsub("Vita", "", colnames(lodM.m)[y])
     m1 <- substr(m1, 1, nchar(m1)-1)
@@ -146,16 +155,18 @@ axis(1, at = 1:4, c("CH", "CD", "BH", "BD"))
 ### TODO: Vita1b & Vita9a
 ### TODO: Vita1c & Vita3b
 
-all <- c("1_3010272", "1_24042124", "1_120474787", "2_89844287", "2_112712327", "2_148442635","3_83838529", "3_92135706", "4_52524395",
-         "5_67573068", "6_107382038", "6_132762500", "9_29939029", "9_104091597", "9_124056586", "10_72780332", "11_5628810", "11_82178599",
-         "12_112855820", "13_89689878", "14_101437457", "15_74248242", "17_32883804", "18_60822951")
+all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
+         "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
+         "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
+         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085", "X_150646933")
 
-names(all) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
-                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
-                "Vita17a","Vita18a")
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
-lodM.m <- read.table(paste0("vita_interactions_2way_females.txt"), sep = "\t")
-lodM.f <- read.table(paste0("vita_interactions_2way_males.txt"), sep = "\t")
+names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
+                "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
+                "Vita15b", "Vita17a", "Vita18a", "VitaXa", "VitaXb")
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
+lodM.m <- read.table(paste0("vita_interactions_2way_females_tp42.txt"), sep = "\t")
+lodM.f <- read.table(paste0("vita_interactions_2way_males_tp42.txt"), sep = "\t")
 
 males <- unlist(lodM.m[lower.tri(lodM.m)])
 females <-unlist(lodM.f[lower.tri(lodM.f)])
@@ -169,22 +180,34 @@ colz[which(m)] <- "#00AEEF"
 colz[which(f)] <- "#FF3333"
 colz[which((males^2 + females^2) < 5)] <- "black"
 
-ii <- which(colz == "#00A651" | colz == "#00AEEF" | colz == "#FF3333")
+ii <- which(colz == "#00A651" | colz == "#00AEEF" | colz == "#FF3333"| colz == "black")
 idx <- sort(males[ii], dec = TRUE, index.return = TRUE)$ix
 mmm <- males[ii][idx]
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("SexByEpistasis_Cor.pdf"), width = 24, height = 24)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/")
+pdf(paste0("SexByEpistasis_Cor_TP42_April25.pdf"), width = 24, height = 24)
 
-plot(males, females, pch = 19, col = colz,
-     xlab = "LOD males", ylab = "LOD females", main = "GxG correlation between LODs")
+plot(c(0,6), c(0,6), pch = 19, col = colz, t = "n", 
+     xlab = "LOD females", ylab = "LOD males", main = "GxG correlation between LODs")
 
 abline(h = 3.8, lty=2)
 abline(v = 3.8, lty=2)
+i <- 1
 for(x in mmm){
   p1 <- names(which(apply(lodM.m == x,1,any, na.rm=TRUE)))
   p2 <- names(which(apply(lodM.m == x,2,any, na.rm=TRUE)))
-  text(lodM.m[p1,p2], lodM.f[p1,p2], gsub("Vita", "", paste0(p1, "-",p2)))
+  chr1 <- substring(gsub("Vita", "", p1), 1, nchar(gsub("Vita", "", p1))-1)
+  chr2 <- substring(gsub("Vita", "", p2), 1, nchar(gsub("Vita", "", p2))-1)
+  if(chr1 != chr2) {
+    col <- "black"
+    if(abs(lodM.f[p1,p2] - lodM.m[p1,p2]) < 0.5) col <- "#00A651"
+    if(lodM.f[p1,p2] - lodM.m[p1,p2] > 0.5) col <- "#FF3333"
+    if(lodM.m[p1,p2] - lodM.f[p1,p2] > 0.5) col <- "#00AEEF"
+    if((lodM.m[p1,p2]^2 + lodM.f[p1,p2]^2) < 5) col <- "black"
+    points(lodM.f[p1,p2], lodM.m[p1,p2], col = col, pch = 19)
+    if(col != "black") text(lodM.f[p1,p2], lodM.m[p1,p2], gsub("Vita", "", paste0(p1, "-",p2)))
+  }
+  i <- i + 1
   #cat(p1, " ", p2, "=", x,"\n")
 }
 dev.off()

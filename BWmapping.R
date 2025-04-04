@@ -41,6 +41,13 @@ addData <- noData[which(noData %in% rownames(bwA))]
 #Add the data from Rich to the data we had
 cdata[addData, "bw42"] <- bwA[addData, "W42d"]
 
+bw <- c("bw42", "bw6", "bw12", "bw18", "bw24")
+
+for(x in bw){
+  bwd <- cdata[which(!is.na(cdata[, x])),]
+  print(t(table(bwd[,c("site", "sex")])))
+}
+
 # Our Progressive Mapping Sequence
 markers <- unique(unlist(lapply(strsplit(colnames(gtsp), ":"), "[",1)))
 

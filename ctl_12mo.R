@@ -261,14 +261,14 @@ par(cex.axis=1.5)
 plot(c(0, max(chr.start)), y = c(0, 12), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "CTL: Longevity (> 365 days) x Bodyweight 12 Months")
 for(x in c(1:19, "X")) {
   points(subset[which(subset[,1] == x),"cpos"], -log10(p.c[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "black",lwd=2, pch=20)
-  points(subset[which(subset[,1] == x),"cpos"], -log10(p.f[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#00AEEF",lwd=2, pch=20)
-  points(subset[which(subset[,1] == x),"cpos"], -log10(p.m[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#FF3333",lwd=2, pch=20)
+  points(subset[which(subset[,1] == x),"cpos"], -log10(p.f[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#FF3333",lwd=2, pch=20)
+  points(subset[which(subset[,1] == x),"cpos"], -log10(p.m[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#00AEEF",lwd=2, pch=20)
 }
 abline(h = 2.75, lty=2, col = "darkolivegreen2", lwd=2)
 abline(h = 4, lty=2, col = "darkolivegreen4", lwd=2)
 axis(1, at = chr.mids, paste0("", c(1:19, "X")), cex.axis=1.2, las=1)
 legend("topleft", c("FDR 5%", "FDR 1%"), lwd=2, lty=c(2,2), col = c("darkolivegreen2", "darkolivegreen4"))
-legend("topright", c("Combined", "Females", "Males"), lwd=2, col = c("black", "#00AEEF", "#FF3333"))
+legend("topright", c("Combined", "Females", "Males"), lwd=2, col = c("black", "#FF3333", "#00AEEF"))
 dev.off()
 
 
