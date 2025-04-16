@@ -7,8 +7,13 @@ mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
+
+mdata <- read.table("um-het3-rqtl.csvr", sep = ",")
+
 #Sample names
 snames <- as.character(pull.pheno(mcross)[, "GenoID"])
+
+##### Compute effect sizes
 
 bwA <- read.csv("bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
 
@@ -35,11 +40,14 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
                     treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
 rownames(cdata) <- snames
 
+
 noData <- snames[which(is.na(cdata[, "bw42"]))]
 addData <- noData[which(noData %in% rownames(bwA))]
 
 #Add the data from Rich to the data we had
 cdata[addData, "bw42"] <- bwA[addData, "W42d"]
+
+write.table(cdata[,-2], "S_Table2_IndividualLevelData.txt", sep = "\t", row.names= TRUE, quote = FALSE)
 
 bw <- c("bw42", "bw6", "bw12", "bw18", "bw24")
 
@@ -71,7 +79,7 @@ for(x in c("bw42", "bw6", "bw12", "bw18", "bw24")){
 }
 colnames(lods.f) <- colnames(pull.geno(mcross))
 rownames(lods.f) <- c("bw42", "bw6", "bw12", "bw18", "bw24")
-
+write.table(lods.f, "MASS_Females.txt", sep = "\t", quote = FALSE)
 
 lods.m <- c()
 for(x in c("bw42", "bw6", "bw12", "bw18", "bw24")){
@@ -93,7 +101,7 @@ for(x in c("bw42", "bw6", "bw12", "bw18", "bw24")){
 }
 colnames(lods.m) <- colnames(pull.geno(mcross))
 rownames(lods.m) <- c("bw42", "bw6", "bw12", "bw18", "bw24")
-
+write.table(lods.m, "MASS_Males.txt", sep = "\t", quote = FALSE)
 
 lods.C <- c()
 for(x in c("bw42", "bw6", "bw12", "bw18", "bw24")){
@@ -114,7 +122,7 @@ for(x in c("bw42", "bw6", "bw12", "bw18", "bw24")){
 }
 colnames(lods.C) <- colnames(pull.geno(mcross))
 rownames(lods.C) <- c("bw42", "bw6", "bw12", "bw18", "bw24")
-
+write.table(lods.C, "MASS_Combined.txt", sep = "\t", quote = FALSE)
 
 # Create the map object
 chrs <- unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",1))

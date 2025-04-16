@@ -26,9 +26,15 @@ cdata[, "adjLongevity"] <- round(as.numeric(coef(lm.null.long)["(Intercept)"]) +
 lm.null.bw6 <- lm(bw6 ~ sex + site + cohort + treatment, data = cdata)
 cdata[, "adjBw6"] <- round(as.numeric(coef(lm.null.bw6)["(Intercept)"]) + residuals(lm.null.bw6), 2)
 
+## TODO 
 
-all <- c("1_3010274", "2_65326540", "3_159581164", "4_11234654", "5_34118900", "6_128506813",  "7_16072018", "8_95039510", "10_18144599", "13_53167285", "13_76135291", "15_3288506", "15_79892499", "15_99306167", "17_35023240")
-names(all) <- c("Soma1a", "Soma2a", "Soma3a", "Soma4a", "Soma5a", "Soma6a", "Soma7a", "Soma8a", "Soma10a", "Soma13a", "Soma13b", "Soma15a", "Soma15b", "Soma15c", "Soma17a")
+all <- c("1_3010272","1_86216552","2_13600088", "2_60201233","2_161871392","3_87974845","3_159581164","4_30761996","4_107374161","6_8006720",
+         "6_138658041","7_16072018","7_120086292","8_71684276","8_126505019","9_51116640","10_18144599","11_97448477","12_71677220",
+         "12_118179607","13_19367506","13_98521647","14_30957748", "14_101437466","15_3288506","16_75758401","17_26542857",
+         "18_52488251","19_3403302","19_53851357")
+names(all) <- c("Soma1a","Soma1b","Soma2a","Soma2b","Soma2c","Soma3a","Soma3b","Soma4a","Soma4b","Soma6a","Soma6b","Soma7a","Soma7b","Soma8a",
+                "Soma8b","Soma9a","Soma10a","Soma11a","Soma12a","Soma12b","Soma13a","Soma13b","Soma14a","Soma14b","Soma15a","Soma16a",
+                "Soma17a","Soma18a","Soma19a","Soma19b")
 
 genotypes <- c()
 for(marker in all){
@@ -69,8 +75,8 @@ for(i in length(all)[1]){
   col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27") # green, blue, purple, red
   col.main <- adjustcolor( col.main, alpha.f = 0.6)
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-  pdf(paste0("SOMA_",names(all)[i],"_SCALE.pdf"), width = 36, height = 12)
+  #setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+  #pdf(paste0("SOMA_",names(all)[i],"_SCALE.pdf"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   par(cex=1.5)
   par(cex.axis=1.2)
@@ -110,7 +116,7 @@ for(i in length(all)[1]){
     axis(2, at = seq(500, 1100, 100), seq(500, 1100, 100), las=2)
     legend("topright", c("CH", "CD", "BH", "BD"), col = col.main, pch=19, bg = "white", ncol=4, bty = "n")
     legend("topleft", c("3-5", "6-11", "12-22", "23-45", "46-90", "91-181", "182-362"), col = "black", pch=19, bg = "white", ncol=1, bty = "n", pt.cex=1:7)
-  dev.off()
+  #dev.off()
 }
 
 

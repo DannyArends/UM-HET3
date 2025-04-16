@@ -273,71 +273,51 @@ getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1
   means <- c(mean(pheAdj[which(gts == "AC")]),mean(pheAdj[which(gts == "AD")]),mean(pheAdj[which(gts == "BC")]),mean(pheAdj[which(gts == "BD")])) - OAmean
   std <- function(x) sd(x)/sqrt(length(x))
   stderrs <- c(std(pheAdj[which(gts == "AC")]),std(pheAdj[which(gts == "AD")]),std(pheAdj[which(gts == "BC")]),std(pheAdj[which(gts == "BD")]))
-  paste0(length(which(!is.na(gts))), "/",nrow(cdata), "\t", round(OAmean,0), "\t", paste0(round(means,0), " ± ", round(stderrs,2), collapse="\t"))
+  paste0(length(which(!is.na(gts))), "/",nrow(cdata), "\t", round(OAmean,1), "\t", paste0(round(means,1), " ± ", round(stderrs,2), collapse="\t"))
 }
 
-getEffect(mcross, gtsp, marker = "1_3010272", timepoint = 860)
-getEffect(mcross, gtsp, marker = "1_24042124", timepoint = 695)
-getEffect(mcross, gtsp, marker = "2_112712327", timepoint = 800)
-getEffect(mcross, gtsp, marker = "4_55012301", timepoint = 650)
-getEffect(mcross, gtsp, marker = "6_107382038", timepoint = 500)
-getEffect(mcross, gtsp, marker = "9_104091597", timepoint = 1025)
-getEffect(mcross, gtsp, marker = "10_72780332", timepoint = 980)
-getEffect(mcross, gtsp, marker = "12_112855820", timepoint = 635)
-getEffect(mcross, gtsp, marker = "13_89689878", timepoint = 395)
-getEffect(mcross, gtsp, marker = "14_101437457", timepoint = 860)
-getEffect(mcross, gtsp, marker = "15_74248242", timepoint = 905)
-getEffect(mcross, gtsp, marker = "17_32883804", timepoint = 665)
-getEffect(mcross, gtsp, marker = "18_60822951", timepoint = 365)
-getEffect(mcross, gtsp, marker = "X_36008085", timepoint = 365)
-getEffect(mcross, gtsp, marker = "X_156343080", timepoint = 740)
+getEffect(mcross, gtsp, marker = "1_3010272", timepoint = 860)        # Vita1A
+getEffect(mcross, gtsp, marker = "1_24042124", timepoint = 695)       # Vita1B
+getEffect(mcross, gtsp, marker = "9_104091597", timepoint = 1025)     # Vita9b
+getEffect(mcross, gtsp, marker = "9_124056586", timepoint = 980)      # Vita9c
+getEffect(mcross, gtsp, marker = "10_72780332", timepoint = 980)      # Vita10a
+getEffect(mcross, gtsp, marker = "12_112855820", timepoint = 635)     # Vita12a
+getEffect(mcross, gtsp, marker = "13_83858506", timepoint = 230)      # Vita13a
+getEffect(mcross, gtsp, marker = "14_78415875", timepoint = 35)       # Vita14a
+getEffect(mcross, gtsp, marker = "14_101437466", timepoint = 860)     # Vita14b
+getEffect(mcross, gtsp, marker = "15_74248242", timepoint = 905)      # Vita15a
+getEffect(mcross, gtsp, marker = "17_32883804", timepoint = 665)      # Vita17a
+getEffect(mcross, gtsp, marker = "18_52488251", timepoint = 140)      # Vita18a
 
-getEffect(mcross, gtsp, marker = "1_24042124", timepoint = 770, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "2_139956785", timepoint = 545, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "3_92135706", timepoint = 560, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "9_29939029", timepoint = 665, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "9_104091597", timepoint = 1040, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "11_82178599", timepoint = 1040, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "X_156343080", timepoint = 740, sex = 0, model = "longevity ~ site + cohort + treatment")
+#Female
+getEffect(mcross, gtsp, marker = "2_112255823", timepoint = 800, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita2b
+getEffect(mcross, gtsp, marker = "2_148442635", timepoint = 545, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita2c
+getEffect(mcross, gtsp, marker = "9_34932404", timepoint = 95, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita9a
+getEffect(mcross, gtsp, marker = "11_82176894", timepoint = 1040, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita11b
+getEffect(mcross, gtsp, marker = "X_156343080", timepoint = 740, sex = 0, model = "longevity ~ site + cohort + treatment") # VitaXb
 
-getEffect(mcross, gtsp, marker = "1_3010272", timepoint = 890, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "1_120474787", timepoint = 365, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "2_112712327", timepoint = 935, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "3_83838529", timepoint = 1070, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "4_52524395", timepoint = 650, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "5_67573068", timepoint = 1085, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "6_134870385", timepoint = 365, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "9_124056586", timepoint = 785, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "10_72780332", timepoint = 980, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "11_5628810", timepoint = 635, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "15_62405371", timepoint = 845, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "17_34460077", timepoint = 695, sex = 1, model = "longevity ~ site + cohort + treatment")
+#Males
+getEffect(mcross, gtsp, marker = "1_121483290", timepoint = 230, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita1c
+getEffect(mcross, gtsp, marker = "1_167148678", timepoint = 230, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita1d
+getEffect(mcross, gtsp, marker = "2_89156987", timepoint = 140, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita2a
+getEffect(mcross, gtsp, marker = "3_83354281", timepoint = 170, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita3a
+getEffect(mcross, gtsp, marker = "4_52524395", timepoint = 650, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita4a
+getEffect(mcross, gtsp, marker = "4_154254581", timepoint = 630, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita4b
+getEffect(mcross, gtsp, marker = "5_67573068", timepoint = 1085, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita5a
+getEffect(mcross, gtsp, marker = "6_93680853", timepoint = 140, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita6a
+getEffect(mcross, gtsp, marker = "6_132762500", timepoint = 320, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita6b
+getEffect(mcross, gtsp, marker = "11_6599922", timepoint = 635, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita11a
+getEffect(mcross, gtsp, marker = "11_113729074", timepoint = 35, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita11c
+getEffect(mcross, gtsp, marker = "15_99306167", timepoint = 275, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita15b
+getEffect(mcross, gtsp, marker = "X_36008085", timepoint = 260, sex = 1, model = "longevity ~ site + cohort + treatment") # VitaXa
 
 
 
 
-### REDO !!!
-getEffect(mcross, gtsp, marker = "1_3010272", timepoint = 860)
-getEffect(mcross, gtsp, marker = "1_24042124", timepoint = 695)
-getEffect(mcross, gtsp, marker = "1_120474787", timepoint = 365, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "2_89844287", timepoint = 140, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "2_112712327", timepoint = 800)
-getEffect(mcross, gtsp, marker = "2_139956785", timepoint = 545, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "3_83838529", timepoint = 1070, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "3_92135706", timepoint = 560, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "4_52524395", timepoint = 650, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "5_67573068", timepoint = 1085, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "6_107382038", timepoint = 455, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "6_132762500", timepoint = 320, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "9_29939029", timepoint = 95, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "9_104091597", timepoint = 1025)
-getEffect(mcross, gtsp, marker = "9_124056586", timepoint = 785, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "10_72780332", timepoint = 980)
-getEffect(mcross, gtsp, marker = "11_5628810", timepoint = 635, sex = 1, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "11_82178599", timepoint = 1040, sex = 0, model = "longevity ~ site + cohort + treatment")
-getEffect(mcross, gtsp, marker = "12_112855820", timepoint = 635)
-getEffect(mcross, gtsp, marker = "13_89689878", timepoint = 395)
-getEffect(mcross, gtsp, marker = "14_101437457", timepoint = 860)
-getEffect(mcross, gtsp, marker = "15_74248242", timepoint = 905)
-getEffect(mcross, gtsp, marker = "17_32883804", timepoint = 665)
-getEffect(mcross, gtsp, marker = "18_60822951", timepoint = 365)
+
+
+
+
+
+
+

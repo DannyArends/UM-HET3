@@ -8,27 +8,27 @@ source("adjustXprobs.R")
 all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
          "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
-         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085", "X_150646933")
+         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085")
 
 names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
-                "Vita15b", "Vita17a", "Vita18a", "VitaXa", "VitaXb")
+                "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
-lodM.m <- read.table(paste0("vita_interactions_2way_females_tp42.txt"), sep = "\t")
-lodM.f <- read.table(paste0("vita_interactions_2way_males_tp42.txt"), sep = "\t")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
+lodM.m <- read.table(paste0("vita_interactions_2way_males_tp42.txt"), sep = "\t")
+lodM.f <- read.table(paste0("vita_interactions_2way_females_tp42.txt"), sep = "\t")
 
 colz.c <- colorRampPalette(c("white", "lightskyblue3"))(15)
 colz.c2 <- colorRampPalette(c("white", "plum2"))(15)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
 
 # TODO: Make these images SEX-Specific
 
-pdf(paste0("Figure_4_GxG_Interaction_combined.pdf"), width = 24, height = 12)
+#pdf(paste0("Figure_4_GxG_Interaction_combined.pdf"), width = 24, height = 12)
 plot(c(1.5, 29.5), c(1.5, 29.5), t = "n", xaxt='n', yaxt='n', xlab="",ylab="", xaxt="n", yaxt="n",bty="n")
-axis(1, at = 1:30, rownames(lodM.m),las=2)
-axis(2, at = 1:30, rev(rownames(lodM.m)),las=2)
+axis(1, at = 1:29, rownames(lodM.m),las=2)
+axis(2, at = 1:29, rev(rownames(lodM.m)),las=2)
 for(x in 1:30){
   for(y in 1:30){
     xp <- x
@@ -52,8 +52,8 @@ box()
 #abline(h = c(4,7,9,10,11,13,16,17,19,20,21,22,23,24,25,27) - 0.5, lwd=1, lty=2)
 #abline(v = c(3,6,8,9,10,12,15,16,18,19,20,21,22,23,24,26) + 0.5, lwd=1, lty=2)
 
-for(x in 1:30){
-  for(y in 1:30){
+for(x in 1:29){
+  for(y in 1:29){
     xp <- x
     yp <- 31 - y
     m1 <- gsub("Vita", "", rownames(lodM.m)[x])
@@ -69,7 +69,7 @@ for(x in 1:30){
   }
 }
 
-dev.off()
+#dev.off()
 
 
 ### Interaction plot
@@ -158,15 +158,15 @@ axis(1, at = 1:4, c("CH", "CD", "BH", "BD"))
 all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
          "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
-         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085", "X_150646933")
+         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085")
 
 names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
-                "Vita15b", "Vita17a", "Vita18a", "VitaXa", "VitaXb")
+                "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
-lodM.m <- read.table(paste0("vita_interactions_2way_females_tp42.txt"), sep = "\t")
-lodM.f <- read.table(paste0("vita_interactions_2way_males_tp42.txt"), sep = "\t")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
+lodM.m <- read.table(paste0("vita_interactions_2way_males_tp42.txt"), sep = "\t")
+lodM.f <- read.table(paste0("vita_interactions_2way_females_tp42.txt"), sep = "\t")
 
 males <- unlist(lodM.m[lower.tri(lodM.m)])
 females <-unlist(lodM.f[lower.tri(lodM.f)])
@@ -184,7 +184,7 @@ ii <- which(colz == "#00A651" | colz == "#00AEEF" | colz == "#FF3333"| colz == "
 idx <- sort(males[ii], dec = TRUE, index.return = TRUE)$ix
 mmm <- males[ii][idx]
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny")
 pdf(paste0("SexByEpistasis_Cor_TP42_April25.pdf"), width = 24, height = 24)
 
 plot(c(0,6), c(0,6), pch = 19, col = colz, t = "n", 
@@ -212,7 +212,7 @@ for(x in mmm){
 }
 dev.off()
 
-### TODO: Make GxG plots for all T42 GxG interaction pairs
+### TODO: Make GxG plots for all SIGNIFICANT GxG interaction pairs
 
 cor.test(unlist(lodM.m[lower.tri(lodM.m)])[ii], unlist(lodM.f[lower.tri(lodM.f)])[ii], method = "spearman")
 
@@ -225,7 +225,7 @@ for(timepoint in c(42, 365, 740, 905)){
 
       if(lodM.m[m2,m1] >= 3.8 || lodM.f[m2,m1] >= 3.8){
 
-      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
+      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny")
       pdf(paste0("GxG_",timepoint,"_",m1,"_",m2, "_new.pdf"), width = 18, height = 8)
 
       marker1 <- all[m1]
@@ -272,7 +272,7 @@ for(timepoint in c(42, 365, 740, 905)){
       op <- par(mfrow = c(1,3))
       op <- par(mar = c(5.1, 5.1, 4.1, 0.1))
       xdata <- cdata
-      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
       lodMS <- read.table(paste0("vita_interactions_2way_combined_tp",timepoint,".txt"), sep = "\t")
 
       plot(c(0.5, 4.5), c(-80, +80), t = "n", 
@@ -327,7 +327,7 @@ for(timepoint in c(42, 365, 740, 905)){
 
       ### Female
       xdata <- cdata[which(cdata[, "sex"] == 0),]
-      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
       lodMS <- read.table(paste0("vita_interactions_2way_females_tp",timepoint,".txt"), sep = "\t")
       plot(c(0.5, 4.5), c(-80, 80), t = "n", 
            main = paste0("Interaction ",m1," & ",m2," (Females)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),
@@ -383,7 +383,7 @@ for(timepoint in c(42, 365, 740, 905)){
 
       ## Males
       xdata <- cdata[which(cdata[, "sex"] == 1),]
-      setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
       lodMS <- read.table(paste0("vita_interactions_2way_males_tp",timepoint,".txt"), sep = "\t")
       plot(c(0.5, 4.5), c(-80, 80), t = "n", 
            main = paste0("Interaction ",m1," & ",m2," (Males)", paste0("\nT",timepoint,", LOD = ",round(lodMS[m2,m1],1))),

@@ -5,11 +5,11 @@
 all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
          "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
-         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085", "X_150646933")
+         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085")
 
 names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
-                "Vita15b", "Vita17a", "Vita18a", "VitaXa", "VitaXb")
+                "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
@@ -68,7 +68,7 @@ for(tp in timepoints){
   axis(1, at = 1:length(all), names(all), las=2)
   axis(2, at = 1:length(all), names(all), las=2)
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
+  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_bioRxiv_All_Key_Files/11_FiguresDanny/GxG")
   write.table(lodM, paste0("vita_interactions_2way_combined_tp", tp,".txt"), sep = "\t", quote=FALSE)
 }
 
@@ -116,7 +116,7 @@ for(sex in names(sexes)){
     axis(1, at = 1:length(all), names(all), las=2)
     axis(2, at = 1:length(all), names(all), las=2)
 
-    setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
+    setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_bioRxiv_All_Key_Files/11_FiguresDanny/GxG")
     write.table(lodM, paste0("vita_interactions_2way_",sex,"_tp", tp,".txt"), sep = "\t", quote=FALSE)
   }
 }

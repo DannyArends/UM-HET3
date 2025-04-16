@@ -10,55 +10,125 @@ mcross <- adjustXprobs(mcross)
 
 gtsp <- pull.genoprob(mcross)
 
-vita1a <- "1_3010272"
+all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
+         "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
+         "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
+         "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085")
 
-mp <- gtsp[, grep(vita1a, colnames(gtsp))]
-gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
-  if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
-}))
+names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
+                "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
+                "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
-longevity = as.numeric(pull.pheno(mcross)[, "longevity"])
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
+for(pname in names(all)){
+  marker <-  all[pname]
 
-ii1 <- which(gts == "AC")
-ii2 <- which(gts == "AD")
-ii3 <- which(gts == "BC")
-ii4 <- which(gts == "BD")
+  mp <- gtsp[, grep(marker, colnames(gtsp))]
+  gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+    if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+  }))
 
-col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
+  longevity = as.numeric(pull.pheno(mcross)[, "longevity"])
 
-nnCH <- length(ii1)
-nnBH <- length(ii2)
-nnCD <- length(ii3)
-nnBD <- length(ii4)
-#
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf("KM-Vita1A-Combined.insetBottom.pdf")
-par(cex=1.5)
-par(cex.axis=1.2)
-plot(c(900, 1200), c(50, 0), t = "n", main = "Vita1a -Combined - % KM Curve", ylab = "% of animals remaining", xlab = "Age", yaxt = "n")
-mm <- c()
-for(x in seq(15, 1500, 15)){
-  iiD <- which(longevity >= x-15 & longevity < x)
-  nCH <- length(which(iiD %in% ii1))
-  nBH <- length(which(iiD %in% ii2))
-  nCD <- length(which(iiD %in% ii3))
-  nBD <- length(which(iiD %in% ii4))
-  cat(x, "", nCH, nBH, nCD, nBD, "\n")
-  mm <- rbind(mm, c(nCH, nBH, nCD, nBD))
-  #points(x, nAC, col = 1)
-  #points(x, nAD, col = 2)
-  #points(x, nBC, col = 3)
-  #points(x, nBD, col = 4)
+  ii1 <- which(gts == "AC") # CH
+  ii2 <- which(gts == "AD") # CD
+  ii3 <- which(gts == "BC") # BH
+  ii4 <- which(gts == "BD") # BD
+
+  nnCH <- length(ii1)
+  nnCD <- length(ii2)
+  nnBH <- length(ii3)
+  nnBD <- length(ii4)
+
+  mm <- c()
+  for(x in seq(20, 1500, 15)){
+    iiD <- which(longevity >= x-15 & longevity < x)
+    nCH <- length(which(iiD %in% ii1))
+    nCD <- length(which(iiD %in% ii2))
+    nBH <- length(which(iiD %in% ii3))
+    nBD <- length(which(iiD %in% ii4))
+    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH))
+  }
+  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H")
+  rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
+  write.table(mm, paste0(pname, "_deathsIn15Dwindows_combined.txt"), sep = "\t", quote = FALSE)
 }
-colnames(mm) <- c("CH", "BH", "CD", "BD")
-rownames(mm) <- seq(15, 1500, 15)
-write.table(mm, "deathsIn15Dwindows.txt", sep = "\t", quote = FALSE)
-axis(2, at = seq(0, 100, 2.5), seq(0, 100, 2.5), las=2)
-points(seq(15, 1500, 15), 100 - (100 *cumsum(mm[,1]/nnCH)), t = "l", col = col.main[1])
-points(seq(15, 1500, 15), 100 - (100 *cumsum(mm[,2]/nnBH)), t = "l", col = col.main[2])
-points(seq(15, 1500, 15), 100 - (100 *cumsum(mm[,3]/nnCD)), t = "l", col = col.main[3])
-points(seq(15, 1500, 15), 100 - (100 *cumsum(mm[,4]/nnBD)), t = "l", col = col.main[4])
-dev.off()
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
+for(pname in names(all)){
+  marker <-  all[pname]
+
+  mp <- gtsp[, grep(marker, colnames(gtsp))]
+  gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+    if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+  }))
+
+  longevity = as.numeric(pull.pheno(mcross)[, "longevity"])
+  sex = as.numeric(pull.pheno(mcross)[, "sex"])
+
+  ii1 <- which(gts == "AC" & sex == 0) # CH
+  ii2 <- which(gts == "AD" & sex == 0) # CD
+  ii3 <- which(gts == "BC" & sex == 0) # BH
+  ii4 <- which(gts == "BD" & sex == 0) # BD
+
+  nnCH <- length(ii1)
+  nnCD <- length(ii2)
+  nnBH <- length(ii3)
+  nnBD <- length(ii4)
+
+  mm <- c()
+  for(x in seq(20, 1500, 15)){
+    iiD <- which(longevity >= x-15 & longevity < x & sex == 0)
+    nCH <- length(which(iiD %in% ii1))
+    nCD <- length(which(iiD %in% ii2))
+    nBH <- length(which(iiD %in% ii3))
+    nBD <- length(which(iiD %in% ii4))
+    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH))
+  }
+  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H")
+  rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
+  write.table(mm, paste0(pname, "_deathsIn15Dwindows_female.txt"), sep = "\t", quote = FALSE)
+}
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
+for(pname in names(all)){
+  marker <-  all[pname]
+
+  mp <- gtsp[, grep(marker, colnames(gtsp))]
+  gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
+    if(length(x) > 0){ return(x[[1]][2]); }else{ return(NA) }
+  }))
+
+  longevity = as.numeric(pull.pheno(mcross)[, "longevity"])
+  sex = as.numeric(pull.pheno(mcross)[, "sex"])
+
+  ii1 <- which(gts == "AC" & sex == 1) # CH
+  ii2 <- which(gts == "AD" & sex == 1) # CD
+  ii3 <- which(gts == "BC" & sex == 1) # BH
+  ii4 <- which(gts == "BD" & sex == 1) # BD
+
+  nnCH <- length(ii1)
+  nnCD <- length(ii2)
+  nnBH <- length(ii3)
+  nnBD <- length(ii4)
+
+  mm <- c()
+  for(x in seq(20, 1500, 15)){
+    iiD <- which(longevity >= x-15 & longevity < x & sex == 1)
+    nCH <- length(which(iiD %in% ii1))
+    nCD <- length(which(iiD %in% ii2))
+    nBH <- length(which(iiD %in% ii3))
+    nBD <- length(which(iiD %in% ii4))
+    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH))
+  }
+  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H")
+  rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
+  write.table(mm, paste0(pname, "_deathsIn15Dwindows_male.txt"), sep = "\t", quote = FALSE)
+}
+
+
+
+
 
 
 
