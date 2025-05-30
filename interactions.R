@@ -2,14 +2,24 @@
 # UM-HET3 interactions between significant Vita loci
 #
 
-all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
+allV <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
          "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
          "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085")
 
-names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
+names(allV) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vita2c", "Vita3a", "Vita4a", "Vita4b", "Vita5a", "Vita6a", "Vita6b", 
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
                 "Vita15b", "Vita17a", "Vita18a", "VitaXa")
+
+allS <- c("1_3010272","1_86216552","2_13600088", "2_60201233","2_161871392","3_87974845","3_159581164","4_30761996","4_107374161","6_8006720",
+         "6_138658041","7_16072018","7_120086292","8_71684276","8_126505019","9_51116640","10_18144599","11_97448477","12_71677220",
+         "12_118179607","13_19367506","13_98521647","14_30957748", "14_101437466","15_3288506","16_75758401","17_26542857",
+         "18_52488251","19_3403302","19_53851357")
+names(allS) <- c("Soma1a","Soma1b","Soma2a","Soma2b","Soma2c","Soma3a","Soma3b","Soma4a","Soma4b","Soma6a","Soma6b","Soma7a","Soma7b","Soma8a",
+                "Soma8b", "Soma9a", "Soma10a","Soma11a","Soma12a","Soma12b","Soma13a","Soma13b","Soma14a","Soma14b","Soma15a","Soma16a",
+                "Soma17a","Soma18a","Soma19a","Soma19b")
+
+all <- c(allV, allS)
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
@@ -68,8 +78,8 @@ for(tp in timepoints){
   axis(1, at = 1:length(all), names(all), las=2)
   axis(2, at = 1:length(all), names(all), las=2)
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_bioRxiv_All_Key_Files/11_FiguresDanny/GxG")
-  write.table(lodM, paste0("vita_interactions_2way_combined_tp", tp,".txt"), sep = "\t", quote=FALSE)
+  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/GxG_Vita_Soma")
+  write.table(lodM, paste0("vita_soma_interactions_2way_combined_tp", tp,".txt"), sep = "\t", quote=FALSE)
 }
 
 ### Males and Females
@@ -116,8 +126,8 @@ for(sex in names(sexes)){
     axis(1, at = 1:length(all), names(all), las=2)
     axis(2, at = 1:length(all), names(all), las=2)
 
-    setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_bioRxiv_All_Key_Files/11_FiguresDanny/GxG")
-    write.table(lodM, paste0("vita_interactions_2way_",sex,"_tp", tp,".txt"), sep = "\t", quote=FALSE)
+    setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/GxG_Vita_Soma")
+    write.table(lodM, paste0("vita_soma_interactions_2way_",sex,"_tp", tp,".txt"), sep = "\t", quote=FALSE)
   }
 }
 

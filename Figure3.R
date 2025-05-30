@@ -14,9 +14,9 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vit
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
                 "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/GxG_April25")
-lodM.m <- read.table(paste0("vita_interactions_2way_males_tp42.txt"), sep = "\t")
-lodM.f <- read.table(paste0("vita_interactions_2way_females_tp42.txt"), sep = "\t")
+  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/GxG_Vita_Soma")
+lodM.m <- read.table(paste0("vita_soma_interactions_2way_males_tp42.txt"), sep = "\t")
+lodM.f <- read.table(paste0("vita_soma_interactions_2way_females_tp42.txt"), sep = "\t")
 
 colz.c <- colorRampPalette(c("white", "lightskyblue3"))(15)
 colz.c2 <- colorRampPalette(c("white", "plum2"))(15)

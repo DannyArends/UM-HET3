@@ -290,11 +290,11 @@ getEffect(mcross, gtsp, marker = "17_32883804", timepoint = 665)      # Vita17a
 getEffect(mcross, gtsp, marker = "18_52488251", timepoint = 140)      # Vita18a
 
 #Female
-getEffect(mcross, gtsp, marker = "2_112255823", timepoint = 800, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita2b
-getEffect(mcross, gtsp, marker = "2_148442635", timepoint = 545, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita2c
-getEffect(mcross, gtsp, marker = "9_34932404", timepoint = 95, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita9a
+getEffect(mcross, gtsp, marker = "2_112255823", timepoint = 800, sex = 0, model = "longevity ~ site + cohort + treatment")  # Vita2b
+getEffect(mcross, gtsp, marker = "2_148442635", timepoint = 545, sex = 0, model = "longevity ~ site + cohort + treatment")  # Vita2c
+getEffect(mcross, gtsp, marker = "9_34932404", timepoint = 95, sex = 0, model = "longevity ~ site + cohort + treatment")    # Vita9a
 getEffect(mcross, gtsp, marker = "11_82176894", timepoint = 1040, sex = 0, model = "longevity ~ site + cohort + treatment") # Vita11b
-getEffect(mcross, gtsp, marker = "X_156343080", timepoint = 740, sex = 0, model = "longevity ~ site + cohort + treatment") # VitaXb
+getEffect(mcross, gtsp, marker = "X_156343080", timepoint = 740, sex = 0, model = "longevity ~ site + cohort + treatment")  # VitaXb
 
 #Males
 getEffect(mcross, gtsp, marker = "1_121483290", timepoint = 230, sex = 1, model = "longevity ~ site + cohort + treatment") # Vita1c
