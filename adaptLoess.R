@@ -64,54 +64,19 @@ for(mname in names(all)){
     D <- as.numeric(phe.p[phe.p[,"gtsP"] == "D" & as.numeric(phe.p[,1]) >= 20, 1])
 
     setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny")
-    pdf(paste0("July25/Vita_LifeGained/",mname, "_",ss[sex],"_LifeGained.pdf"), width = 16, height = 12)
 
-    plot(c(200, 1100), c(-10, 10), t = "n", ylab = "% life gained at tAge", xlab = "Lifespan Cut-off Age (days)", yaxt="n", xaxs="i", main = "Effect Curve")
-    msequence <- seq(20, 1100, 15)
-    std <- function(x) sd(x)/sqrt(length(x))
-    mm <- c()
-    for(d in msequence){
-      mMall <- mean(c(C, B))
-      mPall <- mean(c(H, D))
-
-      CM <- mean(C[C >= d]) - mMall
-      BM <- mean(B[B >= d]) - mMall
-
-      HM <- mean(H[H >= d]) - mPall
-      DM <- mean(D[D >= d]) - mPall
-
-      mm <- rbind(mm, c(CM, BM, HM, DM))
-    }
-    colnames(mm) <- c("CM", "BM", "HM", "DM")
-
-    abline(h = seq(0, 15, 1), lty=2, col = "gray")
-    points(msequence, 100*((mm[,"CM"]-mm[,"BM"]) / ((mean(c(C,B)) * 2) - msequence)), t = 'l', col = col.main[1], lwd=2)
-    points(msequence, 100*((mm[,"BM"]-mm[,"CM"]) / ((mean(c(C,B)) * 2) - msequence)), t = 'l', col = col.main[2], lwd=2)
-
-    points(msequence, 100*((mm[,"HM"]-mm[,"DM"]) / ((mean(c(H,D)) * 2) - msequence)), t = 'l', col = col.main[3], lwd=2)
-    points(msequence, 100*((mm[,"DM"]-mm[,"HM"]) / ((mean(c(H,D)) * 2) - msequence)), t = 'l', col = col.main[4], lwd=2)
-
-    legend("topright", c("C (rel B)", "B (rel C)", "H (rel D)", "D (rel H)"), col = col.main, pch=18)
-    axis(2, at = seq(-100, 170, 1), seq(-100, 170, 1), las=2)
-    dev.off()
-
-    pdf(paste0("July25/Vita_CumulativeDeath/", mname, "_",ss[sex],"_CumDeaths.pdf"), width = 16.4, height = 12)
-      plot(c(200, 1500), c(0, 1), t = "n", 
-           ylab = "cumsum of % deaths in window (relative to population)", xlab = "Lifespan Cut-off Age (days)", yaxt="n", xaxs="i", main = "Effect Curve")
-      msequence <- seq(20, 1500, 15)
       std <- function(x) sd(x)/sqrt(length(x))
 
       maxD <- max(as.numeric( phe[which(phe[, "sex"] == sex),1]))
-      x <- sort(as.numeric( phe[which(phe[, "sex"] == sex),1]))[seq(0,nrow(phe[which(phe[, "sex"] == sex),]),75)]
+      x <- sort(as.numeric( phe[which(phe[, "sex"] == sex),1]))[seq(0,nrow(phe[which(phe[, "sex"] == sex),]), 80)]
       windowM <- cbind(c(0,x), c(x,maxD))
-#      for(day in msequence){
       mids <- c()
       mm <- c()
       for(x in 1:nrow(windowM)){
         day <- windowM[x, 1]
         day2 <- windowM[x, 2]
         mids <- c(mids, (day+day2) / 2)
-#        day2 <- day + 15
+
         nCdR <- (length(which(C > day & C <= day2)) / length(c(C)))
         nBdR <- (length(which(B > day & B <= day2)) / length(c(B)))
         nHdR <- (length(which(H > day & H <= day2)) / length(c(H)))
@@ -121,53 +86,19 @@ for(mname in names(all)){
 
       rownames(mm) <- mids
       colnames(mm) <- c("C", "B", "H", "D")
-
-#      for(day in msequence){
-#        day2 <- day + 15
-#        nCdR <- (length(which(C > day & C <= day2)) / length(c(C))) * 1000
-#        nBdR <- (length(which(B > day & B <= day2)) / length(c(B))) * 1000
-#        nHdR <- (length(which(H > day & H <= day2)) / length(c(H))) * 1000
-#        nDdR <- (length(which(D > day & D <= day2)) / length(c(D))) * 1000
-#        mX <- rbind(mX, c(nCdR, nBdR, nHdR, nDdR))
-#      }
-      mX <- mm * 1000
-
-      #mp <- c()
-      #for(x in 3:(nrow(mX)-2)){
-      #  mp <- rbind(mp, round(apply(mX[(x-2):(x+2),],2,mean),0))
-      #}
-
-      mp <- mm
-
-     # lods1 <- c()
-     # for(x in 1:nrow(mp)){
-     #   lods1 <- c(lods1, -log10(chisq.test(cbind(c(mp[x,1], 100-mp[x,1]), c(mp[x,2], 100-mp[x,2])))$p.value))
-     # }
-     # lods2 <- c()
-     # for(x in 1:nrow(mp)){
-     #   lods <- -log10(chisq.test(cbind(c(mp[x,3], 100-mp[x,3]), c(mp[x,4], 100-mp[x,4])))$p.value)
-     #   lods2 <- c(lods2, lods)
-     # }
-
-
-      #rownames(mp) <- msequence[-c(1,2,96,97)]
-      abline(h = seq(0, 15, 1), lty=2, col = "gray")
-      points(msequence, cumsum(mm[,1]), t = 'l', col = col.main[1], lwd=2)
-      points(msequence, cumsum(mm[,2]), t = 'l', col = col.main[2], lwd=2)
-      points(msequence, cumsum(mm[,3]), t = 'l', col = col.main[3], lwd=2)
-      points(msequence, cumsum(mm[,4]), t = 'l', col = col.main[4], lwd=2)
-
-      legend("topleft", c("C", "B", "H", "D"), col = col.main, pch=18)
-      axis(2, at = seq(0, 1, 0.1), seq(0, 1, 0.1), las=2)
-
-    dev.off()
+      toR <- which(apply(apply(mm,1, function(x){x == 0}),2, sum) > 0)
+      if(length(toR) > 0){
+        mm <- mm[-toR,]
+        mids <- mids[-toR]
+      }
+    mp <- mm
 
     # TODO: Add a test and significance to the plots (ChiSq test)
     # TODO: Standard deviation based on the surrounding bins
     # TODO: Genotype based plots corresponding to the actuarial plots
     # TODO: Paternal colors (blueish) Maternal colors (Redish)
     # TODO: Histogram of all epistasis values with bars of about 0.1
-    pdf(paste0("July25/Vita_HazardRatios/", mname, "_",ss[sex],"_Deathrate_VarAxis.pdf"), width = 16.4, height = 12)
+    pdf(paste0("July25/Vita_HazardRatios/", mname, "_",ss[sex],"_Deathrate_FixAxis.pdf"), width = 16.4, height = 12)
       op <- par(cex = 2)
       par(mar = c(5, 5, 4, 3))
       dt1 <- log2(mp[,1]/mp[,2])
@@ -186,7 +117,8 @@ for(mname in names(all)){
 
       msex <- "Females"
       if(sex == 1) msex <- "Males"
-      plot(c(50, 1600), c(-xx, xx) , t = "n", main = paste0(mname, " ", msex, "alpha: ",span, " E1/E2: ", round(E1,2), "/",round(E2,2)), xaxs="i",
+      plot(c(42, 1350), c(-1.2, 1.2) , t = "n", main = paste0(mname, " ", msex), 
+           sub = paste0("Death = 80, alpha: ",span, " E1/E2: ", round(E1,2), "/",round(E2,2)), xaxs="i",
            xaxt="n",yaxt="n", xlab = "Age [d]", ylab = "log2(Hazard Ratio)")
 
       col1 <- col.main[c(1:2)][1-as.numeric(smooth1 > 0)+1]
@@ -213,10 +145,11 @@ for(mname in names(all)){
 
       axis(1, at = seq(0, 1600, 200), seq(0, 1600, 200), las=1)
       axis(1, at = seq(0, 1600, 100), rep("", length(seq(0, 1600, 100))), las=1)
-      axis(2, at = seq(-1.5, 1.5, 0.15), round(abs(seq(-1.5, 1.5, 0.15)),1), las=1)
+      axis(2, at = seq(-3.6, 3.6, 0.2), round(abs(seq(-3.6, 3.6, 0.2)),1), las=1)
+      axis(2, at = seq(-3.6, 3.6, 0.1), rep("", length(abs(seq(-3.6, 3.6, 0.1)))), las=1)
      # axis(2, at = seq(-4, 4, .5), rep("", length(abs(seq(-4, 4, .5)))), las=1)
-      text(150, -3.5, "Paternal")
-      text(150, 3.5, "Maternal")
+      text(150, -1.5, "Paternal")
+      text(150, 1.5, "Maternal")
       abline(h = 0)
       legend("topright", c("C", "B"), col = col.main[1:2], pch=19, bty = "n")
       legend("bottomright", c("H", "D"), col = col.main[3:4], pch=19, bty = "n")

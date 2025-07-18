@@ -44,7 +44,7 @@ for(tp in timepoints){
                       cohort = as.factor(pull.pheno(mcross)[, "cohort"]), 
                       treatment = as.factor(pull.pheno(mcross)[, "treatment"]))
 
-  idx <- which(cdata[, "longevity"] >= tp)
+  idx <- which(cdata[, "longevity"] >= tp & cdata[, "sex"] == "0")
 
   cdata <- cdata[idx, ]
   gtsp <- gtsp[idx, ]
@@ -59,15 +59,17 @@ for(tp in timepoints){
     for(m2 in m1:length(all)){
       mp1 <- gtsp[, grep(all[m1], colnames(gtsp))]
       mp2 <- gtsp[, grep(all[m2], colnames(gtsp))]
-      lm.null <- lm(longevity ~ sex + site + cohort + treatment + 0, data = cdata)
-      lm.alt <- lm(longevity ~  sex + site + cohort + treatment + mp1 + mp2 + 0, data = cdata)
-      lm.alt2 <- lm(longevity ~  sex + site + cohort + treatment + mp1 * mp2 + 0, data = cdata)
+      lm.null <- lm(longevity ~ site + cohort + treatment + 0, data = cdata)
+      lm.alt <- lm(longevity ~  site + cohort + treatment + mp1 + mp2 + 0, data = cdata)
+      lm.alt2 <- lm(longevity ~  site + cohort + treatment + mp1 * mp2 + 0, data = cdata)
       n <- sum(!is.na(lm.alt$resid))
       lodM[names(all)[m1], names(all)[m2]] <- (n/2) * log10(sum(lm.null$resid^2) / sum(lm.alt$resid^2))
       lodM[names(all)[m2], names(all)[m1]] <- (n/2) * log10(sum(lm.alt$resid^2) / sum(lm.alt2$resid^2))
       if(m1 == m2) lodM[m1,m2] <- NA
     }
   }
+
+  #cat(names(coef(lm.alt2)), "\n", coef(lm.alt2), "\n")
   rownames(lodM) <- names(all)
   colnames(lodM) <- names(all)
 
