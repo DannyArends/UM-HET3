@@ -1,14 +1,72 @@
+# Manually merge regions keeping the minimal interval
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
+regions <- read.table("regions_Aug25.txt", sep="\t", row.names=1)
+colnames(regions) <- c("Chr", "Proximal", "Distal")
+regions[,"Proximal"] <- 1e6 *as.numeric(regions[,"Proximal"])
+regions[,"Distal"] <- 1e6 *as.numeric(regions[,"Distal"])
+
+#
+# genAge
+#
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
-regions <- read.table("regions_4way_2025.txt", sep="\t", header=FALSE, row.names=1)
-colnames(regions) <- c("Chr", "Proximal", "Top", "Distal")
+GAmodel <- read.table("genage/genage_models.csv",sep=",", header=TRUE)
+GAhuman <- read.table("genage/genage_human.csv",sep=",", header=TRUE)
+
+library(biomaRt)
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/regionsAug25")
+
+mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
+for(x in 1:nrow(regions)){
+  r <- paste0(regions[x, "Chr"],":", regions[x, "Proximal"], ":", regions[x, "Distal"])
+  ortho <- getBM(attributes = c("ensembl_gene_id", "external_gene_name", "hsapiens_homolog_associated_gene_name", "celegans_homolog_associated_gene_name", "dmelanogaster_homolog_associated_gene_name", "scerevisiae_homolog_associated_gene_name"), filters = "chromosomal_region", values = r, mart = mart)
+  descr <- getBM(attributes = c("ensembl_gene_id", "chromosome_name", "start_position", "end_position", "strand", "external_gene_name", "gene_biotype", "mgi_id", "mgi_symbol", "description", "mgi_description"), filters = "chromosomal_region", values = r, mart = mart)
+
+  isGM <- grep("^Gm", descr[,"external_gene_name"])
+  if(length(isGM) > 0) descr <- descr[-isGM,]
+
+  isRIKEN <- grep("^RIKEN", descr[,"mgi_description"])
+  if(length(isRIKEN) > 0) descr <- descr[-isRIKEN,]
+
+  isNA <- which(is.na(descr[, "description"]))
+  if(length(isNA) > 0){ descr <- descr[-isNA,] }
+
+  write.table(descr, paste0("genes/all/",rownames(regions)[x], "_all.txt"), sep = "\t", quote = FALSE, na = "", row.names=FALSE)
+
+  inGenAge <- c()
+  for(co in c(4,5,6)){
+    species <- gsub("_homolog_associated_gene_name","", colnames(ortho)[co])
+    mHasG <- unique(ortho[which(ortho[, co] %in% GAmodel[,2]),1])
+    if(length(mHasG) > 0){
+      inGenAge <- rbind(inGenAge, cbind(species, mHasG))
+    }
+  }
+  hHasG <- unique(ortho[which(ortho[, 3] %in% GAhuman[,2]),1])
+  if(length(hHasG) > 0){
+    inGenAge <- rbind(inGenAge, cbind("Human", hHasG))
+  }
+
+  descr <- cbind(descr, genAge = NA)
+  for(ge in unique(inGenAge[,2])){
+    specV <- paste0(as.character(inGenAge[which(inGenAge[,2] == ge),1]), collapse = ";")
+    descr[which(descr[,"ensembl_gene_id"] == ge), "genAge"] <- specV
+  }
+  
+  rname <- paste0("genes/all/",rownames(regions)[x], "_genAge.txt")
+  nFeat <- nrow(descr)
+  nAll <- sum(descr[, "gene_biotype"] == "protein_coding")
+  
+  descr <- descr[which(!is.na(descr[, "genAge"])),]
+  write.table(descr, rname, sep = "\t", quote = FALSE, na = "", row.names=FALSE)
+  cat("Done",rownames(regions)[x], "in GenAge:", length(unique(inGenAge[,2])), "/", nAll, "total Features:", nFeat, "\n")
+}
 
 
 library(biomaRt)
 
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/Aug2025")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/regionsAug25")
 
 mlist <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
@@ -30,6 +88,7 @@ for(x in 1:nrow(regions)){
 }
 names(mlist) <- rownames(regions)
 
+
 types <- unique(unlist(lapply(mlist, function(x){names(table(x[, "gene_biotype"]))})))
 mm <- matrix(0, nrow(regions), length(types), dimnames=list(rownames(regions), types))
 
@@ -38,17 +97,29 @@ for(x in 1:nrow(regions)){
   mm[x, names(tbl)] <- tbl
 }
 
+
 nEntries <- apply(mm,2,sum)
 mm <- mm[,names(sort(nEntries, decreasing = TRUE))]
 
 write.table(mm, "FeaturesVitaLoci.txt",sep="\t", quote=FALSE)
 
 nSum <- apply(mm,1,sum)
-
 mmF <- cbind(HIGA = 0, HI = 0, MOGA = 0, MO = 0, SUM = nSum, mm)
 
 for(x in 1:nrow(regions)){
-  mVEP <- read.csv(paste0("",rownames(regions)[x], ".snps.vep"),sep="\t", skip=86, header=FALSE)
+  setwd("/home/rqdt9/Data/UM-HET3/wholeGenome")
+  # mVEP <- read.csv(paste0("",rownames(regions)[x], ".snps.vep"),sep="\t", skip=86, header=FALSE)
+  chr <- regions[x,"Chr"]
+  aa <- read.csv(gzfile(paste0("chr",chr,".vep.gz")), sep = "\t", skip=79)
+  isSNP <- which(lapply(lapply(strsplit(aa[,"X.Uploaded_variation"], "_"),"[",3), nchar) == 3)
+  aa <- aa[isSNP,]
+  isSNV <- grep("=SNV", aa[, "Extra"])
+  aa <- aa[isSNV,]
+
+  pos <- as.numeric(unlist(lapply(strsplit(aa[, "Location"], ":"), "[",2)))
+  mVEP <- aa[which(pos >= regions[x, "Proximal"] & pos <= regions[x, "Distal"]),]
+
+  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/regionsAug25")
   mGenAge <- read.csv(paste0("genes/all/",rownames(regions)[x], "_genAge.txt"), sep="\t", header=TRUE, row.names = 1)
   colnames(mVEP) <- c("Uploaded_variation","Location","Allele","Gene","Feature","Feature_type","Consequence",
                       "cDNA_position","CDS_position","Protein_position","Amino_acids","Codons","Existing_variation","Extra")
@@ -131,5 +202,26 @@ for(x in 1:nrow(regions)){
   mmF[rownames(regions)[x], "HIGA"] <- length(which(mm[,"Impact"] == "HIGH" & mm[,"inGenAge"] == "YES"))
 }
 write.table(mmF, "FeaturesVitaLociImpacts.txt",sep="\t", quote=FALSE)
+
+
+
+# Call SNPs
+#
+#setwd("/home/rqdt9/Data/UM-HET3/wholeGenome")
+
+#for(x in (1:nrow(mregions))[1]){
+#  name <- mregions[x,1]
+#  chr <- mregions[x,2]
+#  start <- 1e6 *as.numeric(mregions[x,3])
+#  stop <- 1e6 *as.numeric(mregions[x,4])
+#  aa <- read.csv(gzfile(paste0("chr",chr,".vep.gz")), sep = "\t", skip=79)
+#  isSNP <- which(lapply(lapply(strsplit(aa[,"X.Uploaded_variation"], "_"),"[",3), nchar) == 3)
+#  aa <- aa[isSNP,]
+#  isSNV <- grep("=SNV", aa[, "Extra"])
+#  aa <- aa[isSNV,]
+
+#  pos <- as.numeric(unlist(lapply(strsplit(aa[, "Location"], ":"), "[",2)))
+#  aa <- aa[which(pos >= start & pos <= stop),]
+#}
 
 
