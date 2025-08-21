@@ -1,3 +1,13 @@
+#
+# ProgressiveMapping.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Map longevity QTLs by progressively raising the threshold for inclusion (T-age) by 15 days (starting at 20 days)
+# We perform a full scan at each T-age for both Combined (F+M)), Females, and Males
+# We write out the results in a matrix , and visualize
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")

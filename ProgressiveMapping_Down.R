@@ -1,3 +1,12 @@
+#
+# ProgressiveMapping_Down.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Map longevity QTLs by progressively raising the threshold for exclusion (T-age) by 15 days (starting at 365 days)
+# We perform a full scan at each T-age for both Combined (F+M)), Females, and Males only using control animals (treatment = 0)
+#
+
 setwd("C:/Users/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")
