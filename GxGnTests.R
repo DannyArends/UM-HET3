@@ -1,3 +1,11 @@
+#
+# GxGntests.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to compute the exact number of tests performed when doing the G x G scan across all time points
+#
+
 library(RColorBrewer)
 library(svglite)
 library(vioplot)

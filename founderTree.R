@@ -1,3 +1,11 @@
+#
+# founderTree.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# HClust distance tree of founder genotypes
+#
+
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files/merged")
 fvcf <- read.table("fvcfAll.txt", sep="\t",colClasses="character", header=TRUE)
 

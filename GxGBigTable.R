@@ -1,6 +1,10 @@
-###
-### Candidate gene lists, features in Supplemental 2
-###
+#
+# GxGBigTable.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to produce the the big GxG table (containing all Vita and Soma loci) figure in the supplements
+#
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")

@@ -1,3 +1,11 @@
+#
+# GxD Mapping.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Progressive QTL mapping of Gene x Drug effect
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")

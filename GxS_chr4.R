@@ -1,5 +1,10 @@
-#Vita2c (females)
-#Vita9b (males)
+#
+# GxS_chr4.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to produce a visualization of G x Sex effects on chromosome 4 (figure not used in main or supplements)
+#
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")

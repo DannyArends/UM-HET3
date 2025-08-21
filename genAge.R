@@ -1,6 +1,11 @@
 #
-# genAge
+# genAge.R
 #
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Mapping our mouse genes to see if any GenAge homologous genes in C. elegans, Human, D. melanogaster, and S. cerevisiae are known
+#
+
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
 GAmodel <- read.table("genage/genage_models.csv",sep=",", header=TRUE)

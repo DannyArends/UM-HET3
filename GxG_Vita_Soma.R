@@ -1,3 +1,11 @@
+#
+# GxG_Vita_Soma.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to produce the the big GxG GxG_tpXX_Vita_Soma_Big.pdf figures in the supplements
+#
+
 library(RColorBrewer)
 library(svglite)
 library(vioplot)

@@ -1,6 +1,10 @@
-###
-### Candidate gene lists, features in Supplemental 2
-###
+#
+# GxGCircleTable.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to produce the the big GxG circle plots (containing all Vita and Soma loci) figures in the supplements
+#
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
