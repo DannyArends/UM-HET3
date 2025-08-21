@@ -3,7 +3,7 @@
 #
 # copyright (c) 2020-2030 - Danny Arends
 #
-# testing raw correlation between observed longevity and bodyweight measurements for combined, males, and females
+# Testing raw correlation between observed longevity and bodyweight measurements for combined, males, and females
 #
 
 library(svglite)

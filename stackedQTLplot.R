@@ -1,3 +1,11 @@
+#
+# cplot.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Stacked QTL plot visualizations (Figure 1D) 
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -10,7 +18,7 @@ mcross <- adjustXprobs(mcross)
 
 # Writing out 
 iix <- which(pull.pheno(mcross)[,"longevity"] > 365)
-write.table(pull.pheno(mcross)[iix,"GenoID"], "Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
+#write.table(pull.pheno(mcross)[iix,"GenoID"], "Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
 
 # Create the map object
 chrs <- unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",1))
@@ -44,7 +52,7 @@ for(chr in c(1:19, "X")){
 off <- 3.65
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny")
-pdf("Figure_1B_RobPref_combined.pdf", width = 32, height = 16)
+#pdf("Figure_1B_RobPref_combined.pdf", width = 32, height = 16)
   par(cex=1.6)
   par(cex.axis=1.2)
   op <- par(mar = c(5.1, 4, 4, 5.1))
@@ -72,7 +80,7 @@ pdf("Figure_1B_RobPref_combined.pdf", width = 32, height = 16)
   axis(2, at = seq(.5 * off, (25 * off), off),  rownames(lods.cM)[(1:nrow(lods.cM))[c(TRUE, FALSE, FALSE)]], las=2)
   axis(3, at = chr.mids,  c(1:19, "X"))
   axis(4, at = seq(.5 * off, (25 * off), off),  rownames(lods.cM)[(1:nrow(lods.cM))[c(TRUE, FALSE, FALSE)]], las=2)
-dev.off()
+#dev.off()
 
 
 off <- 3.65
