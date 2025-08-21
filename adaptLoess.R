@@ -1,9 +1,10 @@
-# TODO: Follow up with Arthus for the supplemental files - Ask again
-# TODO: Loess smoother
-# TODO: Output a folder of these for all Vita / haplotype
-# TODO: M&M Interaction scan 
-# TODO: Mortality figure for KM (Figure 1b) Males versus Females whole population
-
+#
+# adaptLoess.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+# 
+# Using all identified Vita top markers, perform an adaptive loess across the time axis
+#
 
 all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 

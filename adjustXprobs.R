@@ -1,3 +1,11 @@
+#
+# adjustXprobs.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+# 
+# Adjust X-chromosome probablitities to avoid issues caused by wrong sex assignment 
+#
+
 adjustXprobs <- function(cross){
   sex <- getsex(cross)$sex
   pr <- cross$geno[["X"]]$prob

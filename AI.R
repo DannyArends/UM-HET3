@@ -1,3 +1,11 @@
+#
+# AI.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+#  Use random forest to predict longevity based on the 3 major covariates (sex, cohort, treatment)
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
