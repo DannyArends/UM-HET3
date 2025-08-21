@@ -1,3 +1,12 @@
+#
+# deathsPer15d.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Compute deaths in each 15 day window per genotype (>85% certain) per sex
+# Additionally, at the end we create a visualization of the data
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")

@@ -10,6 +10,7 @@
 # 4) Compute Differential correlation coefficients for each genotype (>85% certain) using progressive mapping
 # 5) Convert Differential correlation values to P-values and -log10P
 # 6) Create the genetic map, computes positions for visualization, and visualize
+#
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")

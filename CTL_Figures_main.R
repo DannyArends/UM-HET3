@@ -1,3 +1,11 @@
+#
+# CTL_Figures_main.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Create actuarial CTL plots fr 2 Soma "Soma4b", "Soma11a" across the different time points (Main figures)
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -54,7 +62,6 @@ for(marker in all){
 }
 colnames(genotypes) <- all
 
-### TODO add the error bars of Rho
 
 doPoints <- function(gts, stepsize = 2, col = 1, sex = c(0,1)) {
   for(ii in seq(12, 60, stepsize)){

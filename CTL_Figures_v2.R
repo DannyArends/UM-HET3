@@ -1,9 +1,9 @@
 #
-# CTL_Figures.R
+# CTL_Figures_v2.R
 #
 # copyright (c) 2020-2030 - Danny Arends
 #
-# Create the second style actuarial CTL plots for all different time points (Supplemental files)
+# Create actuarial CTL plots per Soma locus across the different time points (Supplemental files)
 #
 
 setwd("/home/rqdt9/Github/UM-HET3")
