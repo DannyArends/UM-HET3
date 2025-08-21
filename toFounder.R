@@ -1,3 +1,11 @@
+#
+# toFounder.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Convert merged Monsterplex and Sequenom data to R/qtl v1 founder haplotype coding
+#
+
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/merged")
 
 # Load vcf coded merged data

@@ -1,3 +1,11 @@
+#
+# time_range.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# At Vita loci, determine the time range at which that loci act
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -7,7 +15,6 @@ lods.fM <- read.table("progressiveMapping_females.txt", sep = "\t", check.names=
 lods.cM <- read.table("progressiveMapping_all.txt", sep = "\t", check.names=FALSE)
 
 threshold <- 3.65
-
 
 rownames(lods.cM)[which(lods.cM[,"1_3010272"] > threshold)]
 rownames(lods.cM)[which(lods.cM[,"1_24042124"] > threshold)]

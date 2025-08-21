@@ -1,3 +1,12 @@
+#
+# Vita9B.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# In Depth analysis and visualization of the effect of Vita9B, comparing back to a previously detected QTL 
+# The visualization is seen in Figure 6a,b,c,d
+#
+
 library(svglite)
 
 setwd("/home/rqdt9/Github/UM-HET3")
