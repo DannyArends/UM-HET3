@@ -1,3 +1,13 @@
+#
+# Figure2.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Figures for the main paper text (Main text Figure 2, but some figure might have moved into other figures to make them fit)
+# Figures: 
+# - Haplotype versus Sex Visualization
+#
+
 library(RColorBrewer)
 library(svglite)
 
@@ -25,8 +35,6 @@ x.max <- length(table(map[, "Chr"]))
 colz.c <- c(rgb(0,0,0,0), rgb(0.6,0.6,1.0,1), brewer.pal(9, "Reds")[-c(1:4)])
 
 thresholds <- c(0, 2.5, 2.75, 3.65, 4.25, 4.95, 5.95, 100)
-
-## TODO: Add the effect of Male / Females to the plot or add them as effect-size
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
 pdf(paste0("Figure_NEW_Haplo_x_Sex.pdf"), width = 24, height = 12)

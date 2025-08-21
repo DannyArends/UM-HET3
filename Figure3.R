@@ -1,3 +1,17 @@
+#
+# Figure3.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Figures for the main paper text (Main text Figure 3, but some figure might have moved into other figures to make them fit)
+# Figures: 
+# - G x G Interaction split by males and females
+# - G x G Interaction figure of Vita4a vs Vita10a
+# - Epistasis by Sex visualization showing the difference in epistasis between males and females (now in Figure 5)
+# - G x G Interaction figures of all Vita loci versus all Vita loci (Figure 5 and Supplements)
+# - G x G Interaction figures of the green dots seen in figure 5 (shared between males and females but not significant in either
+#
+
 library(RColorBrewer)
 library(svglite)
 library(vioplot)
@@ -212,7 +226,7 @@ for(x in mmm){
 }
 dev.off()
 
-### TODO: Make GxG plots for all SIGNIFICANT GxG interaction pairs
+### GxG plots for all SIGNIFICANT GxG interaction pairs
 
 cor.test(unlist(lodM.m[lower.tri(lodM.m)])[ii], unlist(lodM.f[lower.tri(lodM.f)])[ii], method = "spearman")
 

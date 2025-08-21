@@ -1,6 +1,12 @@
-timepoints c(365, 560, 875, 1025)
-#Vita2c (females)
-#Vita9b (males)
+#
+# Figure1b.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Figures for the main paper text (Main text Figure 1, but some figure might have moved into other figures to make them fit)
+# Figures: 
+# - 4 Chromosomes zoomed in after progressive QTL mapping across Time
+#
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
