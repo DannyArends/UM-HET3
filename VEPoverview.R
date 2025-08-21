@@ -1,5 +1,12 @@
-setwd("/home/rqdt9/Data/UM-HET3/wholeGenome")
+#
+# VEPoverview.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Print an overview of the number of MODERATE and HIGH impact SNPs per chromosome (VEP predition)
+#
 
+setwd("/home/rqdt9/Data/UM-HET3/wholeGenome")
 
 hasM <- c()
 hasH <- c()
@@ -8,7 +15,6 @@ for(chr in c(1:19, "X")){
   incon <- gzfile(paste0("chr",chr,".vep.gz"))
   mdata <- readLines(incon)
   mdata <- mdata[-c(1:80)]
-
 
   for(x in 1:length(mdata)){
     isM <- grepl("MODERATE", mdata[x])

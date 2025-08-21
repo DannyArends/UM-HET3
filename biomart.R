@@ -1,4 +1,16 @@
+#
+# biomart.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Part 1) Use biomart to download and summarize all genomic features of Vita loci (we ignore GM and RIKEN features)
+# Part 2) Call SNPs on the 4 founder strains, and generate VEP commands for annotation
+# Part 3) Print VEP information per feature in Vita locus
+#
+
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files/2025_Genes")
+
+#### Part 1) BioMart
 
 library(biomaRt)
 
@@ -89,7 +101,7 @@ rownames(mmatrix) <- names(regions)
 
 write.table(mmatrix, file = "GenBiotypes.txt",sep="\t",quote=FALSE,row.names=TRUE, na = "")
 
-#### Berlin Server part
+#### Part 2) Berlin Server part
 
 execute <- function(x, intern = FALSE, execute = TRUE){
   cat("----", x, "\n")
@@ -165,7 +177,7 @@ cat(paste0("/home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq -
 /home/danny/Github/ensembl-vep/vep --species mus_musculus --refseq --offline -i /home/danny/2025/VitaXb.snps.vcf --everything -o /home/danny/2025/VitaXb.snps.vep &
 
 
-
+#### Part 3) Print VEP information per feature in Vita locus
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/2025")
 files <- list.files(pattern = "\\.vep$")

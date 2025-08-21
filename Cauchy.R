@@ -1,3 +1,11 @@
+#
+# Cauchy.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Cauchy Combination test code across time when we perform progressive mapping (here: 20 day increments)
+#
+
 cauchycombination <- function(p) {
    qc <- qcauchy(p, lower.tail=FALSE)
    pc <- pcauchy(mean(qc), lower.tail=FALSE)

@@ -1,6 +1,12 @@
-###
-### Candidate gene lists, features in Supplemental 2
-###
+#
+# circle2.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to generate version 2 of the circle plot (separates males and females) with splines showing 
+# GxG interactions between (and among) for Vita and Soma loci
+#
+
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")

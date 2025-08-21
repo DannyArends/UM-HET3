@@ -1,3 +1,11 @@
+#
+# callSNPsStudents.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to call SNPs (ad VEP predictions) for BSc and MSc students that performed mapping on subsets of the data
+#
+
 execute <- function(x, intern = FALSE, execute = TRUE){
   cat("----", x, "\n")
   if (execute) {

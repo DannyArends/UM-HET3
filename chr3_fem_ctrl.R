@@ -1,3 +1,12 @@
+#
+# chr3_fem_ctrl.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Mapping longevity on chromosome 3 in control only females, to reproduce the results from:
+# https://www.science.org/doi/10.1126/science.abo3191
+#
+
 setwd("C:/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("C:/Github/UM-HET3/files")

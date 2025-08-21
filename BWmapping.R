@@ -1,3 +1,12 @@
+#
+# BWmapping.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# QTL Mapping and visualization of all bodyweight data (42 days, 6, 12, 18, and 24 months)
+# We first add the newly obtained bodyweight data at 42 days, and 12 month
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -56,7 +65,6 @@ for(x in bw){
   print(t(table(bwd[,c("site", "sex")])))
 }
 
-# Our Progressive Mapping Sequence
 markers <- unique(unlist(lapply(strsplit(colnames(gtsp), ":"), "[",1)))
 
 lods.f <- c()

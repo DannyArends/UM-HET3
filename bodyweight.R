@@ -1,3 +1,13 @@
+#
+# bodyweight.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# QTL Mapping and visualization of 6 month bodyweight data 
+# [old file, since we have additional data. See BWmapping.R]
+# TODO: Move to Old/ 
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")

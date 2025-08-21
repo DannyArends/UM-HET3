@@ -1,3 +1,12 @@
+#
+# chr3_fem_GxE.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Mapping longevity on chromosome 3 in control and NDE females, to investigate any GxE (where E = Drug) at the top marker found in:
+# https://www.science.org/doi/10.1126/science.abo3191
+#
+
 setwd("C:/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("C:/Github/UM-HET3/files")

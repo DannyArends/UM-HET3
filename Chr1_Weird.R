@@ -1,3 +1,11 @@
+#
+# Chr1_Weird.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code to investigating some weird recombination patterns seen on chromosome 1 between 31.062.759 and 34.173.196 bp
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
