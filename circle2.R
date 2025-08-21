@@ -7,7 +7,6 @@
 # GxG interactions between (and among) for Vita and Soma loci
 #
 
-
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
