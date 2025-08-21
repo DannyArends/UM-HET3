@@ -1,4 +1,11 @@
-# Call SNPs on HET3
+#
+# snpcalling.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Call SNPs on Monsterplex BAM files of all UM-HET3 animals, and perform SNP calling on UM-HET3 founders
+#
+
 
 execute <- function(x, intern = FALSE, execute = TRUE){
   cat("----", x, "\n")

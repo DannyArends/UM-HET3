@@ -1,3 +1,12 @@
+#
+# simpleM.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Use the simpleM method to iteratively determine how many independant tests are performed when performing a single genotype scan
+# see: https://github.com/LTibbs/SimpleM
+#
+
 setwd("C:/Users/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")

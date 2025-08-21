@@ -1,3 +1,11 @@
+#
+# SexInteractionPlot.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Create sex-interaction plots for all Vita loci using genotypes (>85% certain)
+#
+
 library(RColorBrewer)
 library(svglite)
 library(vioplot)

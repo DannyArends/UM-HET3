@@ -1,5 +1,5 @@
 #
-# monsterplex.R
+# sequenom.R
 #
 # copyright (c) 2020-2030 - Danny Arends
 #
