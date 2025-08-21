@@ -1,3 +1,11 @@
+#
+# image_ACmap_ALL.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Progressive lifespan QTL mapping visualization on 4-way map data
+#
+
 library(RColorBrewer)
 library(svglite)
 

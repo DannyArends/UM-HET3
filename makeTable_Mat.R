@@ -1,3 +1,11 @@
+#
+# makeTable_Mat.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Compute effect sizes from significant loci when mapping on the maternal map
+#
+
 library(RColorBrewer)
 library(svglite)
 

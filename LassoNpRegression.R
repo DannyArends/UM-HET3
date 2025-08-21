@@ -1,5 +1,11 @@
+#
+# LassoNpRegression.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# non-parametrix mapping code what can be used to switch from progressive mapping using linear models to using Quantile Regression
+#
 
-# try some non parametric regression
 library(quantreg)
 lods.cnp <- c()
 model.null = rq(longevity ~ sex + site + cohort + treatment + 0 , data = cdata, tau = 0.5, method="lasso")

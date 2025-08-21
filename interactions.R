@@ -1,5 +1,9 @@
 #
-# UM-HET3 interactions between significant Vita loci
+# interactions.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Mapping GxG interactions between significant Vita and Soma loci at 4 different timepoints (42, 365, 740, and 905 days)
 #
 
 allV <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 

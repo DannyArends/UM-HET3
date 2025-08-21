@@ -1,3 +1,11 @@
+#
+# KM_Vita9.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Kaplan–Meier curve for Vita9B locus using all 4 genotypes, as well a paternal & maternal haplotypes
+#
+
 library(svglite)
 
 setwd("/home/rqdt9/Github/UM-HET3")

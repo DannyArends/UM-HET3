@@ -1,3 +1,11 @@
+#
+# image_ACmap_PAT.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Progressive lifespan QTL mapping visualization on paternal map
+#
+
 library(RColorBrewer)
 library(svglite)
 

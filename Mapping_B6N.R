@@ -1,3 +1,11 @@
+#
+# makeTable_Pat.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Old strategy to map when B6N != (BALB_cJ == C3H_HeJ == C3H_HeJ)
+#
+
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/")
 
 markers <- read.table("merged/all.vcf.sorted.txt", sep = "\t")
