@@ -4,7 +4,12 @@
 # copyright (c) 2020-2030 - Danny Arends
 #
 # Code that Correlated Trait Locus mapping between lifespan and bodyweight at 6 months
-#
+# 1) Create the cdata object and adjust bodyweight an lifespan for the main covariates
+# 2) Compute correlation coefficients using progressive mapping
+# 3) Visualization code
+# 4) Compute Differential correlation coefficients for each genotype (>85% certain) using progressive mapping
+# 5) Convert Differential correlation values to P-values and -log10P
+# 6) Create the genetic map, computes positions for visualization, and visualize
 
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
@@ -57,7 +62,7 @@ toP <- function(allCor, allN){
   return(list(pC))
 }
 
-### Compute correlation coefficients using progressive mapping
+### 2) Compute correlation coefficients using progressive mapping
 ### Also computes the confidence interval around the compute correlation coeff (Lower and Upper)
 corM <- c()
 allN <- c()
@@ -100,7 +105,7 @@ ttt <-toP(corM, allN)
 lods <- round(-log10(ttt[[1]]),2)
 
 
-### Visualization code
+### 3) Visualization code
 
 col.main <- c("#FF3333", "#00AEEF")
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
@@ -131,7 +136,7 @@ op <- par(cex = 2)
   legend("topleft", c("Female", "Male"), col = col.main, lwd=4, bg = "white", ncol=4, bty = "n")
 dev.off()
 
-### Compute Differential correlation coefficients for each genotype (>85% certain) using progressive mapping
+### 4) Compute Differential correlation coefficients for each genotype (>85% certain) using progressive mapping
 ### The computes P-values and transforms those to -log10P
 
 bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw6"], use = "pair", method = "spearman")
@@ -190,7 +195,7 @@ res.c <- computeDiffCor(mcross, gtsp, cdata, c(0,1), method = "spearman")
 res.f <- computeDiffCor(mcross, gtsp, cdata, 0, method = "spearman")
 res.m <- computeDiffCor(mcross, gtsp, cdata, 1, method = "spearman")
 
-### convert Differential correlation values to P-values
+### 5) Convert Differential correlation values to P-values
 ### For an explanation/derivation of the formulas see chapter4: https://pure.rug.nl/ws/portalfiles/portal/13910115/Complete_dissertation.pdf 
 toP <- function(allCor, allN, bCor){
   ## correlation differences to P-value / LOD scores
@@ -232,7 +237,7 @@ p.c <- toP(res.c[[1]], res.c[[2]], bCor)
 p.f <- toP(res.f[[1]], res.f[[2]], bCor.f)
 p.m <- toP(res.m[[1]], res.m[[2]], bCor.m)
 
-### Create the genetic map and computes positions for visualization
+### 6) Create the genetic map and computes positions for visualization
 
 map <- cbind(Chr = unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",1)), 
              Pos = as.numeric(unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",2))))

@@ -1,12 +1,22 @@
+#
+# ctl_42days.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Note code annotations can be found in ctl_6mo.R
+#
+# Code that Correlated Trait Locus mapping between lifespan and bodyweight at 42 days
+# 1) Create the cdata object and adjust bodyweight an lifespan for the main covariates
+# 2) Compute correlation coefficients using progressive mapping
+# 3) Visualization code
+# 4) Compute Differential correlation coefficients for each genotype (>85% certain) using progressive mapping
+# 5) Convert Differential correlation values to P-values and -log10P
+# 6) Create the genetic map, computes positions for visualization, and visualize
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
-#
-# Use a different clor scheme (blue - red)
-#
-
-### TODO: CTL for Males and Females separately (Done)
 
 library(qtl)
 mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))

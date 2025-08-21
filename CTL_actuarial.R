@@ -1,7 +1,12 @@
 #
-# Make all of them for 42, 12mo, 18mo & 24mo
+# CTL_actuarial.R
 #
+# copyright (c) 2020-2030 - Danny Arends
 #
+# Create actuarial CTL plots for all different time points (Supplemental files)
+#
+
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -124,7 +129,6 @@ toP <- function(allCor, allN){
 timepoints <- c(42, 185, 365, 550, 730)
 names(timepoints) <- c("42", "6", "12", "18", "24")
 
-# TODO Do this by using also: 42, 6m 12m, 18m, 24m
 for(tp in c("42", "6", "12", "18", "24")){
   longCol <- paste0("adjLs", tp)
   bwCol <- paste0("adjBw", tp)
