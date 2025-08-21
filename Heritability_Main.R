@@ -1,3 +1,12 @@
+#
+# Heritability_Main.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Compute Heritability using a full model of main Vita effects
+# Uses an mean square methods (Adapted from: Falconer 1989 & Lynch & Walsh 1998)
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
@@ -75,7 +84,9 @@ for(x in sequ){
              Vita6a + Vita6b + Vita9a + Vita9b + Vita9c + Vita10a + Vita11a + Vita11b + Vita11c + Vita12a + Vita13a + 
              Vita14a + Vita14b + Vita15a  + Vita15b + Vita17a + Vita18a + VitaXa , data = adata)
     ma <- anova(ml)
-    # Mean square methods (most common one used)
+    # Mean square methods (Adapted from: Falconer 1989 & Lynch & Walsh 1998)
+    # Background of: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3432754/
+    # Heritability Equations from: https://study.com/learn/lesson/narrow-broad-sense-heritability-equation-calculation.html
     N <- (length(idx)/4)
     sQEE <- (ma[, "Mean Sq"] - ma["Residuals", "Mean Sq"]) / N            # Partial Total variance
     sQTT <- (ma["Residuals", "Mean Sq"] + sum(ma[-nrow(ma), "Mean Sq"])) / N    # Fixed effects & residual variance

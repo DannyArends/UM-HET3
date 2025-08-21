@@ -1,9 +1,10 @@
 #
-# EpistasisH2.R
+# Heritability_Epistasis.R
 #
 # copyright (c) 2020-2030 - Danny Arends
 #
-# Compute Heritability using a full model including main effects and significant epistatic GxG
+# Compute Heritability using a full model including main Vita effects and significant Vita x Vita epistatic GxG
+# Uses an mean square methods (Adapted from: Falconer 1989 & Lynch & Walsh 1998)
 #
 
 setwd("/home/rqdt9/Github/UM-HET3")
