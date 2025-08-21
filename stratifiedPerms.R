@@ -1,4 +1,11 @@
-## Permutations stratified by sex and year
+#
+# stratifiedPerms.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Use simulations to get a threshold for LOD scores, using permutations stratified by sex and year
+#
+
 set.seed(1) # Make sure the permutations are re-do-a-ble
 for(p in 1:1000){
   pdata <- cdata
