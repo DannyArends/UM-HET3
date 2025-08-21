@@ -1,3 +1,12 @@
+#
+# SNPs_VEP_Aug25.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Subset VEP predictions per chromosome, with Vita and Soma loci
+# Combine this with features found in Cita and Soma, and merge with GenAge data via homologs 
+#
+
 # Manually merge regions keeping the minimal interval
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 regions <- read.table("regions_Aug25.txt", sep="\t", row.names=1)
