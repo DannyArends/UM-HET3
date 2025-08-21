@@ -1,4 +1,12 @@
-#Create the children (cvcf file)
+#
+# monsterplex.snps.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Align Monsterplex genotype data (in vcf format) of the UM-HET animals with the 4 founder strains
+# - Read in raw SNP calls and create the UM-HET3, children - cvcf file
+# - Read in raw SNP calls and create the founder - fvcf file
+#
 
 setwd("C:/Github/UM-HET3/files/rawSNPs")
 

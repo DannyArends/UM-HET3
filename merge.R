@@ -1,3 +1,11 @@
+#
+# merge.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Merge Sequenom and Monsterplex data
+#
+
 setwd("C:/Github/UM-HET3/files")
 
 # Load vcf coded sequenom

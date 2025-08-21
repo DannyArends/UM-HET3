@@ -1,3 +1,11 @@
+#
+# monsterplex.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Merge Monsterplex genotype data (in vcf format) with ITP phenotype and covariate data
+#
+
 setwd("C:/Github/UM-HET3/files/monsterplex")
 
 # Load the sample annot

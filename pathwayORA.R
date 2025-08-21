@@ -1,3 +1,13 @@
+#
+# pathwayORA.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Write out background and foreground lists (prioritized (MODERATE impact) & priorititzed (HIGH impact)) of genes
+# - We additionally removed GPCRs and Olfactory genes
+# Lists were submitted to only ORA tools (David, innateDB)
+#
+
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
 regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
@@ -68,7 +78,7 @@ length(unique(prio))
 length(unique(prioH))
 
 
-## OLD ORA (previous version of Vita regions)
+### OLD ORA (previous version of Vita regions)
 
 regions <- read.table("regions_4way_merged_March23.txt", sep="\t", header=FALSE, row.names=1)
 colnames(regions) <- c("Chr", "Proximal", "Distal", "Old")

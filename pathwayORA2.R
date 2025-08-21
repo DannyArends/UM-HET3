@@ -1,3 +1,12 @@
+#
+# pathwayORA2.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Updated version of pathway ORA analysis, We remove GPCRs and Olfactory genes
+# Performs a leave-one-Vita region out approach to see if in-Region clustering of genes explains the observed over-representation
+#
+
 library(biomaRt)
 library(clusterProfiler)
 library(org.Mm.eg.db)
