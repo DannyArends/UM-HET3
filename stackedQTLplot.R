@@ -1,5 +1,5 @@
 #
-# cplot.R
+# stackedQTLplot.R
 #
 # copyright (c) 2020-2030 - Danny Arends
 #

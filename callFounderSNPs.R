@@ -1,3 +1,10 @@
+#
+# createTrack.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code that runs SNP calling on the 4 founders per chromosome and performs VEP predictions
+#
 
 execute <- function(x, intern = FALSE, execute = TRUE){
   cat("----", x, "\n")

@@ -1,3 +1,11 @@
+#
+# createCrossObject.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Main code that generates the cross object from the phased genotype data
+#
+
 setwd("C:/Github/UM-HET3/files")
 
 map <- read.table("merged/map.gts4way.Juli2021.txt", sep="\t")
