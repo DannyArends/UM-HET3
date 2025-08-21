@@ -1,3 +1,11 @@
+#
+# monsterplex.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Merge Sequenom genotype data with ITP phenotype and covariate data, order the map, and transform genotypes to vcf coding (similar to monsterplex data)
+#
+
 setwd("C:/Github/UM-HET3/files/sequenom")
 sdata <- read.csv("sequenom.data.csv", row.names=1, na.strings=c("U", "x", "", "NA"),colClasses="character")
 aind <- read.csv("sequenom.ind.annot.txt",sep="\t", na.strings=c("U", "x", "", "NA"))
