@@ -1,3 +1,11 @@
+#
+# phenotypes.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Old pre-processing of phenotype data, with QTL scans to see if adjustment improves
+#
+
 setwd("C:/Github/UM-HET3/files/merged")
 
 gts4way <- read.table("gts4way.Juli2021.txt", sep="\t",na.strings=c("","NA", "??", "XX"))

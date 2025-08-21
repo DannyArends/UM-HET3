@@ -28,36 +28,9 @@ cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]),
 sequ <-seq(35, 1100, 15)
 reps <- 1:50
 
-all <- c("1_3010272", "1_24042124", "1_120474787", "2_89844287", "2_112712327", "2_148442635","3_83838529", "3_92135706", "4_52524395",
-         "5_67573068", "6_107382038", "6_132762500", "9_29939029", "9_104091597", "9_124056586", "10_72780332", "11_5628810", "11_82178599",
-         "12_112855820", "13_89689878", "14_101437457", "15_74248242", "17_32883804", "18_60822951")
-
-names(all) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
-                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
-                "Vita17a","Vita18a")
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
-lodM.m <- read.table(paste0("vita_interactions_2way_females.txt"), sep = "\t")
-lodM.f <- read.table(paste0("vita_interactions_2way_males.txt"), sep = "\t")
-
-ints <- c()
-for(timepoint in c(42, 365, 740, 905)){
-  for(mX1 in 1:(length(all)-1)){
-    for(mX2 in mX1:length(all)){
-      m1 <- names(all)[mX1]
-      m2 <- names(all)[mX2]
-      if(m1 == m2) next;
-
-      if(lodM.m[m2,m1] >= 3.8 || lodM.f[m2,m1] >= 3.8){
-       ints <- rbind(ints, c(m1,m2, lodM.m[m2,m1] >= 3.8, lodM.f[m2,m1] >= 3.8))
-      }
-}}}
-
-
-############### GREEN DOTS ############### 
-
 mmF <- vector("list", length(sequ))
 names(mmF) <- sequ
-for(x in sequ){
+for(x in sequ[1]){
   Hs <- c()
   set.seed(42)
   for(n in reps) {
@@ -94,23 +67,21 @@ for(x in sequ){
     ml <- lm(longevity ~ site + cohort + treatment + 
              Vita1a + Vita1b + Vita1c + Vita2a + Vita2b + Vita2c + Vita3a + Vita3b + Vita4a + Vita5a + 
              Vita6a + Vita6b + Vita9a + Vita9b + Vita9c + Vita10a + Vita11a + Vita11b + Vita12a + Vita13a + 
-             Vita14a + Vita15a + Vita17a + Vita18a + VitaXa + VitaXb + Vita2a:Vita17a + Vita11a:Vita14a + 
-             Vita4a:Vita10a + Vita10a:Vita11a + Vita3a:Vita6b + Vita11b:Vita13a + Vita11a:Vita13a + Vita11a:Vita15a + 
-             Vita2c:Vita18a + Vita3b:Vita4a + Vita1b:Vita10a + Vita1c:Vita13a + Vita12a:Vita6a, data = adata)
+             Vita14a + Vita15a + Vita17a + Vita18a + VitaXa + VitaXb, data = adata)
     ma <- anova(ml)
     # Mean square methods (most common one used)
     N <- (length(idx)/4)
     sQEE <- (ma[, "Mean Sq"] - ma["Residuals", "Mean Sq"]) / N            # Partial Total variance
-    sQG <- (ma[4:42, "Mean Sq"] - ma["Residuals", "Mean Sq"]) / N         # Partial Genetic variance
+    sQG <- (ma[4:29, "Mean Sq"] - ma["Residuals", "Mean Sq"]) / N         # Partial Genetic variance
     sQE <- (ma["Residuals", "Mean Sq"] + sum(ma[1:3, "Mean Sq"])) / N     # Fixed effects & residual variance
-    sQTT <- (ma["Residuals", "Mean Sq"] + sum(ma[-43, "Mean Sq"])) / N    # Fixed effects & residual variance
+    sQTT <- (ma["Residuals", "Mean Sq"] + sum(ma[-30, "Mean Sq"])) / N    # Fixed effects & residual variance
     sQT <- sQG + sQE # Total variance
     vE <- sQEE / sQTT # Contributions
     Hs <- cbind(Hs, vE)
   }
   cat("Done ", x,"\n")
   colnames(Hs) <- reps
-  rownames(Hs) <- c("site", "cohort", "treatment", c(names(markers), paste0("I", 1:13)), "unexplained")
+  rownames(Hs) <- c("site", "cohort", "treatment", names(markers), "unexplained")
 
   mmF[[as.character(x)]] <- Hs
 }
@@ -119,7 +90,7 @@ for(x in sequ){
 mG <- c()
 mE <- c()
 for(x in sequ){
-  aa <- round(apply(mmF[[as.character(x)]][4:42,],1, mean),3)
+  aa <- round(apply(mmF[[as.character(x)]][4:29,],1, mean),3)
   mG <- rbind(mG, aa)
   aa <- round(apply(mmF[[as.character(x)]][1:3,],1, mean),3)
   mE <- rbind(mE, aa)
@@ -127,16 +98,17 @@ for(x in sequ){
 mG[mG < 0] <- 0
 mE[mE < 0] <- 0
 rownames(mG) <- sequ
-colnames(mG) <- c(names(markers), paste0("I", 1:13))
+colnames(mG) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
+                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
+                "Vita17a","Vita18a","VitaXa","VitaXb")
 
 rownames(mE) <- sequ
 colnames(mE) <- c("Site", "Cohort", "Treatment")
 
-
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-#pdf("H2_Female_GxG.pdf", width = 20, height = 20)
+pdf("H2_Female.pdf", width = 20, height = 20)
 nf <- layout( matrix(c(1,2,2), ncol=1) )
 op <- par(mar = c(4,10,2,2))
 op <- par(cex = 1.5)
@@ -167,7 +139,7 @@ image(1:nrow(mG), 1:(ncol(mE) + ncol(mG)), combined, xaxt="n",
 
 axis(2, at = 1:ncol(combined), colnames(combined), las=2)
 box()
-
+dev.off()
 
 
 
@@ -209,22 +181,27 @@ for(x in sequ){
     ml <- lm(longevity ~ site + cohort + treatment + 
              Vita1a + Vita1b + Vita1c + Vita2a + Vita2b + Vita2c + Vita3a + Vita3b + Vita4a + Vita5a + 
              Vita6a + Vita6b + Vita9a + Vita9b + Vita9c + Vita10a + Vita11a + Vita11b + Vita12a + Vita13a + 
-             Vita14a + Vita15a + Vita17a + Vita18a + VitaXa + VitaXb + Vita2a:Vita17a + Vita11a:Vita14a + 
-             Vita4a:Vita10a + Vita10a:Vita11a + Vita3a:Vita6b + Vita11b:Vita13a + Vita11a:Vita13a + Vita11a:Vita15a + 
-             Vita2c:Vita18a + Vita3b:Vita4a + Vita1b:Vita10a + Vita1c:Vita13a + Vita12a:Vita6a, data = adata)
+             Vita14a + Vita15a + Vita17a + Vita18a + VitaXa + VitaXb, data = adata)
     ma <- anova(ml)
+    # Variance explained: Nu - partial method
+    #vE <- ma[, "Sum Sq"] / ma["Residuals", "Sum Sq"]
+
+
+    # Variance explained: Omega partial method
+    #vE <- (ma[, "Sum Sq"] - (ma[, "Df"] * ma["Residuals", "Mean Sq"])) / (ma[, "Sum Sq"] + ((length(idx) - ma[, "Df"]) * ma["Residuals", "Mean Sq"]))
+
     # Mean square methods (most common one used)
     N <- (length(idx)/4)
     sQEE <- (ma[, "Mean Sq"] - ma["Residuals", "Mean Sq"]) / N # Partial Total variance
-    sQG <- (ma[4:42, "Mean Sq"] - ma["Residuals", "Mean Sq"]) / N # Partial Genetic variance
+    sQG <- (ma[4:29, "Mean Sq"] - ma["Residuals", "Mean Sq"]) / N # Partial Genetic variance
     sQE <- (ma["Residuals", "Mean Sq"] + sum(ma[1:3, "Mean Sq"])) / N # Fixed effects & residual variance
-    sQTT <- (ma["Residuals", "Mean Sq"] + sum(ma[-43, "Mean Sq"])) / N # Fixed effects & residual variance
+    sQTT <- (ma["Residuals", "Mean Sq"] + sum(ma[-30, "Mean Sq"])) / N # Fixed effects & residual variance
     sQT <- sQG + sQE # Total variance
     vE <- sQEE / sQTT # Contributions
     Hs <- cbind(Hs, vE)
   }
   colnames(Hs) <- reps
-  rownames(Hs) <- c("site", "cohort", "treatment", c(names(markers), paste0("I", 1:13)), "unexplained")
+  rownames(Hs) <- c("site", "cohort", "treatment", names(markers), "unexplained")
   cat("Done ", x,"\n")
   mmM[[as.character(x)]] <- Hs
 }
@@ -234,7 +211,7 @@ for(x in sequ){
 mG <- c()
 mE <- c()
 for(x in sequ){
-  aa <- round(apply(mmM[[as.character(x)]][4:42,],1, mean),3)
+  aa <- round(apply(mmM[[as.character(x)]][4:29,],1, mean),3)
   mG <- rbind(mG, aa)
   aa <- round(apply(mmM[[as.character(x)]][1:3,],1, mean),3)
   mE <- rbind(mE, aa)
@@ -242,8 +219,97 @@ for(x in sequ){
 mG[mG < 0] <- 0
 mE[mE < 0] <- 0
 rownames(mG) <- sequ
-colnames(mG) <- c(names(markers), paste0("I", 1:13))
+colnames(mG) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
+                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
+                "Vita17a","Vita18a","VitaXa","VitaXb")
 
 rownames(mE) <- sequ
 colnames(mE) <- c("Site", "Cohort", "Treatment")
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
+pdf("H2_Male.pdf", width = 20, height = 20)
+
+nf <- layout( matrix(c(1,2,2), ncol=1) )
+op <- par(mar = c(4,10,2,2))
+op <- par(cex = 1.5)
+plot(c(10, 1110), y = c(0, 0.70), xlab = "Tage (Days)", ylab = "Broad sense haplotype heritability", 
+     main = "Male Heritability - 26 Vita regions", t = "n", yaxt="n", xaxt="n", yaxs = "i", xaxs = "i")
+for(x in sequ){
+  aa <- mmM[[as.character(x)]][4:29,]
+  aa[aa < 0] <- 0
+  boxplot(as.numeric(apply(aa,2,sum)), boxwex=20, at = x, add = TRUE, yaxt="n", 
+          col = add.alpha("#00AEEF", 0.4), medcol="#00AEEF", border="#00AEEF", outpch = 19, outcex = .5)
+
+  aa <- mmM[[as.character(x)]][1:3,]
+  aa[aa < 0] <- 0
+  boxplot(as.numeric(apply(aa,2,sum)), boxwex=20, at = x, add = TRUE, yaxt="n", 
+          col = add.alpha("#466D1D", 0.4), medcol="#607D3B", border="#607D3B", outpch = 19, outcex = .5)
+}
+axis(1, at = seq(20, 1100, 4*15), seq(20, 1100, 4*15))
+axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
+legend("bottomleft", c("Male", "Environment"), fill = add.alpha(c("#00AEEF", "#AFE1AF"), 0.4), border = c("#00AEEF", "#AFE1AF"))
+
+combined <- cbind(mE, round(100 * mG)[,ncol(mG):1])
+ms <- c(c(0.0, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64), c(1,2,4,8,16,32))
+colz <- c(colorRampPalette(c("#FFFFFF","#486E33"))(7), colorRampPalette(c("#FFFFFF","#00AEEF"))(6))
+image(1:nrow(mG), 1:(ncol(mE) + ncol(mG)), combined, xaxt="n", 
+      yaxt = "n", xlab = "Tage (Days)", ylab = "", main = "H2 Mean square methods (Male)",
+      breaks = ms, col = colz)
+
+axis(2, at = 1:ncol(combined), colnames(combined), las=2)
+box()
+dev.off()
+
+
+#### OLD
+
+
+mR <- c()
+for(x in sequ){
+  x <- round(apply(mmM[[as.character(x)]][4:29,],1, mean),3)
+  mR <- rbind(mR, x)
+}
+mR[mR < 0] <- 0
+rownames(mR) <- sequ
+colnames(mR) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
+                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
+                "Vita17a","Vita18a","VitaXa","VitaXb")
+
+#TODO from 42 days
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_Tables_Files/07_Heritability_Figures")
+pdf("H2_Male.pdf", width = 20, height = 20)
+  op <- par(mar = c(4,10,2,2))
+  op <- par(cex = 1.5)
+  image(1:nrow(mR), 1:ncol(mR), mR, xaxt="n", yaxt = "n", xlab = "Cut", ylab = "", main = "H2 Mean square methods (Males)")
+  axis(1, at = (1:nrow(mR))[c(TRUE, FALSE)], sequ[c(TRUE, FALSE)])
+  axis(2, at = 1:ncol(mR), colnames(mR), las=2)
+  box()
+dev.off()
+
+
+
+#TODO from 42 days
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_Tables_Files/07_Heritability_Figures")
+pdf(paste0("Extra_Heritability_Female_Env.pdf"), width = 14, height = 10)
+  plot(c(365, 1100), y = c(0, 0.75), xlab = "Cutoff age", ylab = "Broad sense haplotype heritability", 
+       main = "Heritability - 26 Vita regions", t = "n", yaxt="n", xaxt="n", yaxs = "i")
+  for(x in sequ){
+    vita <- apply(mmF[[as.character(x)]],2, function(y){sum(y[4:29])})
+    boxplot(as.numeric(vita), boxwex=20, at = x-2.5, add = TRUE, yaxt="n", col = "hotpink")
+
+    env <- apply(mmF[[as.character(x)]],2, function(y){sum(y[1:3])})
+    boxplot(env, boxwex=10, at = x+2.5, add = TRUE, yaxt="n", col = 3)
+
+  #  vita <- apply(mmM[[as.character(x)]],2, function(y){sum(y[4:29])})
+  #  boxplot(as.numeric(vita), boxwex=20, at = x-2.5, add = TRUE, yaxt="n", col = "blue")
+
+  #  env <- apply(mmM[[as.character(x)]],2, function(y){sum(y[1:3])})
+  #  boxplot(env, boxwex=10, at = x+2.5, add = TRUE, yaxt="n", col = 3)
+
+    cat(mean(vita), "\n")
+  }
+  axis(1, at = seq(365, 1100, 4*15), seq(365, 1100, 4*15))
+  axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
+dev.off()
+
 

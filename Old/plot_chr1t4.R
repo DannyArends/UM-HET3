@@ -1,3 +1,11 @@
+#
+# plot_chr1t4.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Zoom in plot of progressive mapping results on chromosomes 1 through 4
+#
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
