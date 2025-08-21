@@ -1,3 +1,11 @@
+#
+# PostPhasingRemoval.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Post phasing removal of markers not in linkage with the neighbouring markers
+#
+
 setwd("C:/Github/UM-HET3/files")
 gts4way.fill <- read.table("merged/gts4way.rqtl.filled.Juli2021.txt", sep="\t")
 gts4way.rqtl <- read.table("merged/gts4way.rqtl.Juli2021.txt", sep="\t")

@@ -1,3 +1,11 @@
+#
+# PostVEP.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Merging data from VEP, SNPs, and GenAge into a single per locus text file
+#
+
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
 regions <- read.table("regions_4way_2025.txt", sep="\t", header=FALSE, row.names=1)

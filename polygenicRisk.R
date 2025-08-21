@@ -1,3 +1,13 @@
+#
+# polygenicRisk.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Two ways of performing Polygenic risk prediction (not in the paper, but on bioarchive)
+# - Classify loci as Increasing, Decreasing, Neutral & classifying risk as Sum(Loci)
+# - Summing up the effect size of loci, when effect size is larger than error
+#
+
 library(svglite)
 
 setwd("/home/rqdt9/Github/UM-HET3")
