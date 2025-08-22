@@ -11,11 +11,11 @@ Most scripts in this repository start by loading in the um-het3-rqtl.csvr, which
 The folder [PreCross/](./PreCross/) contains all the code used to call SNPs on the monsterplex BAM files, and the conversion & harmonization of Monsterplex and Sequenom data into the cross object. It also contains the code to convert observed SNPs to the Founder strain haplotypes. This code is used to produce the um-het3-rqtl.csvr from Monsterplex .BAM files and the Sequenom data, with phenotypes and covariates coming from
 [genenetwork.org](https://genenetwork.org).
 
-The folder [ProgessiveMapping/](./ProgessiveMapping/) contains all the code used to perform actuarial QTL scans on lifespan for 4-way, paternal and maternal maps. This folder also the adjustXprobs.R code, that is needed for proper X-chromosome mapping, and furthermore contains bodyweight QTL mapping as well as simpleM and Cauchi combination tests for Multiple Testing correction. The Lasso based non-parametric Quantile Regression 'engine' code is also found here.
+The folder [ProgessiveMapping/](./ProgessiveMapping/) contains all the code used to perform actuarial QTL scans on lifespan for 4-way, paternal and maternal maps. This folder also contains the adjustXprobs.R code, that is needed for proper X-chromosome mapping, and furthermore contains bodyweight QTL mapping as well as simpleM and Cauchi Combination tests for multiple testing correction. The Lasso based non-parametric Quantile Regression 'engine' code is also found here.
 
-The folder [Soma/](./Soma/) contains all the code used to perform the Correlated Trait Locus (CTL) mapping analysis between bodyweight (at 5 timepoints) and progressive lifespan mapping.
+The folder [Soma/](./Soma/) contains all the code used to perform the Correlated Trait Locus (CTL) mapping analysis between bodyweight (at 5 timepoints) and progressive lifespan mapping. Furthermore, code for visualizing Soma loci is also located in this folder.
 
-The folder [Interactions/](./Interactions/) contains the Interaction models used to investigate / map all interactions between G x G, G x Sex, G x Site, and G x Drug. As well as code for creating the big interaction table figure inside the paper.
+The folder [Interactions/](./Interactions/) contains the interaction models used to investigate / map all interactions between G x G, G x Sex, G x Site, and G x Drug. As well as code for creating the big interaction table figure inside the paper.
 
 The folder [Figures/](./Figures/) contains code that produces the figures / images inside the paper. Not all figure code is found here some code lives in their respective folders (e.g. visualizations of predictions are found in [Predictions/](./Predictions/), while some GxG images are found in [Interactions/](./Interactions/).
 
