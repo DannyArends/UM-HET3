@@ -1,5 +1,5 @@
 #
-# interactions.R
+# GxG_Mapping.R
 #
 # copyright (c) 2020-2030 - Danny Arends
 #
@@ -54,8 +54,7 @@ for(tp in timepoints){
   gtsp <- gtsp[idx, ]
 
 
-  # TODO compute LOD scores for T42, 365, 740, 905
-  # TODO compute LOD scores for combined
+  # Compute GxG LOD scores for males and females combined
 
   lodM <- matrix(NA, length(all), length(all), dimnames = list(names(all), names(all)))
   for(m1 in 1:length(all)){
@@ -104,8 +103,7 @@ for(sex in names(sexes)){
     gtsp <- gtsp[idx, ]
 
 
-    # TODO compute LOD scores for T42, 365, 740, 905
-    # TODO compute LOD scores for combined
+    # Compute GxG LOD scores for males or females
 
     lodM <- matrix(NA, length(all), length(all), dimnames = list(names(all), names(all)))
     for(m1 in 1:length(all)){
