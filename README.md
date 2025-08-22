@@ -35,7 +35,7 @@ The folder [Old/](./Old/) contains the old & deprecated code not used anymore, o
 
 The code in this ropsitory is made possible by, and has dependencies on, the following excellent software:
 
-- [The R Project for Statistical Computing](https://https://www.r-project.org/)
+- [The R Project for Statistical Computing](https://www.r-project.org/)
 - [Ensembl Variant Effect Predictor (Ensembl VEP)](https://www.ensembl.org/info/docs/tools/vep/index.html)
 - [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
 - [Bcftools](https://samtools.github.io/bcftools/)
