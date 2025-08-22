@@ -68,3 +68,7 @@ Or be a maintainer, and adopt (the documentation of) a function.
 
 Written by Danny Arends and is released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). 
 See [LICENSE.txt](./LICENSE.txt).
+
+### Cite
+
+Arends, D., Ashbrook, D. G., Roy, S., Lu, L., Sloan, Z., Centeno, A. G., Lamour, K. H., de Magalhães, J. P., Prins, P., Broman, K. W., Sen, S., Mitchell, S. J., MacArthur, M. R., Akin, Ö. A., Auwerx, J., Bajwa, A., Diaz, V., Harrison, D. E., Strong, R., Nelson, J. F., Mozhui, K., Williams, E. G., Miller, R. A., & Williams, R. W. (2025). **Genetic Modulation of Lifespan: Dynamic Effects, Sex Differences, and Body Weight Trade-offs** *bioRxiv* [https://doi.org/10.1101/2025.04.27.649857](https://doi.org/10.1101/2025.04.27.649857)
