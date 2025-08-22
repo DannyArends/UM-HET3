@@ -31,6 +31,17 @@ The folder [Predictions/](./Predictions/) contains all the code used to predict 
 
 The folder [Old/](./Old/) contains the old & deprecated code not used anymore, or which was used to do one off analysis.
 
+### Dependancies 🛠️
+
+The code in this ropsitory is made possible by, and has dependencies on, the following excellent software:
+
+- [The R Project for Statistical Computing](https://https://www.r-project.org/)
+- [Ensembl Variant Effect Predictor (Ensembl VEP)](https://www.ensembl.org/info/docs/tools/vep/index.html)
+- [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
+- [Bcftools](https://samtools.github.io/bcftools/)
+
+As well as many many different R-packages used in the analysis of the data.
+
 ### Genotype Coding Convention 🧬
 
 The code for progressive QTL mapping in this repository follows specific conventions to ensure consistency and clarity. The analysis relies on a genetic map created from Monsterplex Capture DNA-Sequencing and Sequenom MassARRAY data. The codebase is designed to handle the complex genetic structure of the UM-HET3 population, a four-way cross derived from four distinct parental strains.
