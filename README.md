@@ -34,14 +34,14 @@ The folder [Old/](./Old/) contains the old & deprecated code not used anymore, o
 
 The code for progressive QTL mapping in this repository follows specific conventions to ensure consistency and clarity. The analysis relies on a genetic map created from Monsterplex Capture DNA-Sequencing and Sequenom MassARRAY data. The codebase is designed to handle the complex genetic structure of the UM-HET3 population, a four-way cross derived from four distinct parental strains.
 
-Before data is formatted for R/Qtl v1, genotypes are coded as follows:
+The data is formatted for R/Qtl v1, and as such genotypes are coded as follows:
 
-AA for the BALB/cByJ strain
-BB for the C57BL/6J strain
-CC for the C3H/HeJ strain
-DD for the DBA/2J strain
+- AA for the BALB/cByJ strain
+- BB for the C57BL/6J strain
+- CC for the C3H/HeJ strain
+- DD for the DBA/2J strain
 
-The code also accounts for phase-known alleles where the counterpart is uncertain or not imputed. These are represented with a question mark. For example, a genotype with an A allele from one parent and an unknown allele from the other is coded as A?. Similarly, an unknown allele combined with a known C allele is represented as ?C. This convention allows the analysis to proceed even with incomplete genotyping data, maintaining the integrity of the genetic map.
+The code also accounts for phase-known alleles where the counterpart is uncertain or not imputed. These are represented with a question mark. For example, a genotype with an A allele from the BALB/cByJ parent and an unknown allele from the other is coded as A?. Similarly, an unknown allele combined with a known C allele is represented as ?C. This convention allows the analysis to proceed even with incomplete genotyping data, maintaining the integrity of the genetic map.
 
 ### Contributing 🙌
 
