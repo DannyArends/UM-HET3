@@ -47,7 +47,7 @@ As well as many many different R-packages used in the analysis of the data.
 
 The code for progressive QTL mapping in this repository follows specific conventions to ensure consistency and clarity. The analysis relies on a genetic map created from Monsterplex Capture DNA-Sequencing and Sequenom MassARRAY data. The codebase is designed to handle the complex genetic structure of the UM-HET3 population, a four-way cross derived from four distinct parental strains.
 
-The data is formatted for R/Qtl-v1, and as such genotypes are coded as follows:
+The data is formatted for R/qtl-v1, and as such genotypes are coded as follows:
 
 - AA for the BALB/cByJ strain
 - BB for the C57BL/6J strain
