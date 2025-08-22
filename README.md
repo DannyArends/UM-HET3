@@ -29,6 +29,8 @@ The folder [ProgessiveMapping/](./ProgessiveMapping/) contains all the code used
 
 The folder [Soma/](./Soma/) contains all the code used to perform the Correlated Trait Locus (CTL) mapping analysis between bodyweight (at 5 timepoints) and progressive lifespan mapping.
 
+The folder [Interactions/](./Interactions/) contains the Interaction models used to investigate / map all interactions between G x G, G x Sex, G x Site, and G x Drug. As well as code for creating the big interaction table figure inside the paper.
+
 The folder [Inversions/](./Inversions/) contains the inversion finder code, which finds inversion by looking at recombination frequency using an 8-marker sliding window
 
 The folder [Old/](./Old/) contains the old & deprecated code not used anymore, or which was used to do one off analysis.
