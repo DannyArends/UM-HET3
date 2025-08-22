@@ -6,7 +6,7 @@ The repository provides the tools for reproducing the findings presented in the 
 
 ### Structure 📁
 
-Most scripts in this repository start by loading in the um-het3-rqtl.csvr, which is the data coded for R/qtl v1 as explained in the read.cross help file. The um-het3-rqtl.csvr file can be loaded in with the R/qtl-v1 read.cross function, with parameters set to genotypes=NULL and na.strings=c("-", "NA")
+Most scripts in this repository start by loading in the um-het3-rqtl.csvr, which is the data coded for R/qtl-v1 as explained in the read.cross help file. The um-het3-rqtl.csvr file can be loaded in with the R/qtl-v1 read.cross function, with parameters set to genotypes=NULL and na.strings=c("-", "NA")
 
 The folder [PreCross/](./PreCross/) contains all the code used to call SNPs on the monsterplex BAM files, and the conversion & harmonization of Monsterplex and Sequenom data into the cross object. It also contains the code to convert observed SNPs to the Founder strain haplotypes. This code is used to produce the um-het3-rqtl.csvr from Monsterplex .BAM files and the Sequenom data, with phenotypes and covariates coming from
 [genenetwork.org](https://genenetwork.org).
@@ -38,6 +38,7 @@ The code in this ropsitory is made possible by, and has dependencies on, the fol
 - [The R Project for Statistical Computing](https://www.r-project.org/)
 - [Ensembl Variant Effect Predictor (Ensembl VEP)](https://www.ensembl.org/info/docs/tools/vep/index.html)
 - [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html)
+- [R/qtl](https://rqtl.org/)
 - [Bcftools](https://samtools.github.io/bcftools/)
 
 As well as many many different R-packages used in the analysis of the data.
@@ -46,7 +47,7 @@ As well as many many different R-packages used in the analysis of the data.
 
 The code for progressive QTL mapping in this repository follows specific conventions to ensure consistency and clarity. The analysis relies on a genetic map created from Monsterplex Capture DNA-Sequencing and Sequenom MassARRAY data. The codebase is designed to handle the complex genetic structure of the UM-HET3 population, a four-way cross derived from four distinct parental strains.
 
-The data is formatted for R/Qtl v1, and as such genotypes are coded as follows:
+The data is formatted for R/Qtl-v1, and as such genotypes are coded as follows:
 
 - AA for the BALB/cByJ strain
 - BB for the C57BL/6J strain
