@@ -1,23 +1,8 @@
-## UM-HET3 ✨
-Data analysis UM-HET3 - 4-way cross created from (BALB/cByJ x C57BL/6J) and (C3H/HeJ x DBA/2J)
+## Genetics of longevity ✨
 
-Creating a physical and genetic map from Monsterplex Capture DNA-Sequencing data and Sequenom MassARRAY data for the UM-HET3 populations
+This repository contains the code used to analyze the genetics of aging and lifespan in a study on a large cohort of UM-HET3 mice. The scripts map loci that influence mortality, revealing how their effects change with age and sex. The code also investigates the genetic basis for the relationship between body weight and lifespan, identifying distinct sets of genes that control this correlation at different life stages.
 
-- Three physical locations (Sites/Centers): JL, UM, and UT
-- Cohort Structure 2004 - 2012
-- Treatments (21 levels, some duplicated/too small)
-- Body weight at 42 days, and 6, 12, 18, and 24 months 
-- Individual lifespan data in days
-
-Progressive QTL mapping code can be found in this repository
-
-Genotype coding convention in R/1tl v1: BALB/cByJ = AA, C57BL/6J = BB, C3H/HeJ = CC, DBA/2J = DD
-
-Phase-known alleles, with uncertain/not imputed counterpart:
-AC or AD = A?
-BC or BD = B?
-AC or BC = ?C
-AD or BD = ?D
+The repository provides the tools for reproducing the findings presented in the corresponding paper. It includes scripts for the actuarial analysis of survival data, the mapping of Vita loci that influence lifespan, and the identification of Soma loci that control the relationship between body weight and longevity. The code also supports the analysis of epistatic interactions between these genetic loci, highlighting the complex genetic architecture of aging.
 
 ### Structure 📁
 
@@ -44,6 +29,19 @@ The folder [Various/](./Various/) contains all the code for computing main effec
 The folder [Predictions/](./Predictions/) contains all the code used to predict lifespan either by using random forest on covariates, as well as our two novel approaches ways of performing polygenic risk prediction (not in the paper, but in the biorxiv version).
 
 The folder [Old/](./Old/) contains the old & deprecated code not used anymore, or which was used to do one off analysis.
+
+### Coding Convention for Progressive QTL Mapping
+
+The code for progressive QTL mapping in this repository follows specific conventions to ensure consistency and clarity. The analysis relies on a genetic map created from Monsterplex Capture DNA-Sequencing and Sequenom MassARRAY data. The codebase is designed to handle the complex genetic structure of the UM-HET3 population, a four-way cross derived from four distinct parental strains.
+
+Before data is formatted for R/Qtl v1, genotypes are coded as follows:
+
+AA for the BALB/cByJ strain
+BB for the C57BL/6J strain
+CC for the C3H/HeJ strain
+DD for the DBA/2J strain
+
+The code also accounts for phase-known alleles where the counterpart is uncertain or not imputed. These are represented with a question mark. For example, a genotype with an A allele from one parent and an unknown allele from the other is coded as A?. Similarly, an unknown allele combined with a known C allele is represented as ?C. This convention allows the analysis to proceed even with incomplete genotyping data, maintaining the integrity of the genetic map.
 
 ### Contributing 🙌
 
