@@ -35,6 +35,8 @@ The folder [Figures/](./Figures/) contains code that produces the figures / imag
 
 The folder [Inversions/](./Inversions/) contains the inversion finder code, which finds inversion by looking at recombination frequency using an 8-marker sliding window.
 
+The folder [CandidateGenes/](./CandidateGenes/) contains all the code used to investigate and prioritize genetic features and possible candidate genes, code for biomaRt, VEP prediction, Pathway ORA, and known cross referencing genes in Vita / Soma regions with homologs in GenAge is stored here.
+
 The folder [SingleLocus/](./SingleLocus/) contains all the code used to investigate single loci in the UM-HET3 genome (e.g. The Vita9B locus previously found by R. Miller), as well as code for mapping the control animals used in the Science paper by Sleiman et al. to compare/align their original work on a subset of animals with our mapping approach. Furthermore, there is code to investigate distal chromosome X and proximal chromosome 1, at which we observed some distortion in recombination frequency.
 
 The folder [Predictions/](./Predictions/) contains all the code used to predict lifespan either by using random forest on covariates, as well as our two novel approaches ways of performing polygenic risk prediction (not in the paper, but in the biorxiv version).
