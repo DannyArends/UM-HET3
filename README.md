@@ -8,7 +8,8 @@ The repository provides the tools for reproducing the findings presented in the 
 
 Most scripts in this repository start by loading in the um-het3-rqtl.csvr, which is the data coded for R/qtl v1 as explained in the read.cross help file. Data can be loaded in with read.cross parameters set to genotypes=NULL and na.strings=c("-", "NA")
 
-The folder [PreCross/](./PreCross/) contains all the code used to call SNPs on the monsterplex BAM files, and the conversion & harmonization of Monsterplex and Sequenom data into the cross object. It also contains the code to convert observed SNPs to the Founder strain haplotypes.
+The folder [PreCross/](./PreCross/) contains all the code used to call SNPs on the monsterplex BAM files, and the conversion & harmonization of Monsterplex and Sequenom data into the cross object. It also contains the code to convert observed SNPs to the Founder strain haplotypes. This code is used to produce the um-het3-rqtl.csvr from Monsterplex .BAM files and the Sequenom data, with phenotypes and covariates coming from
+[genenetwork.org](https://genenetwork.org).
 
 The folder [ProgessiveMapping/](./ProgessiveMapping/) contains all the code used to perform actuarial QTL scans on lifespan for 4-way, paternal and maternal maps. This folder also the adjustXprobs.R code, that is needed for proper X-chromosome mapping, and furthermore contains bodyweight QTL mapping as well as simpleM and Cauchi combination tests for Multiple Testing correction. The Lasso based non-parametric Quantile Regression 'engine' code is also found here.
 
