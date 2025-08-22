@@ -1,3 +1,12 @@
+#
+# VitaXb.R
+#
+# copyright (c) 2020-2030 - Danny Arends
+#
+# Code that led use to exclude VitaXb, due to a high female recombination rate at the end of chromosome X
+#
+
+
 setwd("/home/rqdt9/Github/UM-HET3")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
