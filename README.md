@@ -30,7 +30,7 @@ The folder [Predictions/](./Predictions/) contains all the code used to predict 
 
 The folder [Old/](./Old/) contains the old & deprecated code not used anymore, or which was used to do one off analysis.
 
-### Coding Convention for Progressive QTL Mapping
+### Genotype Coding Convention 🧬
 
 The code for progressive QTL mapping in this repository follows specific conventions to ensure consistency and clarity. The analysis relies on a genetic map created from Monsterplex Capture DNA-Sequencing and Sequenom MassARRAY data. The codebase is designed to handle the complex genetic structure of the UM-HET3 population, a four-way cross derived from four distinct parental strains.
 
