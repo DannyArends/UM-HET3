@@ -23,6 +23,8 @@ AD or BD = ?D
 
 Most scripts in this repository start by loading in the um-het3-rqtl.csvr, which is the data coded for R/qtl v1 as explained in the read.cross help file. Data can be loaded in with read.cross parameters set to genotypes=NULL and na.strings=c("-", "NA")
 
+The folder [PreCross/](./PreCross/) contains all the code used to call SNPs on the monsterplex BAM files, and the conversion & harmonization of Monsterplex and Sequenom data into the cross object. It also contains the code to convert observed SNPs to the Founder strain haplotypes.
+
 The folder [Soma/](./Soma/) contains all the code used to perform the Correlated Trait Locus (CTL) mapping analysis between bodyweight (at 5 timepoints) and progressive lifespan mapping.
 
 The folder [Inversions/](./Inversions/) contains the inversion finder code, which finds inversion by looking at recombination frequency using an 8-marker sliding window
