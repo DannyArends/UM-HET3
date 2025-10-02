@@ -1,5 +1,5 @@
 #
-# pathwayORA2.R
+# pathwayORA_v3.R
 #
 # copyright (c) 2020-2030 - Danny Arends
 #
@@ -12,12 +12,12 @@ library(clusterProfiler)
 library(org.Mm.eg.db)
 library(ReactomePA)
 
+# Manually merge regions keeping the minimal interval
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
-
-regions <- read.table("regions_4way_2025.txt", sep="\t", header=FALSE, row.names=1)
-colnames(regions) <- c("Chr", "Proximal", "Top", "Distal")
-regions <- regions[which(!(rownames(regions) %in% c("Vita17a", "VitaXa", "VitaXb"))),]
-
+regions <- read.table("regions_Aug25.txt", sep="\t", row.names=1)
+colnames(regions) <- c("Chr", "Proximal", "Distal")
+regions[,"Proximal"] <- 1e6 *as.numeric(regions[,"Proximal"])
+regions[,"Distal"] <- 1e6 *as.numeric(regions[,"Distal"])
 
 GPCRs <- read.table("May2024/GPCRs.txt", sep = "\t", header=TRUE)
 
@@ -38,36 +38,28 @@ isRIKEN <- grep("^RIKEN", mlist[,"mgi_description"])
 genome <- mlist[-isRIKEN, ]
 
 ## Convert from ensembl ID to entrez ID
-
 getEntrez <- function(ensembl) { return(as.character(na.omit(genome[which(genome[,"ensembl_gene_id"] %in% ensembl), "entrezgene_id"]))) }
 wholeGenome <- unique(genome[,"ensembl_gene_id"])
 
-## Load our data
+
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/regionsAug25")
 protein_coding <- vector("list", nrow(regions))
 prioritized <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
-  protein_coding[[x]] <- read.csv(paste0("2025/genes/protein_coding_genes_", rownames(regions)[x], ".txt"), sep = "\t")
+  protein_coding[[x]] <- read.csv(paste0("genes/protein_coding_genes_", rownames(regions)[x], ".txt"), sep = "\t")
   iix <- which(protein_coding[[x]][, "ensembl_gene_id"] %in% GPCRs[,"Ensembl.Gene.ID..Mouse."])
   protein_coding[[x]] <- protein_coding[[x]][-iix,]
   olf <- grep("^Olf", protein_coding[[x]][,"external_gene_name"])
   if(length(olf)> 0) protein_coding[[x]] <- protein_coding[[x]][-olf,]
 
-  # Distance max 2 Mb from top
-  d <- abs(((protein_coding[[x]][, "start_position"] + protein_coding[[x]][, "end_position"]) / 2) - regions[x, "Top"])
-  protein_coding[[x]] <- protein_coding[[x]][which(d < 1000000),]
-
-  prioritized[[x]] <- read.csv(paste0("2025/summary/", rownames(regions)[x], ".summary.txt"), sep = "\t")
+  prioritized[[x]] <- read.csv(paste0("summary/", rownames(regions)[x], ".summary.txt"), sep = "\t")
   iix <- which(prioritized[[x]][, "ensembl_gene_id"] %in% GPCRs[,"Ensembl.Gene.ID..Mouse."])
   prioritized[[x]] <- prioritized[[x]][-iix,]
   olf <- grep("^Olf", prioritized[[x]][,"name"])
   if(length(olf)> 0) protein_coding[[x]] <- prioritized[[x]][-olf,]
-
-  # Distance max 2 Mb from top
-  d <- abs(((prioritized[[x]][, "start"] + prioritized[[x]][, "stop"]) / 2) - regions[x, "Top"])
-  prioritized[[x]] <- prioritized[[x]][which(d < 1000000),]
 }
 
-## Leave one region out
+## One region OR versus 
 enrichments <- vector("list", nrow(regions))
 KEGGs <- vector("list", nrow(regions))
 REACTOMEs <- vector("list", nrow(regions))
@@ -76,16 +68,14 @@ FGs <- vector("list", nrow(regions))
 for(x in 1:nrow(regions)){
   bg <- c()
   fg <- c()
-  for(y in (1:nrow(regions))[-x]){
-    iiMod <- which(prioritized[[y]][,3] == "HIGH")
-    bg <- c(bg, protein_coding[[y]][,1])
-    fg <- c(fg, prioritized[[y]][iiMod,1])
+  for(y in (1:nrow(regions))){
+    bg <- c(bg, prioritized[[y]][,1])
   }
   BGs[[x]] <- bg
-  FGs[[x]] <- fg
+  FGs[[x]] <- prioritized[[x]][, 1]
   # Gene Ontology
   enrichments[[x]] <- enrichGO(FGs[[x]], "org.Mm.eg.db", ont = "BP", keyType="ENSEMBL", pvalueCutoff = 0.2, universe = BGs[[x]])
-  enrichments[[x]] <- enrichments[[x]][, 1:8]
+  enrichments[[x]] <- enrichments[[x]]
 
   # Kegg
   KEGGs[[x]] <- enrichKEGG(gene = getEntrez(FGs[[x]]), organism = 'mmu', pvalueCutoff = 0.2, universe = getEntrez(BGs[[x]]))
@@ -101,8 +91,35 @@ names(enrichments) <- rownames(regions)
 names(KEGGs) <- rownames(regions)
 names(REACTOMEs) <- rownames(regions)
 
-any(table(unlist(lapply(enrichments,rownames))) == nrow(regions))
-any(table(unlist(lapply(KEGGs,rownames))) == nrow(regions))
-any(table(unlist(lapply(REACTOMEs,rownames))) == nrow(regions))
+for(x in names(enrichments)){
+  write.table(enrichments[[x]], file = paste0("GO_",x,".txt"), sep = "\t", quote = FALSE)
+  write.table(KEGGs[[x]], file = paste0("KEGG_",x,".txt"), sep = "\t", quote = FALSE)
+  write.table(REACTOMEs[[x]], file = paste0("REACTOME_",x,".txt"), sep = "\t", quote = FALSE)
+}
 
+header <- TRUE
+for(x in names(enrichments)){
+  if(is.null(enrichments[[x]][,1:10])) next;
+  if(nrow(enrichments[[x]][,1:10]) > 0){
+    write.table(cbind(x, enrichments[[x]][,1:10]), file = paste0("GO_summary.txt"), sep = "\t", quote = FALSE, append = TRUE, col.names = header)
+    header <- FALSE
+  }
+}
 
+header <- TRUE
+for(x in names(enrichments)){
+  if(is.null(KEGGs[[x]])) next;
+  if(nrow(KEGGs[[x]]) > 0){
+    write.table(cbind(x, KEGGs[[x]]), file = paste0("KEGG_summary.txt"), sep = "\t", quote = FALSE, append = TRUE, col.names = header)
+    header <- FALSE
+  }
+}
+
+header <- TRUE
+for(x in names(enrichments)){
+  if(is.null(REACTOMEs[[x]])) next;
+  if(nrow(REACTOMEs[[x]]) > 0){
+    write.table(cbind(x, REACTOMEs[[x]]), file = paste0("REACTOME_summary.txt"), sep = "\t", quote = FALSE, append = TRUE, col.names = header)
+    header <- FALSE
+  }
+}
