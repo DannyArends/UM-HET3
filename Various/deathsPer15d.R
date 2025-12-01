@@ -7,7 +7,7 @@
 # Additionally, at the end we create a visualization of the data
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
+setwd("/home/rqdt9/Github/UM-HET3/ProgessiveMapping")
 source("adjustXprobs.R")
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 
@@ -28,7 +28,7 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vit
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
                 "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/NatureReviewUpdates")
 for(pname in names(all)){
   marker <-  all[pname]
 
@@ -51,14 +51,22 @@ for(pname in names(all)){
 
   mm <- c()
   for(x in seq(20, 1500, 15)){
+    ## Deaths in Window
     iiD <- which(longevity >= x-15 & longevity < x)
     nCH <- length(which(iiD %in% ii1))
     nCD <- length(which(iiD %in% ii2))
     nBH <- length(which(iiD %in% ii3))
     nBD <- length(which(iiD %in% ii4))
-    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH))
+
+    ## Surviving from the end of window
+    iiA <- which(longevity >= (x-15))
+    nCHA <- length(which(iiA %in% ii1))
+    nCDA <- length(which(iiA %in% ii2))
+    nBHA <- length(which(iiA %in% ii3))
+    nBDA <- length(which(iiA %in% ii4))
+    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH, nCHA, nCDA, nBHA, nBDA, sum(nCHA, nCDA, nBHA, nBDA), length(iiA)))
   }
-  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H")
+  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H", "CH_alive", "CD_alive", "BH_alive", "BD_alive", "nGenotyped", "nTotal")
   rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
   write.table(mm, paste0(pname, "_deathsIn15Dwindows_combined.txt"), sep = "\t", quote = FALSE)
 }
@@ -92,9 +100,16 @@ for(pname in names(all)){
     nCD <- length(which(iiD %in% ii2))
     nBH <- length(which(iiD %in% ii3))
     nBD <- length(which(iiD %in% ii4))
-    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH))
+
+    ## Surviving from the end of window
+    iiA <- which(longevity >= (x-15) & sex == 0)
+    nCHA <- length(which(iiA %in% ii1))
+    nCDA <- length(which(iiA %in% ii2))
+    nBHA <- length(which(iiA %in% ii3))
+    nBDA <- length(which(iiA %in% ii4))
+    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH, nCHA, nCDA, nBHA, nBDA, sum(nCHA, nCDA, nBHA, nBDA), length(iiA)))
   }
-  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H")
+  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H", "CH_alive", "CD_alive", "BH_alive", "BD_alive", "nGenotyped", "nTotal")
   rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
   write.table(mm, paste0(pname, "_deathsIn15Dwindows_female.txt"), sep = "\t", quote = FALSE)
 }
@@ -128,9 +143,16 @@ for(pname in names(all)){
     nCD <- length(which(iiD %in% ii2))
     nBH <- length(which(iiD %in% ii3))
     nBD <- length(which(iiD %in% ii4))
-    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH))
+    
+    ## Surviving from the end of window
+    iiA <- which(longevity >= (x-15) & sex == 1)
+    nCHA <- length(which(iiA %in% ii1))
+    nCDA <- length(which(iiA %in% ii2))
+    nBHA <- length(which(iiA %in% ii3))
+    nBDA <- length(which(iiA %in% ii4))
+    mm <- rbind(mm, c(nCH, nCD, nBH, nBD, nCH + nCD, nBH + nBD, nCD + nBD, nCH + nBH, nCHA, nCDA, nBHA, nBDA, sum(nCHA, nCDA, nBHA, nBDA), length(iiA)))
   }
-  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H")
+  colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H", "CH_alive", "CD_alive", "BH_alive", "BD_alive", "nGenotyped", "nTotal")
   rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
   write.table(mm, paste0(pname, "_deathsIn15Dwindows_male.txt"), sep = "\t", quote = FALSE)
 }
