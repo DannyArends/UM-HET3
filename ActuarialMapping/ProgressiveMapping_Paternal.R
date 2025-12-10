@@ -8,13 +8,14 @@
 # We don't use 4 genotype probabilities at each marker, but use paternal haplotypes (C and D)
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
+
 setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -68,7 +69,7 @@ for(x in msequence){
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.cM,2), "progressiveMapping_pat_all.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "DataSet/output/progressiveMapping_pat_all.txt", sep = "\t", quote=FALSE)
 
 ### Females
 
@@ -118,7 +119,7 @@ for(x in msequence){
 colnames(lods.fM) <- colnames(pull.geno(mcross))
 rownames(lods.fM) <- paste0("> ", msequence)
 
-write.table(round(lods.fM,2), "progressiveMapping_pat_females.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.fM,2), "DataSet/output/progressiveMapping_pat_females.txt", sep = "\t", quote=FALSE)
 
 ### Males
 
@@ -168,6 +169,6 @@ for(x in seq(365, 1050, 15)){
 colnames(lods.mM) <- colnames(pull.geno(mcross))
 rownames(lods.mM) <- paste0("> ", seq(365, 1050, 15))
 
-write.table(round(lods.mM,2), "progressiveMapping_pat_males.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.mM,2), "DataSet/output/progressiveMapping_pat_males.txt", sep = "\t", quote=FALSE)
 
 

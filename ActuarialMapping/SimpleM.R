@@ -7,13 +7,14 @@
 # see: https://github.com/LTibbs/SimpleM
 #
 
-setwd("C:/Users/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
+
+setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 
 days <- as.numeric(pull.pheno(mcross)[, "longevity"])
 idx <- which(days >= 365)
@@ -80,3 +81,4 @@ for(x in rangeTested){
 
 c(fixLength = rangeTested[which.min(simpleMeffs)], nTests = min(simpleMeffs))
 plot(rangeTested, simpleMeffs, xlab = "fixLength", ylab="Meff")
+

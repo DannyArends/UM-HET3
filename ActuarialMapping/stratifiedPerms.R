@@ -35,3 +35,4 @@ for(p in 1:1000){
   p.lods <- c(p.lods, max(lods.c))
   cat("Done p=",p,", lod=", max(lods.c), "\n")
 }
+

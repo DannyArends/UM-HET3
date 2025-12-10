@@ -7,13 +7,12 @@
 # We perform a full scan at each T-age for both Combined (F+M)), Females, and Males only using control animals (treatment = 0)
 #
 
-setwd("C:/Users/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 1)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -58,7 +57,7 @@ for(x in msequence){
 }
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 
-png("ProgressiveMapping_UMHET3_DieBefore.png", width = 1400, height = 1050)
+png("DataSet/output/ProgressiveMapping_UMHET3_DieBefore.png", width = 1400, height = 1050)
 
 # Plot the QTL profile
 library(RColorBrewer)
@@ -192,7 +191,7 @@ rownames(lods.mM) <- paste0("> ", msequence)
 rownames(lods.fM) <- paste0("> ", msequence)
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.mM,2), "progressiveMapping_males_diebefore.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.fM,2), "progressiveMapping_females_diebefore.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.cM,2), "progressiveMapping_all_diebefore.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.mM,2), "DataSet/output/progressiveMapping_males_diebefore.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.fM,2), "DataSet/output/progressiveMapping_females_diebefore.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "DataSet/output/progressiveMapping_all_diebefore.txt", sep = "\t", quote=FALSE)
 

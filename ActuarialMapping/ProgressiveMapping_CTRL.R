@@ -12,7 +12,6 @@ library(qtl)
 source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
 mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
