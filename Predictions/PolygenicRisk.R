@@ -28,10 +28,8 @@ sex <- sex[above]
 observed <- pull.pheno(mcross)[above, "longevity"]
 sex <- pull.pheno(mcross)[above, "sex"]
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
-
 # Read the effects at top marker
-regions <- read.table("regions_4way_merged_effects.txt", sep="\t", header=TRUE, row.names=1)
+regions <- read.table("DataSet/output/regions_4way_merged_effects.txt", sep="\t", header=TRUE, row.names=1)
 regions[,"Top"] <- gsub(",", "", regions[,"Top"])
 
 as.DNI <- function(regions, col = "BALB.C3H"){
@@ -129,8 +127,7 @@ mRa <- mRp[which(mRp %in% group.ac)]
 xx <- colorRampPalette(c("#fc8d59", "white", "#91bfdb"))( 1+(max(group) - min(group)) )
 group.cols <- xx[1+ (group - min(group))]
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
-pdf(paste0("Figure_6_ML_longevity_COUNT.pdf"), width = 12, height = 6)
+pdf(paste0("DataSet/output/Figure_6_ML_longevity_COUNT.pdf"), width = 12, height = 6)
   layout(matrix(1:2, ncol = 2), width = c(2,0.3), height = c(1,1))
   par(mai=c(1, 1, 1, 0))
   aa <- hist(mRa, breaks = seq(min(mRa)-0.5, (max(mRa)+0.5), 1), col = group.cols, las = 2, xaxt = 'n',
@@ -148,7 +145,7 @@ dev.off()
 #plot(pull.pheno(mcross)[iix, "longevity"] ~ mRp2[iix])
 
 
-pdf(paste0("Figure_6_ML_longevity_EFFECT.pdf"), width = 12, height = 12)
+pdf(paste0("DataSet/output/Figure_6_ML_longevity_EFFECT.pdf"), width = 12, height = 12)
   plot(c(-200, 200), y = c(0, 1500), pch=19, t = "n", main = "Lifespan versus Haplotype Effect", xlab = "Estimated haplotype effect", ylab = "Lifespan", yaxt = "n", xaxt="n")
   points(mRp2, observed, col = c("hotpink", "blue")[sex + 1], pch = c(16, 15)[sex + 1], cex=0.5)
   abline(lm(observed[sex==0] ~ mRp2[sex==0]), col = "hotpink", lwd=2, untf=T)
@@ -163,7 +160,7 @@ dev.off()
 # op <- par(mfrow=c(2,1))
 #boxplot(mRp2 ~ sex + cut(observed, breaks = seq(0, 1500,100)), col = c("hotpink", "blue"))
 library(vioplot)
-pdf(paste0("Figure_7_ML_longevity_BOXPLOT_H.pdf"), width = 12, height = 20)
+pdf(paste0("DataSet/output/Figure_7_ML_longevity_BOXPLOT_H.pdf"), width = 12, height = 20)
 op <- par(mar = c(4,10,2,2))
 plot(y = c(1,10), x = c(-200, 150), t="n", xaxt ="n", yaxt = "n",ylab = "", xlab = "Estimated haplotype effect")
 for(x in 1:10){
@@ -183,10 +180,7 @@ axis(2, at = 1:10, xas, las = 2)
 dev.off()
 
 
-  boxplot(mRp2[sex == 1] ~ cut(observed[sex == 1], at = (1:15)+0.4, breaks = seq(0, 1500,100)), col = c("blue"), add = TRUE, boxwex=.2)
-
-
-
+boxplot(mRp2[sex == 1] ~ cut(observed[sex == 1], at = (1:15)+0.4, breaks = seq(0, 1500,100)), col = c("blue"), add = TRUE, boxwex=.2)
 
 # Males
 Yf <- mRp2[sex==1] + mean(observed[sex==1])
@@ -198,7 +192,7 @@ Yf <- mRp2[sex==0] + mean(observed[sex==0])
 lm(observed[sex==0] ~ Yf)
 anova(lm(observed[sex==0] ~ Yf))
 
-pdf(paste0("Figure_5_ML_longevity_EFFECT.pdf"), width = 28, height = 10)
+pdf(paste0("DataSet/output/Figure_5_ML_longevity_EFFECT.pdf"), width = 28, height = 10)
 par(cex=2)
 par(cex.axis=1.5)
 op <- par(cex=4)
@@ -214,10 +208,6 @@ sds <- c()
 for(x in seq(-6,6,1)){ sds <- c(sds, sd(phe[which(mRp[iix] == x)]) / sqrt(length(phe[which(mRp[iix] == x)]))); }
 
 rect(1:13 - 0.25, rep(750,13), 1:13 + 0.25, aa$stats[3,], col = xx)
-#points(aa$stats[3,] + sds, pch = "-", cex=2, t = "h", lwd=2)
-#points(aa$stats[3,] + sds, pch = "-", cex=3)
-#points(aa$stats[3,] - sds, pch = "-", cex=2, t = "h", col = xx, lwd=2)
-#points(aa$stats[3,] - sds, pch = "-", cex=3)
 points(aa$conf[2,], pch = "-", cex=2, t = "h", lwd=2)
 points(aa$conf[2,], pch = "-", cex=3)
 points(aa$conf[1,], pch = "-", cex=2, t = "h", col = xx, lwd=4)
@@ -242,11 +232,6 @@ for(x in r){ sds <- c(sds, sd(phe[which(mRp2c[iix] == x)]) / sqrt(length(phe[whi
 
 
 rect(1:length(r) - 0.25, rep(750,length(r)), 1:length(r) + 0.25, aa$stats[3,r], col = xx)
-#points(aa$stats[3,], pch = 19, t = 'b')
-#points(aa$stats[3,] + sds, pch = "-", cex=2, t = "h", lwd=2)
-#points(aa$stats[3,] + sds, pch = "-", cex=3)
-#points(aa$stats[3,] - sds, pch = "-", cex=2, t = "h", col = xx, lwd=2)
-#points(aa$stats[3,] - sds, pch = "-", cex=3)
 points(aa$conf[2,r], pch = "-", cex=2, t = "h", lwd=2)
 points(aa$conf[2,r], pch = "-", cex=3)
 points(aa$conf[1,r], pch = "-", cex=2, t = "h", col = xx, lwd=4)
