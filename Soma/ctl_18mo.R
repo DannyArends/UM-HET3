@@ -14,12 +14,10 @@
 # 6) Create the genetic map, computes positions for visualization, and visualize
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
@@ -108,8 +106,8 @@ lods <- round(-log10(ttt[[1]]),2)
 col.main <- c("#FF3333", "#00AEEF")
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 col.alpha2 <- add.alpha(col.main, 0.1)
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("CTL_MF_18months.pdf"), width = 14, height = 12)
+
+pdf(paste0("DataSet/output/CTL_MF_18months.pdf"), width = 14, height = 12)
 op <- par(cex = 2)
 
   plot(c(42, 1100), c(-0.5, 0.2), t = "n", xlab = "Truncation age (days)", ylab = "Correlation BW550 to Tage", 
@@ -133,10 +131,6 @@ op <- par(cex = 2)
 dev.off()
 
 ### Continue
-
-
-
-
 bCor <- cor(cdata[, "adjLongevity"], cdata[, "adjBw18"], use = "pair", method = "spearman")
 bCor.f <- cor(cdata[which(cdata[, "sex"] == 0), "adjLongevity"], cdata[which(cdata[, "sex"] == 0), "adjBw18"], use = "pair", method = "spearman")
 bCor.m <- cor(cdata[which(cdata[, "sex"] == 1), "adjLongevity"], cdata[which(cdata[, "sex"] == 1), "adjBw18"], use = "pair", method = "spearman")
@@ -252,16 +246,15 @@ for(chr in c(1:19, "X")){
   cp = cl + cp + gap
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/__Tables")
-write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "CTL_BW18_T550_C.txt", sep="\t", quote = FALSE)
-write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "CTL_BW18_T550_M.txt", sep="\t", quote = FALSE)
-write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "CTL_BW18_T550_F.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "DataSet/output/CTL_BW18_T550_C.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "DataSet/output/CTL_BW18_T550_M.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "DataSet/output/CTL_BW18_T550_F.txt", sep="\t", quote = FALSE)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("CTL_mapping_18mo.pdf"), width = 36, height = 12)
+pdf(paste0("DataSet/output/CTL_mapping_18mo.pdf"), width = 36, height = 12)
   par(cex=2)
   par(cex.axis=1.5)
-  plot(c(0, max(chr.start)), y = c(0, 8), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "CTL: Longevity (≥ 550 days) x Bodyweight 18 Months")
+  plot(c(0, max(chr.start)), y = c(0, 8), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, 
+       main = "CTL: Longevity (≥ 550 days) x Bodyweight 18 Months")
   for(x in c(1:19, "X")) {
     points(subset[which(subset[,1] == x),"cpos"], -log10(p.c[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "black",lwd=2)
     points(subset[which(subset[,1] == x),"cpos"], -log10(p.f[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#00AEEF",lwd=2)

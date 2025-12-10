@@ -14,23 +14,20 @@
 # 6) Create the genetic map, computes positions for visualization, and visualize
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
 #Sample names
 snames <- as.character(pull.pheno(mcross)[, "GenoID"])
 
-bwA <- read.csv("bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
-
+bwA <- read.csv("DataSet/bodyweights/bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
 
 #42 days
-bw <- read.csv("ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
+bw <- read.csv("DataSet/bodyweights/ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
 bw <- bw[which(bw[, "DA2024"] == 1),]
 
 gtsp <- pull.genoprob(mcross)
@@ -127,8 +124,7 @@ col.main <- c("#FF3333", "#00AEEF")
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 col.alpha2 <- add.alpha(col.main, 0.1)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("CTL_MF_42days.pdf"), width = 14, height = 12)
+pdf(paste0("DataSet/output/CTL_MF_42days.pdf"), width = 14, height = 12)
 op <- par(cex = 2)
 
   plot(c(42, 1100), c(-0.5, 0.2), t = "n", xlab = "Truncation age (days)", ylab = "Correlation BW42 to Tage", 
@@ -270,14 +266,12 @@ for(chr in c(1:19, "X")){
   cp = cl + cp + gap
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_bioRxiv_All_Key_Files/11_FiguresDanny")
-write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "CTL_BW42_T42_C.txt", sep="\t", quote = FALSE)
-write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "CTL_BW42_T42_M.txt", sep="\t", quote = FALSE)
-write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "CTL_BW42_T42_F.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "DataSet/output/CTL_BW42_T42_C.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "DataSet/output/CTL_BW42_T42_M.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "DataSet/output/CTL_BW42_T42_F.txt", sep="\t", quote = FALSE)
 
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("CTL_mapping_42day.pdf"), width = 36, height = 12)
+pdf(paste0("DataSet/output/CTL_mapping_42day.pdf"), width = 36, height = 12)
 par(cex=2)
 par(cex.axis=1.5)
 plot(c(0, max(chr.start)), y = c(0, 8), t = 'n', ylab = "LOD", xlab = "Chromosome", 
@@ -300,8 +294,4 @@ axis(1, at = chr.mids, paste0("", c(1:19, "X")), cex.axis=1.2, las=1)
 legend("topleft", c("FDR 5%", "FDR 1%"), lwd=2, lty=c(2,2), col = c("darkolivegreen2", "darkolivegreen4"))
 legend("topright", c("Combined", "Females", "Males"), lwd=2, col = c("black", "#FF3333", "#00AEEF"))
 dev.off()
-
-
-
-
 

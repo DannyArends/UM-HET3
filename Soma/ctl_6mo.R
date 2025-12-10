@@ -110,8 +110,7 @@ col.main <- c("#FF3333", "#00AEEF")
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 col.alpha2 <- add.alpha(col.main, 0.1)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("CTL_MF_6months.pdf"), width = 14, height = 12)
+pdf(paste0("DataSet/output/CTL_MF_6months.pdf"), width = 14, height = 12)
 op <- par(cex = 2)
 
   plot(c(42, 1100), c(-0.5, 0.2), t = "n", xlab = "Truncation age (days)", ylab = "Correlation BW185 to Tage", 
@@ -260,17 +259,16 @@ for(chr in c(1:19, "X")){
 }
 
 ### Write progressive CTL mapping results
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "CTL_BW6_T185_C.txt", sep="\t", quote = FALSE)
-write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "CTL_BW6_T185_M.txt", sep="\t", quote = FALSE)
-write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "CTL_BW6_T185_F.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.c[[1]]),2), round(res.c[[1]],2)), file = "DataSet/output/CTL_BW6_T185_C.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.m[[1]]),2), round(res.m[[1]],2)), file = "DataSet/output/CTL_BW6_T185_M.txt", sep="\t", quote = FALSE)
+write.table(cbind(round(-log10(p.f[[1]]),2), round(res.f[[1]],2)), file = "DataSet/output/CTL_BW6_T185_F.txt", sep="\t", quote = FALSE)
 
 ### Visualize into a PDF
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("CTL_mapping_6mo.pdf"), width = 36, height = 12)
+pdf(paste0("DataSet/output/CTL_mapping_6mo.pdf"), width = 36, height = 12)
 par(cex=2)
 par(cex.axis=1.5)
-plot(c(0, max(chr.start)), y = c(0, 12), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "CTL: Longevity (> 185 days) x Bodyweight 6 Months")
+plot(c(0, max(chr.start)), y = c(0, 12), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, 
+     main = "CTL: Longevity (> 185 days) x Bodyweight 6 Months")
 for(x in c(1:19, "X")) {
   points(subset[which(subset[,1] == x),"cpos"], -log10(p.c[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "black",lwd=2, pch=20)
   points(subset[which(subset[,1] == x),"cpos"], -log10(p.f[[1]][rownames(subset)[which(subset[,1] == x)]]), t = 'l', col = "#FF3333",lwd=2, pch=20)
@@ -323,7 +321,6 @@ if(length(BH) > 100) cBH <- lm(cdata[BH, "adjLongevity"] ~ cdata[BH, "adjBw6"]+1
 if(length(CD) > 100) cCD <- lm(cdata[CD, "adjLongevity"] ~ cdata[CD, "adjBw6"]+1);
 if(length(BD) > 100) cBD <- lm(cdata[BD, "adjLongevity"] ~ cdata[BD, "adjBw6"]+1);
 
-
 ###Soma13a
 mp <- gtsp[, grep("13_53167285", colnames(gtsp))]
 gts <- unlist(lapply(lapply(lapply(apply(mp, 1,function(x){which(x > 0.85)}),names), strsplit, ":"), function(x){
@@ -337,9 +334,4 @@ if(length(CH) > 100) cCH <- lm(cdata[CH, "adjLongevity"] ~ cdata[CH, "adjBw6"]+1
 if(length(BH) > 100) cBH <- lm(cdata[BH, "adjLongevity"] ~ cdata[BH, "adjBw6"]+1);
 if(length(CD) > 100) cCD <- lm(cdata[CD, "adjLongevity"] ~ cdata[CD, "adjBw6"]+1);
 if(length(BD) > 100) cBD <- lm(cdata[BD, "adjLongevity"] ~ cdata[BD, "adjBw6"]+1);
-
-
-
-
-
 
