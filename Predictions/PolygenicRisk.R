@@ -9,14 +9,12 @@
 #
 
 library(svglite)
+library(qtl)
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -33,7 +31,7 @@ sex <- pull.pheno(mcross)[above, "sex"]
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
 # Read the effects at top marker
-regions <- read.table("regions_4way_merged_Oct24_effects.txt", sep="\t", header=TRUE, row.names=1)
+regions <- read.table("regions_4way_merged_effects.txt", sep="\t", header=TRUE, row.names=1)
 regions[,"Top"] <- gsub(",", "", regions[,"Top"])
 
 as.DNI <- function(regions, col = "BALB.C3H"){

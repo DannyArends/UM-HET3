@@ -11,7 +11,7 @@ library(biomaRt)
 GAmodel <- read.table("DataSet/genage/genage_models.csv",sep=",", header=TRUE)
 GAhuman <- read.table("DataSet/genage/genage_human.csv",sep=",", header=TRUE)
 
-regions <- read.table("DataSet/regions/regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
+regions <- read.table("DataSet/regions/regions_4way_merged.txt", sep="\t", header=FALSE, row.names=1)
 colnames(regions) <- c("Chr", "Proximal", "Distal")
 
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")

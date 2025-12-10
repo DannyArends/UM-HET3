@@ -9,7 +9,7 @@ mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
-regions <- read.table("regions_4way_sorted_final.txt", sep = "\t", header=TRUE)
+regions <- read.table("regions_4way_topm.txt", sep = "\t", header=TRUE)
 regions[,"Top"] <- gsub(",", "", regions[,"Top"])
 
 markers <- paste0(regions[, "Chr"], "_",regions[, "Top"], sep="")

@@ -19,7 +19,7 @@ mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
-regions <- read.table("DataSet/regions/regions_4way_merged_May24_effects.txt", sep = "\t", header=TRUE, row.names = 1)
+regions <- read.table("DataSet/regions/regions_4way_merged_effects.txt", sep = "\t", header=TRUE, row.names = 1)
 regions[,"Top"] <- gsub(",", "", regions[,"Top"])
 
 markers <- paste0(regions[, "Chr"], "_",regions[, "Top"], sep="")

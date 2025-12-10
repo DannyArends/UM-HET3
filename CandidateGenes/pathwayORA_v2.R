@@ -14,7 +14,7 @@ library(ReactomePA)
 
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
 
-regions <- read.table("regions_4way_2025.txt", sep="\t", header=FALSE, row.names=1)
+regions <- read.table("regions_4way_topm.txt", sep="\t", header=FALSE, row.names=1)
 colnames(regions) <- c("Chr", "Proximal", "Top", "Distal")
 regions <- regions[which(!(rownames(regions) %in% c("Vita17a", "VitaXa", "VitaXb"))),]
 
