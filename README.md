@@ -4,6 +4,20 @@ This repository contains the code used to analyze the genetics of aging and life
 
 The repository provides the tools for reproducing the findings presented in the corresponding paper. It includes scripts for the actuarial analysis of survival data, the mapping of *Vita* loci that influence lifespan, and the identification of *Soma* loci that control the relationship between body weight and longevity. The code also supports the analysis of epistatic interactions between these genetic loci, highlighting the complex genetic architecture of aging.
 
+### Installation 🛠️
+
+To obtain the source code in your current working directory, run the following command your terminal:
+
+```
+git clone https://github.com/DannyArends/UM-HET3.git
+```
+
+To install R package dependencies, navigate into the UM-HET3 directory and run the following command in your terminal:
+
+```
+Rscript installer.R
+```
+
 ### Structure 📁
 
 Most scripts in this repository start by loading in the um-het3-rqtl.csvr, which is the data coded for R/qtl-v1 as explained in the read.cross help file. The um-het3-rqtl.csvr file can be loaded in with the R/qtl-v1 read.cross function, with parameters set to genotypes=NULL and na.strings=c("-", "NA")
@@ -66,7 +80,7 @@ Or be a maintainer, and adopt (the documentation of) a function.
 
 ### License ⚖️
 
-Written by Danny Arends and is released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). 
+Written by Danny Arends and released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). 
 See [LICENSE.txt](./LICENSE.txt).
 
 ### Cite 📝
