@@ -11,14 +11,11 @@
 library(RColorBrewer)
 library(svglite)
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-lods.cI <- read.table("progressiveMapping_INT.txt", sep = "\t",check.names=FALSE)
+lods.cI <- read.table("DataSet/output/progressiveMapping_INT.txt", sep = "\t",check.names=FALSE)
 lods.cI <- lods.cI[-1,]
 lods.cI <- lods.cI[c(TRUE,FALSE,FALSE), ]
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-map <- read.table("genetic_map.txt", sep = "\t")
+
+map <- read.table("DataSet/output/genetic_map.txt", sep = "\t")
 threshold <- 2.5
 
 chrs <- c(1:19)
@@ -36,8 +33,7 @@ colz.c <- c(rgb(0,0,0,0), rgb(0.6,0.6,1.0,1), brewer.pal(9, "Reds")[-c(1:4)])
 
 thresholds <- c(0, 2.5, 2.75, 3.65, 4.25, 4.95, 5.95, 100)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf(paste0("Figure_NEW_Haplo_x_Sex.pdf"), width = 24, height = 12)
+pdf(paste0("DataSet/output/Figure_NEW_Haplo_x_Sex.pdf"), width = 24, height = 12)
 
 plot(c(1, l.x), c(1, 1+nrow(lods.cI)), t = 'n', xlab = "", xaxt='n', ylab="", yaxt='n', xaxs="i", yaxs="i", main = "Haplotype x Sex interaction")
 abline(h = 1:nrow(lods.cI))
@@ -70,6 +66,4 @@ for(chr in chrs){
 }
 axis(2, at = 0.5 + 1:nrow(lods.cI), rownames(lods.cI), las=2)
 dev.off()
-
-
 

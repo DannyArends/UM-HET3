@@ -9,6 +9,7 @@
 #
 
 library(qtl)
+library(RColorBrewer)
 
 source("ActuarialMapping/adjustXprobs.R")
 
@@ -91,7 +92,6 @@ axis(1, at = chr.mids, paste0("Chr", 1:4))
 png("DataSet/output/ProgressiveMapping_UMHET3.png", width = 1400, height = 1050)
 
 # Plot the QTL profile
-library(RColorBrewer)
 colz <- brewer.pal(5, "Purples")
 
 layout(matrix(c(1,1,1,1,1,1,2,3,3,3,3,3,3,4,5,5,5,5,5,5,6), ncol=7, byrow=TRUE))
@@ -147,7 +147,6 @@ for(x in msequence){
 colnames(lods.fM) <- colnames(pull.geno(mcross))
 
 # Plot the QTL profile
-library(RColorBrewer)
 colz <- brewer.pal(5, "PuRd")[-1]
 
 op <- par(mar = c(4.5,8,3,0))
@@ -199,7 +198,6 @@ for(x in msequence){
 colnames(lods.mM) <- colnames(pull.geno(mcross))
 
 # Plot the QTL profile
-library(RColorBrewer)
 colz <- brewer.pal(5, "Blues")
 
 op <- par(mar = c(4.5,8,3,0))

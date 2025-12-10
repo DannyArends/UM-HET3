@@ -25,13 +25,12 @@ names(allS) <- c("Soma1a","Soma1b","Soma2a","Soma2b","Soma2c","Soma3a","Soma3b",
 
 all <- c(allV, allS)
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 
@@ -83,8 +82,7 @@ for(tp in timepoints){
   axis(1, at = 1:length(all), names(all), las=2)
   axis(2, at = 1:length(all), names(all), las=2)
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/GxG_Vita_Soma")
-  write.table(lodM, paste0("vita_soma_interactions_2way_combined_tp", tp,".txt"), sep = "\t", quote=FALSE)
+  write.table(lodM, paste0("DataSet/output/vita_soma_interactions_2way_combined_tp", tp,".txt"), sep = "\t", quote=FALSE)
 }
 
 ### Males and Females
@@ -130,12 +128,9 @@ for(sex in names(sexes)){
     axis(1, at = 1:length(all), names(all), las=2)
     axis(2, at = 1:length(all), names(all), las=2)
 
-    setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/GxG_Vita_Soma")
-    write.table(lodM, paste0("vita_soma_interactions_2way_",sex,"_tp", tp,".txt"), sep = "\t", quote=FALSE)
+    write.table(lodM, paste0("DataSet/output/vita_soma_interactions_2way_",sex,"_tp", tp,".txt"), sep = "\t", quote=FALSE)
   }
 }
-
-
 
 ### DO the green dots
 combos <- rbind(
@@ -196,6 +191,4 @@ for(x in 1:nrow(combos)){
 
   cat(m1,m2, round(sum(aa[,3]) / length(ii),2), "\n")
 }
-
-
 

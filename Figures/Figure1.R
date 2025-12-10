@@ -12,18 +12,15 @@
 
 library(svglite)
 library(pspline)
+library(qtl)
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
-
 
 phe <- pull.pheno(mcross)[, "longevity"]
 sex <- pull.pheno(mcross)[, "sex"]
@@ -31,8 +28,7 @@ sex <- pull.pheno(mcross)[, "sex"]
 males <- phe[sex == 1 & phe >= 20]
 females <- phe[sex == 0 & phe >= 20]
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresRedone")
-pdf("Figure_1_KM.pdf", width = 16, height = 12)
+pdf("DataSet/output/Figure_1_KM.pdf", width = 16, height = 12)
 par(cex=2)
 par(cex.axis=1.2)
 plot(c(20, 1456), c(0, 100), t = "n", ylab = "% survival", xlab = "days", yaxt="n", main = "KM Curve", xaxt = "n")
@@ -47,7 +43,7 @@ axis(1, at = seq(0, 1500, 100), seq(0, 1500, 100), las = 2)
 legend("topright", c("Males", "Females"), col = c("blue", "hotpink"), pch=18)
 dev.off()
 
-pdf("Figure_1_EC.pdf", width = 12, height = 12)
+pdf("DataSet/output/Figure_1_EC.pdf", width = 12, height = 12)
 par(cex=2)
 par(cex.axis=1.2)
 
@@ -64,7 +60,7 @@ for(d in msequence){
   mm <- rbind(mm, c(mM, sM, mF, sF))
 }
 
-  # Combined
+# Combined
 points(msequence, mm[,1], t = 'l', col = "blue", lwd=2)
 polygon(c(msequence, rev(msequence)), c(mm[,1] + mm[,2], rev(mm[,1] - mm[,2])), col = rgb(0,0,1,0.5), border = NA)
 
@@ -75,17 +71,7 @@ legend("topright", c("Males", "Females"), col = c("blue", "hotpink"), pch=18)
 axis(2, at = seq(-100, 100, 10), seq(-100, 100, 10), las=2)
 dev.off()
 
-
-
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
-# Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 pheno <- pull.pheno(mcross)
-
 
 # Which rows contains males (isM) and which rows contain females(isF)
 isM <- which(pheno[ , "sex"] == 1)
@@ -98,8 +84,7 @@ f <- hist(pheno[isF, "longevity"], add = TRUE,
           col = rgb(1, 0.3, 0.7, 0.3), breaks = seq(20, 1500, 15))
 
 # Fancy Schmacy histogram (upto Sachini's standards)
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_Tables_Files/06_RandomFiguresForRob")
-#pdf("Histogram_Horizontal_M+F.pdf")
+pdf("DataSet/output/Histogram_Horizontal_M+F.pdf")
 plot(x= c(-125, 125), y = c(0, 1500), main = "UM-HET3 longevity by sex",
      ylab = "Longevity (days)", xlab = "Frequency", t = "n", yaxs= "i", xaxs= "i", yaxt="n")
 for(x in 1:length(m$counts)){
@@ -107,9 +92,9 @@ for(x in 1:length(m$counts)){
   rect(0, seq(0, 1500, 15)[x], f$counts[x], seq(0, 1500, 15)[x + 1], col = "hotpink")
 }
 axis(2, at = seq(0, 1500, 250), seq(0, 1500, 250), las=2)
-#dev.off()
+dev.off()
 
-pdf("Histogram_Horizontal_M+F_remaining.pdf")
+pdf("DataSet/output/Histogram_Horizontal_M+F_remaining.pdf")
 plot(x= c(-125, 125), y = c(0, 1300), main = "",
      ylab = "Longevity (days)", xlab = "Frequency", t = "n", yaxs= "i", xaxs= "i", yaxt="n", xaxt="n")
 for(x in 1:length(m$counts)){
@@ -125,5 +110,4 @@ axis(2, at = seq(0, 1500, 100), seq(0, 1500, 100), las=2)
 axis(3, at = seq(-100, 0, 10), round(sum(m$counts) * (abs(seq(-100, 0, 10)) / 100), 0), las=2)
 axis(3, at = seq(0, 100, 10), round(sum(f$counts) * (abs(seq(0, 100, 10)) / 100), 0), las=2)
 dev.off()
-
 

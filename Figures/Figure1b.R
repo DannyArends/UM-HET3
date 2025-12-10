@@ -8,13 +8,13 @@
 # - 4 Chromosomes zoomed in after progressive QTL mapping across Time
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+library(svglite)
+
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -30,10 +30,10 @@ positions <- as.numeric(unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_")
 map <- cbind(Chr = chrs, Pos = positions)
 rownames(map) <- colnames(pull.geno(mcross))
 
-lods.cM <- read.table("progressiveMapping_all.txt", sep = "\t",check.names=FALSE)
-lods.mM <- read.table("progressiveMapping_males.txt", sep = "\t",check.names=FALSE)
-lods.fM <- read.table("progressiveMapping_females.txt", sep = "\t",check.names=FALSE)
-lods.cI <- read.table("progressiveMapping_INT.txt", sep = "\t",check.names=FALSE)
+lods.cM <- read.table("DataSet/output/progressiveMapping_all20D.txt", sep = "\t",check.names=FALSE)
+lods.mM <- read.table("DataSet/output/progressiveMapping_males20D.txt", sep = "\t",check.names=FALSE)
+lods.fM <- read.table("DataSet/output/progressiveMapping_females20D.txt", sep = "\t",check.names=FALSE)
+lods.cI <- read.table("DataSet/output/progressiveMapping_INT.txt", sep = "\t",check.names=FALSE)
 
 subset <- map[which(map[,1] %in% c(1:19, "X")),]
 subset <- cbind(subset, cpos = NA)
@@ -51,13 +51,7 @@ for(chr in c(1:19, "X")){
   cp = cl + cp + gap
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files/Figures")
-library(svglite)
-tp <- "> 365"
-#timepoints c(365, 560, 875, 1025)
-
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/0000_ITP_BioRxiv_Tables_Files")
-pdf("4Chromosomes_Fig3_DifferentTPs.pdf", width = 36, height = 12)
+pdf("DataSet/output/4Chromosomes_Fig3_DifferentTPs.pdf", width = 36, height = 12)
   par(cex=2)
   par(cex.axis=1.5)
   plot(c(0, 777655628), y = c(0, 10), t = 'n', ylab = "LOD", xlab = "Chromosome",xaxt="n", las=2, main = "Longevity (365 days)")
@@ -76,8 +70,4 @@ pdf("4Chromosomes_Fig3_DifferentTPs.pdf", width = 36, height = 12)
   axis(1, at = chr.mids, paste0("", c(1:19, "X")), cex.axis=1.2, las=1)
   legend("topleft", c("All", "Males", "Females", "Interaction"), lwd=6, lty=c(1,1,1,1), col = c("black", "blue", "red", "forestgreen"))
 dev.off()
-
-
-c4 <- which(subset[,1] == "4")
-c3 <- which(subset[,1] == "3")
 

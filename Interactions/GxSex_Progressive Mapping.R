@@ -6,20 +6,19 @@
 # Code to perform progressive mapping of all G x Sex effects
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
 # Writing out 
 iix <- which(pull.pheno(mcross)[,"longevity"] > 365)
-write.table(pull.pheno(mcross)[iix,"GenoID"], "Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
+write.table(pull.pheno(mcross)[iix,"GenoID"], "DataSet/output/Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
 
 # Create the map object
 chrs <- unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",1))
@@ -62,7 +61,7 @@ for(x in msequence){
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.cM,2), "progressiveMapping_INT.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "DataSet/output/progressiveMapping_INT.txt", sep = "\t", quote=FALSE)
 
 
 
@@ -71,8 +70,7 @@ all <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", 
          "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
          "15_74248242", "15_99306167", "17_32883804", "18_52488251", "X_36008085", "X_150646933")
 
-lods.i <- read.table("progressiveMapping_INT.txt", sep = "\t", check.names = FALSE)
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
-write.table(round(lods.cM,2)[, all], "GxS_LODs_Vita_Apr1.txt", sep = "\t", quote = FALSE)
+lods.i <- read.table("DataSet/output/progressiveMapping_INT.txt", sep = "\t", check.names = FALSE)
+write.table(round(lods.cM,2)[, all], "DataSet/output/GxS_LODs_Vita_Apr1.txt", sep = "\t", quote = FALSE)
 
 

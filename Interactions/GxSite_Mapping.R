@@ -6,13 +6,12 @@
 # Code to perform progressive mapping of all G x Site effects
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -59,7 +58,7 @@ for(x in msequence){
 }
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 rownames(lods.cM) <- paste0("> ", msequence)
-write.table(lods.cM, "combined_GxSite.txt", sep = "\t", quote = FALSE)
+write.table(lods.cM, "DataSet/output/combined_GxSite.txt", sep = "\t", quote = FALSE)
 
 lods.fM <- c()
 minAge <- c()
@@ -90,7 +89,7 @@ for(x in msequence){
 }
 colnames(lods.fM) <- colnames(pull.geno(mcross))
 rownames(lods.fM) <- paste0("> ", msequence)
-write.table(lods.fM, "female_GxSite.txt", sep = "\t", quote = FALSE)
+write.table(lods.fM, "DataSet/output/female_GxSite.txt", sep = "\t", quote = FALSE)
 
 
 lods.mM <- c()
@@ -122,5 +121,5 @@ for(x in msequence){
 }
 colnames(lods.mM) <- colnames(pull.geno(mcross))
 rownames(lods.mM) <- paste0("> ", msequence)
-write.table(lods.mM, "male_GxSite.txt", sep = "\t", quote = FALSE)
+write.table(lods.mM, "DataSet/output/male_GxSite.txt", sep = "\t", quote = FALSE)
 
