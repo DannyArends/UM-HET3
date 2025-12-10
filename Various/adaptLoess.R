@@ -15,17 +15,13 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vit
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
                 "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
-
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
-# Read cross object
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
-
 gtsp <- pull.genoprob(mcross)
 
 col.main <- c("#00cdcd", "#9400d3", "#ff1493", "#deb887")
@@ -64,34 +60,32 @@ for(mname in names(all)){
     H <- as.numeric(phe.p[phe.p[,"gtsP"] == "H" & as.numeric(phe.p[,1]) >= 20, 1])
     D <- as.numeric(phe.p[phe.p[,"gtsP"] == "D" & as.numeric(phe.p[,1]) >= 20, 1])
 
-    setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny")
+    std <- function(x) sd(x)/sqrt(length(x))
 
-      std <- function(x) sd(x)/sqrt(length(x))
+    maxD <- max(as.numeric( phe[which(phe[, "sex"] == sex),1]))
+    x <- sort(as.numeric( phe[which(phe[, "sex"] == sex),1]))[seq(0,nrow(phe[which(phe[, "sex"] == sex),]), 80)]
+    windowM <- cbind(c(0,x), c(x,maxD))
+    mids <- c()
+    mm <- c()
+    for(x in 1:nrow(windowM)){
+      day <- windowM[x, 1]
+      day2 <- windowM[x, 2]
+      mids <- c(mids, (day+day2) / 2)
 
-      maxD <- max(as.numeric( phe[which(phe[, "sex"] == sex),1]))
-      x <- sort(as.numeric( phe[which(phe[, "sex"] == sex),1]))[seq(0,nrow(phe[which(phe[, "sex"] == sex),]), 80)]
-      windowM <- cbind(c(0,x), c(x,maxD))
-      mids <- c()
-      mm <- c()
-      for(x in 1:nrow(windowM)){
-        day <- windowM[x, 1]
-        day2 <- windowM[x, 2]
-        mids <- c(mids, (day+day2) / 2)
+      nCdR <- (length(which(C > day & C <= day2)) / length(c(C)))
+      nBdR <- (length(which(B > day & B <= day2)) / length(c(B)))
+      nHdR <- (length(which(H > day & H <= day2)) / length(c(H)))
+      nDdR <- (length(which(D > day & D <= day2)) / length(c(D)))
+      mm <- rbind(mm, c(nCdR, nBdR, nHdR, nDdR))
+    }
 
-        nCdR <- (length(which(C > day & C <= day2)) / length(c(C)))
-        nBdR <- (length(which(B > day & B <= day2)) / length(c(B)))
-        nHdR <- (length(which(H > day & H <= day2)) / length(c(H)))
-        nDdR <- (length(which(D > day & D <= day2)) / length(c(D)))
-        mm <- rbind(mm, c(nCdR, nBdR, nHdR, nDdR))
-      }
-
-      rownames(mm) <- mids
-      colnames(mm) <- c("C", "B", "H", "D")
-      toR <- which(apply(apply(mm,1, function(x){x == 0}),2, sum) > 0)
-      if(length(toR) > 0){
-        mm <- mm[-toR,]
-        mids <- mids[-toR]
-      }
+    rownames(mm) <- mids
+    colnames(mm) <- c("C", "B", "H", "D")
+    toR <- which(apply(apply(mm,1, function(x){x == 0}),2, sum) > 0)
+    if(length(toR) > 0){
+      mm <- mm[-toR,]
+      mids <- mids[-toR]
+    }
     mp <- mm
 
     # TODO: Add a test and significance to the plots (ChiSq test)
@@ -99,7 +93,7 @@ for(mname in names(all)){
     # TODO: Genotype based plots corresponding to the actuarial plots
     # TODO: Paternal colors (blueish) Maternal colors (Redish)
     # TODO: Histogram of all epistasis values with bars of about 0.1
-    pdf(paste0("July25/Vita_HazardRatios/", mname, "_",ss[sex],"_Deathrate_FixAxis.pdf"), width = 16.4, height = 12)
+    pdf(paste0("DataSet/output/Vita_HazardRatios", mname, "_",ss[sex],"_Deathrate_FixAxis.pdf"), width = 16.4, height = 12)
       op <- par(cex = 2)
       par(mar = c(5, 5, 4, 3))
       dt1 <- log2(mp[,1]/mp[,2])
@@ -158,43 +152,35 @@ for(mname in names(all)){
   }
 }
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny")
-  pdf(paste0(mname, "_RelativeDeaths_15day_WholePopulation.pdf"), width = 16, height = 12)
-
+pdf(paste0("DataSet/output/", mname, "_RelativeDeaths_15day_WholePopulation.pdf"), width = 16, height = 12)
   par(cex=2)
   par(cex.axis=1.2)
 
 
-    plot(c(200, 1500), c(0, 1), t = "n", 
-         ylab = "cumsum of % deaths in window (relative to population)", xlab = "Lifespan Cut-off Age (days)", yaxt="n", xaxs="i", main = "Effect Curve")
-    msequence <- seq(20, 1500, 15)
-    std <- function(x) sd(x)/sqrt(length(x))
-    mm <- c()
-    for(day in msequence){
-      day2 <- day + 15
-      nCdR <- length(which(C > day & C <= day2)) / length(c(C,D))
-      nDdR <- length(which(D > day & D <= day2)) / length(c(C,D))
-      mm <- rbind(mm, c(nCdR, nDdR))
-    }
-    abline(h = seq(0, 15, 1), lty=2, col = "gray")
-    points(msequence, cumsum(mm[,1]), t = 'l', col = "#FF3399", lwd=2)
-    points(msequence, cumsum(mm[,2]), t = 'l', col = "#CCCC99", lwd=2)
+  plot(c(200, 1500), c(0, 1), t = "n", ylab = "cumsum of % deaths in window (relative to population)", xlab = "Lifespan Cut-off Age (days)", 
+       yaxt="n", xaxs="i", main = "Effect Curve")
+  msequence <- seq(20, 1500, 15)
+  std <- function(x) sd(x)/sqrt(length(x))
+  mm <- c()
+  for(day in msequence){
+    day2 <- day + 15
+    nCdR <- length(which(C > day & C <= day2)) / length(c(C,D))
+    nDdR <- length(which(D > day & D <= day2)) / length(c(C,D))
+    mm <- rbind(mm, c(nCdR, nDdR))
+  }
+  abline(h = seq(0, 15, 1), lty=2, col = "gray")
+  points(msequence, cumsum(mm[,1]), t = 'l', col = "#FF3399", lwd=2)
+  points(msequence, cumsum(mm[,2]), t = 'l', col = "#CCCC99", lwd=2)
 
-    legend("topleft", c("H", "D"), col = c("#FF3399", "#CCCC99"), pch=18)
-    axis(2, at = seq(0, 1, 0.1), seq(0, 1, 0.1), las=2)
-    #dev.off()
+  legend("topleft", c("H", "D"), col = c("#FF3399", "#CCCC99"), pch=18)
+  axis(2, at = seq(0, 1, 0.1), seq(0, 1, 0.1), las=2)
+  #dev.off()
 
-    abline(v = 970)
-    abline(v = 520)
-  dev.off()
+  abline(v = 970)
+  abline(v = 520)
+dev.off()
 
-
-#  hist(mm[,1] - mm[,2], col = rgb(1,0,0,0.5), breaks = seq(0, 0.02, .0001))
-#  hist(mm[,2], add = TRUE, col = rgb(0,1,0,0.5), breaks = seq(0, 0.02, .0001))
-
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny")
-  pdf(paste0(mname, "_RelativeDeaths_15day_SubPopulation.pdf"), width = 16, height = 12)
-
+pdf(paste0("DataSet/output/",mname, "_RelativeDeaths_15day_SubPopulation.pdf"), width = 16, height = 12)
   par(cex=2)
   par(cex.axis=1.2)
 
@@ -207,43 +193,33 @@ for(mname in names(all)){
   axis(1, at = seq(0, 1600, 200), seq(0, 1600, 200), las=1)
   abline(h = 0)
   legend("topleft", c("H", "D"), col = c("#FF3399", "#CCCC99"), pch=18)
+dev.off()
 
-  dev.off()
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny")
-  pdf("Vita2B_Deaths_15day_OwnAllele.pdf", width = 16, height = 12)
-
+pdf("DataSet/output/Vita2B_Deaths_15day_OwnAllele.pdf", width = 16, height = 12)
   par(cex=2)
   par(cex.axis=1.2)
 
+  plot(c(200, 1500), c(0, 1), t = "n", ylab = "cumsum of % deaths in window (relative to same allele)", xlab = "Lifespan Cut-off Age (days)", 
+       yaxt="n", xaxs="i", main = "Effect Curve")
+  msequence <- seq(20, 1500, 15)
+  std <- function(x) sd(x)/sqrt(length(x))
+  mm <- c()
+  for(day in msequence){
+    day2 <- day + 15
+    nCdR <- length(which(C > day & C <= day2)) / length(c(C))
+    nDdR <- length(which(D > day & D <= day2)) / length(c(D))
+    mm <- rbind(mm, c(nCdR, nDdR))
+  }
+  abline(h = seq(0, 15, 1), lty=2, col = "gray")
+  points(msequence, cumsum(mm[,1]), t = 'l', col = "#FF3399", lwd=2)
+  points(msequence, cumsum(mm[,2]), t = 'l', col = "#CCCC99", lwd=2)
 
-    plot(c(200, 1500), c(0, 1), t = "n", ylab = "cumsum of % deaths in window (relative to same allele)", xlab = "Lifespan Cut-off Age (days)", yaxt="n", xaxs="i", main = "Effect Curve")
-    msequence <- seq(20, 1500, 15)
-    std <- function(x) sd(x)/sqrt(length(x))
-    mm <- c()
-    for(day in msequence){
-      day2 <- day + 15
-      nCdR <- length(which(C > day & C <= day2)) / length(c(C))
-      nDdR <- length(which(D > day & D <= day2)) / length(c(D))
-      mm <- rbind(mm, c(nCdR, nDdR))
-    }
-    abline(h = seq(0, 15, 1), lty=2, col = "gray")
-    points(msequence, cumsum(mm[,1]), t = 'l', col = "#FF3399", lwd=2)
-    points(msequence, cumsum(mm[,2]), t = 'l', col = "#CCCC99", lwd=2)
-    #polygon(c(msequence, rev(msequence)), c(mm[,1] + mm[,2], rev(mm[,1] - mm[,2])), col = rgb(0,0,1,0.5), border = NA)
+  legend("topleft", c("H", "D"), col = c("#FF3399", "#CCCC99"), pch=18)
+  axis(2, at = seq(0, 1, 0.1), seq(0, 1, 0.1), las=2)
+  abline(v = 970)
+  abline(v = 520)
+dev.off()
 
-    #points(msequence, mm[,3], t = 'l', col = rgb(.4,0.2,1,1), lwd=2)
-    #polygon(c(msequence, rev(msequence)), c(mm[,3] + mm[,4], rev(mm[,3] - mm[,4])), col = rgb(.4,0.2,1,0.5), border = NA)
-
-
-    legend("topleft", c("H", "D"), col = c("#FF3399", "#CCCC99"), pch=18)
-    axis(2, at = seq(0, 1, 0.1), seq(0, 1, 0.1), las=2)
-    #dev.off()
-
-    abline(v = 970)
-    abline(v = 520)
-  dev.off()
-
-}
 
 

@@ -7,13 +7,11 @@
 # Additionally, at the end we create a visualization of the data
 #
 
-setwd("/home/rqdt9/Github/UM-HET3/ProgessiveMapping")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
-# Read cross object
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
@@ -156,13 +154,6 @@ for(pname in names(all)){
   rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
   write.table(mm, paste0(pname, "_deathsIn15Dwindows_male.txt"), sep = "\t", quote = FALSE)
 }
-
-
-
-
-
-
-
 
 #
 setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_bioRxiv_All_Key_Files/11_FiguresDanny")
