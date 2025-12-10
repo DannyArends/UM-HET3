@@ -8,20 +8,19 @@
 # We write out the results in a matrix , and visualize
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
-library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
 
 # Writing out 
 iix <- which(pull.pheno(mcross)[,"longevity"] >= 365)
-write.table(pull.pheno(mcross)[iix,"GenoID"], "Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
+write.table(pull.pheno(mcross)[iix,"GenoID"], "DataSet/output/Cases_UM_HET3.txt",sep="\t", row.names=FALSE, quote=FALSE, col.names=FALSE)
 
 # Create the map object
 chrs <- unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_"),"[",1))
@@ -30,7 +29,7 @@ positions <- as.numeric(unlist(lapply(strsplit(colnames(pull.geno(mcross)), "_")
 map <- cbind(Chr = chrs, Pos = positions)
 rownames(map) <- colnames(pull.geno(mcross))
 
-write.table(map, "genetic_map.txt", sep = "\t", quote=FALSE)
+write.table(map, "DataSet/output/genetic_map.txt", sep = "\t", quote=FALSE)
 
 # Our Progressive Mapping Sequence
 msequence <- seq(20, 1100, 15)
@@ -66,7 +65,7 @@ for(x in msequence){
 colnames(lods.cM) <- colnames(pull.geno(mcross))
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.cM,2), "progressiveMapping_all.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "DataSet/output/progressiveMapping_all20D.txt", sep = "\t", quote=FALSE)
 
 subset <- map[which(as.numeric(map[,1]) %in% 1:4),]
 subset <- cbind(subset, cpos = NA)
@@ -89,7 +88,7 @@ for(x in 1:4){
 
 axis(1, at = chr.mids, paste0("Chr", 1:4))
 
-png("ProgressiveMapping_UMHET3.png", width = 1400, height = 1050)
+png("DataSet/output/ProgressiveMapping_UMHET3.png", width = 1400, height = 1050)
 
 # Plot the QTL profile
 library(RColorBrewer)
@@ -223,9 +222,9 @@ rownames(lods.mM) <- paste0("> ", msequence)
 rownames(lods.fM) <- paste0("> ", msequence)
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.mM,2), "progressiveMapping_males20D.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.fM,2), "progressiveMapping_females20D.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.cM,2), "progressiveMapping_all20D.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.mM,2), "DataSet/output/progressiveMapping_males20D.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.fM,2), "DataSet/output/progressiveMapping_females20D.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "DataSet/output/progressiveMapping_all20D.txt", sep = "\t", quote=FALSE)
 
 threshold <- 3.65
 
@@ -280,7 +279,8 @@ getEffect <- function(mcross, gtsprob, timepoint = 365, sex = "all", marker = "1
   adj <- residuals(mlm) + mean(cdata[, "longevity"])
   pheAdj[names(adj)] <- adj
   OAmean <- mean(pheAdj[which(!is.na(gts))])
-  means <- c(mean(pheAdj[which(gts == "AC")]),mean(pheAdj[which(gts == "AD")]),mean(pheAdj[which(gts == "BC")]),mean(pheAdj[which(gts == "BD")])) - OAmean
+  means <- c(mean(pheAdj[which(gts == "AC")]),mean(pheAdj[which(gts == "AD")]),
+             mean(pheAdj[which(gts == "BC")]),mean(pheAdj[which(gts == "BD")])) - OAmean
   std <- function(x) sd(x)/sqrt(length(x))
   stderrs <- c(std(pheAdj[which(gts == "AC")]),std(pheAdj[which(gts == "AD")]),std(pheAdj[which(gts == "BC")]),std(pheAdj[which(gts == "BD")]))
   paste0(length(which(!is.na(gts))), "/",nrow(cdata), "\t", round(OAmean,1), "\t", paste0(round(means,1), " ± ", round(stderrs,2), collapse="\t"))

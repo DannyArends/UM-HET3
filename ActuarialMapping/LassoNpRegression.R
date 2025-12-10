@@ -4,9 +4,10 @@
 # copyright (c) 2020-2030 - Danny Arends
 #
 # non-parametrix mapping code what can be used to switch from progressive mapping using linear models to using Quantile Regression
-#
+# Drop the following code inside the mapping loop in ProgressiveMapping.R
 
 library(quantreg)
+
 lods.cnp <- c()
 model.null = rq(longevity ~ sex + site + cohort + treatment + 0 , data = cdata, tau = 0.5, method="lasso")
 for(marker in colnames(pull.geno(mcross))){
@@ -17,3 +18,4 @@ for(marker in colnames(pull.geno(mcross))){
   lods.cnp <- c(lods.cnp, lod)
 }
 names(lods.cnp) <- colnames(pull.geno(mcross))
+

@@ -7,13 +7,13 @@
 # We perform a full scan at each T-age for both Combined (F+M)), Females, and Males only using control animals (treatment = 0)
 #
 
-setwd("C:/Users/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("C:/Users/rqdt9/OneDrive - Northumbria University - Production Azure AD/Documents/HU-Berlin/UM-HET3/files")
+library(qtl)
+
+source("ActuarialMapping/adjustXprobs.R")
 
 # Read cross object
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -184,9 +184,9 @@ rownames(lods.mM) <- paste0("> ", msequence)
 rownames(lods.fM) <- paste0("> ", msequence)
 rownames(lods.cM) <- paste0("> ", msequence)
 
-write.table(round(lods.mM,2), "progressiveMapping_ctrl_males.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.fM,2), "progressiveMapping_ctrl_females.txt", sep = "\t", quote=FALSE)
-write.table(round(lods.cM,2), "progressiveMapping_ctrl_all.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.mM,2), "DataSet/output/progressiveMapping_ctrl_males.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.fM,2), "DataSet/output/progressiveMapping_ctrl_females.txt", sep = "\t", quote=FALSE)
+write.table(round(lods.cM,2), "DataSet/output/progressiveMapping_ctrl_all.txt", sep = "\t", quote=FALSE)
 
 threshold <- 3.65
 
