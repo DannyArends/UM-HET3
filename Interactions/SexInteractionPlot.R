@@ -9,18 +9,12 @@
 library(RColorBrewer)
 library(svglite)
 library(vioplot)
-
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
-
-### Interaction plot
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+
+# Read cross object
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross, step = 0)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -67,10 +61,8 @@ for(m in 1:length(all)){
   add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
   col.alpha <- add.alpha(col.main, 0.1)
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/03_Figure_3_GxS")
-
   cdata <- cdata[which(cdata[, "pheAdj"] > 365),]
-  pdf(paste0(names(all)[m], ".GxS.pdf"), width = 12, height = 12)
+  pdf(paste0("DataSet/output/", names(all)[m], ".GxS.pdf"), width = 12, height = 12)
   op <- par(cex = 2)
   plot(c(1,4), c(mean(cdata[, "pheAdj"])-40, mean(cdata[, "pheAdj"])+40), t = "n", 
        main = paste0(names(all)[m], " x Sex interaction (>=",365," days)"), 

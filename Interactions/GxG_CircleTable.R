@@ -6,21 +6,19 @@
 # Code to produce the the big GxG circle plots (containing all Vita and Soma loci) figures in the supplements
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+
+# Read cross object
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
-
 gtsp <- pull.genoprob(mcross)
 
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-lods.all <- read.table("progressiveMapping_all20D.txt", sep = "\t", check.names = FALSE)
-lods.f <- read.table("progressiveMapping_females20D.txt", sep = "\t", check.names = FALSE)
-lods.m <- read.table("progressiveMapping_males20D.txt", sep = "\t", check.names = FALSE)
+lods.all <- read.table("DataSet/output/progressiveMapping_all20D.txt", sep = "\t", check.names = FALSE)
+lods.f <- read.table("DataSet/output/progressiveMapping_females20D.txt", sep = "\t", check.names = FALSE)
+lods.m <- read.table("DataSet/output/progressiveMapping_males20D.txt", sep = "\t", check.names = FALSE)
 
 allV <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
@@ -45,8 +43,7 @@ all <- all[-which(duplicated(all))]
 mbigm <- c()
 
 for(tp in c("42", "365", "740", "905")){
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/x_GxG_Vita_Soma_See_Extended_Data_6")
-  lodM.m <- read.table(paste0("vita_soma_interactions_2way_males_tp",tp,".txt"), sep = "\t")
+  lodM.m <- read.table(paste0("DataSet/output/vita_soma_interactions_2way_males_tp",tp,".txt"), sep = "\t")
   for(x in 1:ncol(lodM.m)){
     for(y in 1:x){
       lodM.m[y,x] <- lodM.m[x,y]
@@ -54,7 +51,7 @@ for(tp in c("42", "365", "740", "905")){
   }
   lodM.m <- lodM.m[names(all), names(all)]
 
-  lodM.f <- read.table(paste0("vita_soma_interactions_2way_females_tp",tp,".txt"), sep = "\t")
+  lodM.f <- read.table(paste0("DataSet/output/vita_soma_interactions_2way_females_tp",tp,".txt"), sep = "\t")
   for(x in 1:ncol(lodM.f)){
     for(y in 1:x){
       lodM.f[y,x] <- lodM.f[x,y]
@@ -62,8 +59,7 @@ for(tp in c("42", "365", "740", "905")){
   } 
   lodM.f <- lodM.f[names(all), names(all)]
 
-  setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-  map <- read.table("genetic_map.txt", sep = "\t")
+  map <- read.table("DataSet/output/genetic_map.txt", sep = "\t")
   map <- cbind(map, cloc = NA)
   map <- map[-c(893,892),]
 
@@ -275,8 +271,8 @@ for(x in 1:4){
   }
 }
 
-write.table(num, "GxG_numSignificant.txt", sep = "\t", row.names=FALSE)
-write.table(overlap, "GxG_overlapMvsF.txt", sep = "\t", row.names=FALSE)
+write.table(num, "DataSet/output/GxG_numSignificant.txt", sep = "\t", row.names=FALSE)
+write.table(overlap, "DataSet/output/GxG_overlapMvsF.txt", sep = "\t", row.names=FALSE)
 
 for(x in 1:4){
   ml <- mbigm[mbigm[,5] >= x & mbigm[,1] == "M",]

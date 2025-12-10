@@ -10,10 +10,6 @@ library(RColorBrewer)
 library(svglite)
 library(vioplot)
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-
-
 allV <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
          "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
@@ -46,15 +42,14 @@ int.f <- c()
 int.m <- c()
 for(tp in c("42", "365", "740", "905")){
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/x_GxG_Vita_Soma_See_Extended_Data_6")
-lodM.m <- read.table(paste0("vita_soma_interactions_2way_males_tp",tp,".txt"), sep = "\t")
+lodM.m <- read.table(paste0("DataSet/output/vita_soma_interactions_2way_males_tp",tp,".txt"), sep = "\t")
 for(x in 1:ncol(lodM.m)){
 for(y in 1:x){
     lodM.m[y,x] <- lodM.m[x,y]
   }
 } 
 lodM.m <- lodM.m[names(all), names(all)]
-lodM.f <- read.table(paste0("vita_soma_interactions_2way_females_tp",tp,".txt"), sep = "\t")
+lodM.f <- read.table(paste0("DataSet/output/vita_soma_interactions_2way_females_tp",tp,".txt"), sep = "\t")
 for(x in 1:ncol(lodM.f)){
 for(y in 1:x){
     lodM.f[y,x] <- lodM.f[x,y]
@@ -68,11 +63,7 @@ colz.c <- c(colz.c, rep("lightskyblue3", 40))
 colz.c2 <- colorRampPalette(c("white", "plum2"))(6)
 colz.c2 <- c(colz.c2, rep("plum2", 40))
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/")
-
-# TODO: Make these images SEX-Specific
-
-pdf(paste0(paste0("GxG_tp",tp,"_Vita_Soma_Big.pdf")), width = 36, height = 36)
+pdf(paste0(paste0("DataSet/output/GxG_tp",tp,"_Vita_Soma_Big.pdf")), width = 36, height = 36)
 op <- par(mar = c(5,5,5,5))
 plot(c(0.5, length(all)+0.5), c(0.5, length(all)+0.5), t = "n", xaxt='n', yaxt='n', xlab="",ylab="", xaxs="i", yaxs="i",bty="n")
 axis(1, at = 1:length(all), rownames(lodM.m[names(all),])[1:length(all)],las=2)
@@ -133,7 +124,7 @@ for(x in 1:length(all)){
 }
 box()
 dev.off()
-pdf(paste0(paste0("GxG_tp",tp,"_Histogram.pdf")), width = 18, height = 10)
+pdf(paste0(paste0("DataSet/output/GxG_tp",tp,"_Histogram.pdf")), width = 18, height = 10)
   op <- par(cex = 2)
   plot(c(0, 7), c(0, 100), t = "n", yaxs="i", main = paste0("LOD scores, tp = ", tp), ylab = "Counts", xlab = "LOD", xaxt="n", yaxt="n")
   hist(allLods.m, add = TRUE, breaks = seq(0,8, 0.1), col = rgb(0,0,1,0.3))
@@ -149,8 +140,6 @@ pdf(paste0(paste0("GxG_tp",tp,"_Histogram.pdf")), width = 18, height = 10)
   legend("topright", c(paste0("Male, 95% = ",round(mL,2)), paste0("Female, 95% = ",round(fL,2))), fill = c(rgb(0,0,1,0.3), rgb(1,0,0,0.3)))
 dev.off()
 }
-write.table(int.m, "test.m.txt", sep = "\t", quote = FALSE, row.names=FALSE)
-write.table(int.f, "test.f.txt", sep = "\t", quote = FALSE, row.names=FALSE)
-
-
+write.table(int.m, "DataSet/output/test.m.txt", sep = "\t", quote = FALSE, row.names=FALSE)
+write.table(int.f, "DataSet/output/test.f.txt", sep = "\t", quote = FALSE, row.names=FALSE)
 

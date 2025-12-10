@@ -5,6 +5,7 @@
 #
 # Mapping GxG interactions between significant Vita and Soma loci at 4 different timepoints (42, 365, 740, and 905 days)
 #
+library(qtl)
 
 allV <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
@@ -24,8 +25,6 @@ names(allS) <- c("Soma1a","Soma1b","Soma2a","Soma2b","Soma2c","Soma3a","Soma3b",
                 "Soma17a","Soma18a","Soma19a","Soma19b")
 
 all <- c(allV, allS)
-
-library(qtl)
 
 source("ActuarialMapping/adjustXprobs.R")
 

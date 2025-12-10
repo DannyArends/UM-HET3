@@ -10,10 +10,6 @@ library(RColorBrewer)
 library(svglite)
 library(vioplot)
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-
-
 allV <- c("1_3010274", "1_24042124", "1_121483290", "1_167148678", "2_89156987", "2_112255823", "2_148442635", "3_83354281", 
          "4_52524395", "4_154254581", "5_67573068", "6_93680853", "6_132762500", "9_34932404", "9_104091597", "9_124056586", 
          "10_72780332", "11_6599922", "11_82176894", "11_113729074", "12_112855820", "13_83858506", "14_78415875", "14_101437466", 
@@ -50,15 +46,14 @@ int.m <- c()
 
 tp <- 42
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/x_GxG_Vita_Soma_See_Extended_Data_6")
-lodM.m <- read.table(paste0("vita_soma_interactions_2way_males_tp",tp,".txt"), sep = "\t")
+lodM.m <- read.table(paste0("DataSet/output/vita_soma_interactions_2way_males_tp",tp,".txt"), sep = "\t")
 for(x in 1:ncol(lodM.m)){
 for(y in 1:x){
     lodM.m[y,x] <- lodM.m[x,y]
   }
 } 
 lodM.m <- lodM.m[names(all), names(all)]
-lodM.f <- read.table(paste0("vita_soma_interactions_2way_females_tp",tp,".txt"), sep = "\t")
+lodM.f <- read.table(paste0("DataSet/output/vita_soma_interactions_2way_females_tp",tp,".txt"), sep = "\t")
 for(x in 1:ncol(lodM.f)){
 for(y in 1:x){
     lodM.f[y,x] <- lodM.f[x,y]
@@ -71,8 +66,6 @@ colz.c <- c(colz.c, rep("lightskyblue3", 40))
 
 colz.c2 <- colorRampPalette(c("white", "plum2"))(6)
 colz.c2 <- c(colz.c2, rep("plum2", 40))
-
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_Nature_Prep_All_Key_Files/11_FiguresDanny/")
 
 # TODO: Make these images SEX-Specific
 
