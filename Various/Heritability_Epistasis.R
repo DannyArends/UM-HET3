@@ -7,13 +7,11 @@
 # Uses an mean square methods (Adapted from: Falconer 1989 & Lynch & Walsh 1998)
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
-# Read cross object
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -154,8 +152,7 @@ colnames(mE) <- c("Site", "Cohort", "Treatment")
 
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf("H2_G_GxG_Female.pdf", width = 26, height = 26/3)
+pdf("DataSet/ouput/H2_G_GxG_Female.pdf", width = 26, height = 26/3)
 op <- par(mar = c(4,10,2,2))
 op <- par(cex = 1.5)
 
@@ -275,8 +272,7 @@ colnames(mE) <- c("Site", "Cohort", "Treatment")
 
 
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf("H2_G_GxG_Male.pdf", width = 26, height = 26/3)
+pdf("DataSet/ouput/H2_G_GxG_Male.pdf", width = 26, height = 26/3)
 op <- par(mar = c(4,10,2,2))
 op <- par(cex = 1.5)
 

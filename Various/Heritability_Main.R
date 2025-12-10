@@ -7,13 +7,11 @@
 # Uses an mean square methods (Adapted from: Falconer 1989 & Lynch & Walsh 1998)
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
-# Read cross object
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -100,7 +98,6 @@ for(x in sequ){
   mmF[[as.character(x)]] <- Hs
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
 mG <- c()
 mE <- c()
 for(x in sequ){
@@ -113,16 +110,16 @@ mG[mG < 0] <- 0
 mE[mE < 0] <- 0
 rownames(mG) <- sequ
 colnames(mG) <- names(markers)
-write.table(mG, "peakVar_Vg_Females.txt", sep = "\t", quote=FALSE)
+write.table(mG, "DataSet/ouput/peakVar_Vg_Females.txt", sep = "\t", quote=FALSE)
 
 rownames(mE) <- sequ
 colnames(mE) <- c("Site", "Cohort", "Treatment")
-write.table(mE, "peakVar_Ve_Females.txt", sep = "\t", quote=FALSE)
+write.table(mE, "DataSet/ouput/peakVar_Ve_Females.txt", sep = "\t", quote=FALSE)
 
 add.alpha <- function (hex.color.list,alpha) sprintf("%s%02X",hex.color.list,floor(alpha*256))
 
 
-pdf("H2_Female_29Vita.pdf", width = 20, height = 20)
+pdf("DataSet/ouput/H2_Female_29Vita.pdf", width = 20, height = 20)
 nf <- layout( matrix(c(1,2,2), ncol=1) )
 op <- par(mar = c(4,10,2,2))
 op <- par(cex = 1.5)
@@ -222,8 +219,6 @@ for(x in sequ){
   mmM[[as.character(x)]] <- Hs
 }
 
-
-
 mG <- c()
 mE <- c()
 for(x in sequ){
@@ -239,14 +234,13 @@ colnames(mG) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a"
                 "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
                 "Vita17a","Vita18a","VitaXa","VitaXb")
 
-write.table(mG, "peakVar_Vg_Males.txt", sep = "\t", quote=FALSE)
+write.table(mG, "DataSet/ouput/peakVar_Vg_Males.txt", sep = "\t", quote=FALSE)
 
 rownames(mE) <- sequ
 colnames(mE) <- c("Site", "Cohort", "Treatment")
-write.table(mE, "peakVar_Ve_Males.txt", sep = "\t", quote=FALSE)
+write.table(mE, "DataSet/ouput/peakVar_Ve_Males.txt", sep = "\t", quote=FALSE)
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny")
-pdf("H2_Male_29Vita.pdf", width = 20, height = 20)
+pdf("DataSet/ouput/H2_Male_29Vita.pdf", width = 20, height = 20)
 
 nf <- layout( matrix(c(1,2,2), ncol=1) )
 op <- par(mar = c(4,10,2,2))
@@ -278,57 +272,4 @@ image(1:nrow(mG), 1:(ncol(mE) + ncol(mG)), combined, xaxt="n",
 axis(2, at = 1:ncol(combined), colnames(combined), las=2)
 box()
 dev.off()
-
-
-#### OLD
-
-
-mR <- c()
-for(x in sequ){
-  x <- round(apply(mmM[[as.character(x)]][4:29,],1, mean),3)
-  mR <- rbind(mR, x)
-}
-mR[mR < 0] <- 0
-rownames(mR) <- sequ
-colnames(mR) <- c("Vita1a","Vita1b","Vita1c","Vita2a","Vita2b","Vita2c","Vita3a","Vita3b","Vita4a","Vita5a","Vita6a","Vita6b",
-                "Vita9a","Vita9b","Vita9c","Vita10a","Vita11a","Vita11b","Vita12a","Vita13a","Vita14a","Vita15a",
-                "Vita17a","Vita18a","VitaXa","VitaXb")
-
-#TODO from 42 days
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_Tables_Files/07_Heritability_Figures")
-pdf("H2_Male.pdf", width = 20, height = 20)
-  op <- par(mar = c(4,10,2,2))
-  op <- par(cex = 1.5)
-  image(1:nrow(mR), 1:ncol(mR), mR, xaxt="n", yaxt = "n", xlab = "Cut", ylab = "", main = "H2 Mean square methods (Males)")
-  axis(1, at = (1:nrow(mR))[c(TRUE, FALSE)], sequ[c(TRUE, FALSE)])
-  axis(2, at = 1:ncol(mR), colnames(mR), las=2)
-  box()
-dev.off()
-
-
-
-#TODO from 42 days
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_Tables_Files/07_Heritability_Figures")
-pdf(paste0("Extra_Heritability_Female_Env.pdf"), width = 14, height = 10)
-  plot(c(365, 1100), y = c(0, 0.75), xlab = "Cutoff age", ylab = "Broad sense haplotype heritability", 
-       main = "Heritability - 26 Vita regions", t = "n", yaxt="n", xaxt="n", yaxs = "i")
-  for(x in sequ){
-    vita <- apply(mmF[[as.character(x)]],2, function(y){sum(y[4:29])})
-    boxplot(as.numeric(vita), boxwex=20, at = x-2.5, add = TRUE, yaxt="n", col = "hotpink")
-
-    env <- apply(mmF[[as.character(x)]],2, function(y){sum(y[1:3])})
-    boxplot(env, boxwex=10, at = x+2.5, add = TRUE, yaxt="n", col = 3)
-
-  #  vita <- apply(mmM[[as.character(x)]],2, function(y){sum(y[4:29])})
-  #  boxplot(as.numeric(vita), boxwex=20, at = x-2.5, add = TRUE, yaxt="n", col = "blue")
-
-  #  env <- apply(mmM[[as.character(x)]],2, function(y){sum(y[1:3])})
-  #  boxplot(env, boxwex=10, at = x+2.5, add = TRUE, yaxt="n", col = 3)
-
-    cat(mean(vita), "\n")
-  }
-  axis(1, at = seq(365, 1100, 4*15), seq(365, 1100, 4*15))
-  axis(2, at = seq(0, 1,0.1), paste0(seq(0,100,10), "%"), las=2)
-dev.off()
-
 
