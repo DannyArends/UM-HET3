@@ -6,12 +6,10 @@
 # Create actuarial CTL plots fr 2 Soma "Soma4b", "Soma11a" across the different time points (Main figures)
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 
@@ -19,7 +17,7 @@ mcross <- adjustXprobs(mcross)
 snames <- as.character(pull.pheno(mcross)[, "GenoID"])
 
 #42 days
-bw <- read.csv("ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
+bw <- read.csv("DataSet/bodyweights/ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
 bw <- bw[which(bw[, "DA2024"] == 1),]
 
 gtsp <- pull.genoprob(mcross)
@@ -90,8 +88,7 @@ for(i in 1:length(all)){
   col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
   col.main <- adjustcolor( col.main, alpha.f = 0.6)
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-  pdf(paste0("BW42_CTL_",names(all)[i],".pdf"), width = 36, height = 12)
+  pdf(paste0("DataSet/output/BW42_CTL_",names(all)[i],".pdf"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   par(cex=1.5)
   par(cex.axis=1.2)
@@ -160,8 +157,7 @@ for(i in 1:length(all)){
   col.main <- c("#00A654", "#004BAD", "#B16BE6", "#F02D27")
   col.main <- adjustcolor( col.main, alpha.f = 0.6)
 
-  setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/00_ITP_BioRxiv_All_Key_Files/11_FiguresDanny")
-  pdf(paste0("CTL_",names(all)[i],"_d42_bin2_v2.pdf"), width = 36, height = 12)
+  pdf(paste0("DataSet/output/CTL_",names(all)[i],"_d42_bin2_v2.pdf"), width = 36, height = 12)
   op <- par(mfrow = c(1,3))
   par(cex=1.5)
   par(cex.axis=1.2)
@@ -203,7 +199,4 @@ for(i in 1:length(all)){
 
   dev.off()
 }
-
-
-
 

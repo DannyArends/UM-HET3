@@ -6,12 +6,10 @@
 # Create actuarial CTL plots per Soma locus across the different time points (Supplemental files)
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
 gtsp <- pull.genoprob(mcross)
@@ -30,11 +28,11 @@ adjustPHE <- function(cdata, days = 0, column = "bw42", out = c("is42", "adjBw42
 }
 
 #42 days
-bwA <- read.csv("bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
-bw <- read.csv("ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
+bwA <- read.csv("DataSet/bodyweights/bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
+bw <- read.csv("DataSet/bodyweights/ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
 bw <- bw[which(bw[, "DA2024"] == 1),]
 
-trait <- read.csv("ITP_10003.csv", header = TRUE, comment.char = "#", skip=10, row.names=2,na.strings = c("NA", "", "x"))
+trait <- read.csv("DataSet/bodyweights/ITP_10003.csv", header = TRUE, comment.char = "#", skip=10, row.names=2,na.strings = c("NA", "", "x"))
 trait <- trait[which(trait[, "DA2024"] == 1),]
 snames <- as.character(pull.pheno(mcross)[, "GenoID"])
 
@@ -102,8 +100,6 @@ for(marker in all){
 }
 colnames(genotypes) <- all
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__Arends_bioRxiv_All_Key_Files/11_FiguresDanny/Soma")
-
 toP <- function(allCor, allN){
   ## correlation differences to P-value / LOD scores
   pC <- c()
@@ -134,7 +130,7 @@ for(tp in c("42", "6", "12", "18", "24")){
   bwStCol <- paste0("bw", tp)
   startTP <- timepoints[tp]
   for(m in names(all)){
-    pdf(paste0(m, "_", tp,"_actuarial.pdf"), width = (28+14) * .8, height = 12)
+    pdf(paste0("DataSet/output/", m, "_", tp,"_actuarial.pdf"), width = (28+14) * .8, height = 12)
     op <- par(mfrow=c(1,3))
     op <- par(cex = 2)
     par(mar = c(5, 4, 4, 2))

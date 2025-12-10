@@ -6,17 +6,14 @@
 # Visualization (in CTL style) of Male/Female correlation differences using 6 month bodyweight (think: sex = genetic marker)
 #
 
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
-
-
 gtsp <- pull.genoprob(mcross)
+
 cdata <- data.frame(longevity = as.numeric(pull.pheno(mcross)[, "longevity"]), 
                     adjLongevity = NA, 
                     sex = as.numeric(pull.pheno(mcross)[, "sex"]), 
