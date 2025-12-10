@@ -6,32 +6,26 @@
 # QTL Mapping and visualization of all bodyweight data (42 days, 6, 12, 18, and 24 months)
 # We first add the newly obtained bodyweight data at 42 days, and 12 month
 #
-
-setwd("/home/rqdt9/Github/UM-HET3")
-source("adjustXprobs.R")
-setwd("/home/rqdt9/OneDrive/Documents/HU-Berlin/UM-HET3/files")
-
 library(qtl)
-mcross <- read.cross(format="csvr", file="um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
+
+source("ActuarialMapping/adjustXprobs.R")
+
+mcross <- read.cross(format="csvr", file="DataSet/um-het3-rqtl.csvr", genotypes=NULL, na.strings=c("-", "NA"))
 mcross <- calc.genoprob(mcross)
 mcross <- adjustXprobs(mcross)
-
-
-mdata <- read.table("um-het3-rqtl.csvr", sep = ",")
 
 #Sample names
 snames <- as.character(pull.pheno(mcross)[, "GenoID"])
 
 ##### Compute effect sizes
-
-bwA <- read.csv("bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
+bwA <- read.csv("DataSet/bodyweights/bw_RichM.txt", sep = "\t", header = TRUE, comment.char = "#", row.names=1, na.strings = c("NA", "", "x"))
 
 #42 days
-bw <- read.csv("ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
+bw <- read.csv("DataSet/bodyweights/ITP_50601.csv", header = TRUE, comment.char = "#", skip=11, row.names=2,na.strings = c("NA", "", "x"))
 bw <- bw[which(bw[, "DA2024"] == 1),]
 
 #12 months
-trait <- read.csv("ITP_10003.csv", header = TRUE, comment.char = "#", skip=10, row.names=2,na.strings = c("NA", "", "x"))
+trait <- read.csv("DataSet/bodyweights/ITP_10003.csv", header = TRUE, comment.char = "#", skip=10, row.names=2,na.strings = c("NA", "", "x"))
 trait <- trait[which(trait[, "DA2024"] == 1),]
 
 gtsp <- pull.genoprob(mcross)
