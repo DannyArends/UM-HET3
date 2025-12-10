@@ -101,7 +101,8 @@ rownames(mmatrix) <- names(regions)
 
 write.table(mmatrix, file = "GenBiotypes.txt",sep="\t",quote=FALSE,row.names=TRUE, na = "")
 
-#### Part 2) Berlin Server part
+
+#### Part 2) Execute SNP calling on a Server/Cloud/HPC infrastructure
 
 execute <- function(x, intern = FALSE, execute = TRUE){
   cat("----", x, "\n")

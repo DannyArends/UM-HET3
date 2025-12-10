@@ -8,9 +8,7 @@
 # Lists were submitted to only ORA tools (David, innateDB)
 #
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
-
-regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
+regions <- read.table("DataSet/regions/regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
 colnames(regions) <- c("Chr", "Proximal", "Distal", "Old")
 
 ### Pathway ORA all genes

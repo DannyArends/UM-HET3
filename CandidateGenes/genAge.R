@@ -6,16 +6,13 @@
 # Mapping our mouse genes to see if any GenAge homologous genes in C. elegans, Human, D. melanogaster, and S. cerevisiae are known
 #
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3")
-
-GAmodel <- read.table("genage/genage_models.csv",sep=",", header=TRUE)
-GAhuman <- read.table("genage/genage_human.csv",sep=",", header=TRUE)
-
-regions <- read.table("regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
-colnames(regions) <- c("Chr", "Proximal", "Distal")
-
 library(biomaRt)
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/2025")
+
+GAmodel <- read.table("DataSet/genage/genage_models.csv",sep=",", header=TRUE)
+GAhuman <- read.table("DataSet/genage/genage_human.csv",sep=",", header=TRUE)
+
+regions <- read.table("DataSet/regions/regions_4way_merged_May24.txt", sep="\t", header=FALSE, row.names=1)
+colnames(regions) <- c("Chr", "Proximal", "Distal")
 
 mart <- useMart("ensembl", dataset="mmusculus_gene_ensembl", host="https://nov2020.archive.ensembl.org")
 for(x in 1:nrow(regions)){
@@ -53,7 +50,8 @@ for(x in 1:nrow(regions)){
     descr[which(descr[,"ensembl_gene_id"] == ge), "genAge"] <- specV
   }
   
-  rname <- paste0("genes/all/",rownames(regions)[x], "_genAge.txt")
+  ## Make sure the "genes/all" folder exists ("/home/rqdt9/Dropbox (UTHSC GGI)/MyFolder/UM-HET3/2025")
+  rname <- paste0("DataSet/output/genes/all/",rownames(regions)[x], "_genAge.txt")
   nFeat <- nrow(descr)
   nAll <- sum(descr[, "gene_biotype"] == "protein_coding")
   
