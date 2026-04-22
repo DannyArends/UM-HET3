@@ -108,6 +108,7 @@ for(x in 1:length(all)){
         }
         #rect(xp-0.5,yp-0.5, xp+0.5, yp + 0.5, col = colz.c[1+ 0.5 * round(lodM.m[name2,name1])], border = "gray")
         #text(xp, yp, paste0(formatC(lodM.m[name2,name1], digits = 1, format = "f"), ""), col = bcol)
+        cat(name1, " ", name2, "\n")
         nTests <- nTests + 1
         allLods.m <- c(allLods.m, lodM.m[name2, name1])
       }

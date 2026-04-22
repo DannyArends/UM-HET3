@@ -26,7 +26,7 @@ names(all) <- c("Vita1a", "Vita1b", "Vita1c", "Vita1d", "Vita2a", "Vita2b", "Vit
                 "Vita9a", "Vita9b", "Vita9c", "Vita10a", "Vita11a", "Vita11b", "Vita11c", "Vita12a", "Vita13a", "Vita14a", "Vita14b", "Vita15a", 
                 "Vita15b", "Vita17a", "Vita18a", "VitaXa")
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/NatureReviewUpdates")
+setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/RedoSupplement2")
 for(pname in names(all)){
   marker <-  all[pname]
 
@@ -66,10 +66,11 @@ for(pname in names(all)){
   }
   colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H", "CH_alive", "CD_alive", "BH_alive", "BD_alive", "nGenotyped", "nTotal")
   rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
-  write.table(mm, paste0(pname, "_deathsIn15Dwindows_combined.txt"), sep = "\t", quote = FALSE)
+  mm <- cbind(TageRange = rownames(mm), mm)
+  write.table(mm, paste0(pname, "_deathsIn15Dwindows_combined.txt"), sep = "\t", quote = TRUE, row.names=FALSE)
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
+#setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
 for(pname in names(all)){
   marker <-  all[pname]
 
@@ -109,10 +110,11 @@ for(pname in names(all)){
   }
   colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H", "CH_alive", "CD_alive", "BH_alive", "BD_alive", "nGenotyped", "nTotal")
   rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
-  write.table(mm, paste0(pname, "_deathsIn15Dwindows_female.txt"), sep = "\t", quote = FALSE)
+  mm <- cbind(TageRange = rownames(mm), mm)
+  write.table(mm, paste0(pname, "_deathsIn15Dwindows_female.txt"), sep = "\t", quote = TRUE, row.names=FALSE)
 }
 
-setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
+#setwd("/home/rqdt9/Dropbox (UTHSC GGI)/ITP_HET3_Mapping_Paper_Arends_2021/__bioRxiv_All_Key_Files/11_FiguresDanny/")
 for(pname in names(all)){
   marker <-  all[pname]
 
@@ -152,7 +154,8 @@ for(pname in names(all)){
   }
   colnames(mm) <- c("CH", "CD", "BH", "BD", "C", "B", "D", "H", "CH_alive", "CD_alive", "BH_alive", "BD_alive", "nGenotyped", "nTotal")
   rownames(mm) <- paste0(seq(5, 1500, 15), "-", seq(20, 1515, 15))[-100]
-  write.table(mm, paste0(pname, "_deathsIn15Dwindows_male.txt"), sep = "\t", quote = FALSE)
+  mm <- cbind(TageRange = rownames(mm), mm)
+  write.table(mm, paste0(pname, "_deathsIn15Dwindows_male.txt"), sep = "\t", quote = TRUE, row.names=FALSE)
 }
 
 #
