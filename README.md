@@ -76,7 +76,7 @@ The code in this repository is made possible by, and has dependencies on, the fo
 
 As well as many many different R-packages used in the analysis of the data.
 
-### Genotype Coding Convention 🧬
+### Genotype Coding Convention
 
 The code for progressive QTL mapping in this repository follows specific conventions to ensure consistency and clarity. The analysis relies on a genetic 
 map created from Monsterplex Capture DNA-Sequencing and Sequenom MassARRAY data. The codebase is designed to handle the complex genetic structure of the 
@@ -105,4 +105,4 @@ See [LICENSE.txt](./LICENSE.txt).
 
 ### Cite
 
-Arends, D., Ashbrook, D. G., Roy, S., Lu, L., Sloan, Z., Centeno, A. G., Lamour, K. H., de Magalhães, J. P., Prins, P., Broman, K. W., Sen, S., Mitchell, S. J., MacArthur, M. R., Akin, Ö. A., Auwerx, J., Bajwa, A., Diaz, V., Harrison, D. E., Strong, R., Nelson, J. F., Mozhui, K., Williams, E. G., Miller, R. A., & Williams, R. W. (2026). **Dynamics of genetic and somatic trade-offs in ageing and mortality** *Nature* [https://doi.org/10.1038/s41586-026-10407-9](doi.org/10.1038/s41586-026-10407-9)
+Arends, D., Ashbrook, D. G., Roy, S., Lu, L., Sloan, Z., Centeno, A. G., Lamour, K. H., de Magalhães, J. P., Prins, P., Broman, K. W., Sen, S., Mitchell, S. J., MacArthur, M. R., Akin, Ö. A., Auwerx, J., Bajwa, A., Diaz, V., Harrison, D. E., Strong, R., Nelson, J. F., Mozhui, K., Williams, E. G., Miller, R. A., & Williams, R. W. (2026). **Dynamics of genetic and somatic trade-offs in ageing and mortality** *Nature* [https://doi.org/10.1038/s41586-026-10407-9](https://doi.org/10.1038/s41586-026-10407-9)
