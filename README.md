@@ -4,7 +4,7 @@ This repository contains the R code used to produce the findings in our Nature p
 It covers actuarial QTL mapping of *Vita* loci that shape lifespan, CTL mapping of *Soma* loci that control the body weight vs longevity trade-off, and epistatic 
 interaction analysis between all loci stratified by sex and age.
 
-Data is available in [Dataset/](./Dataset/) and on [GeneNetwork](https://genenetwork.org/show_trait?trait_id=10001&dataset=HET3-ITPPublish).
+Data is available in [DataSet/](./DataSet/) and on [GeneNetwork](https://genenetwork.org/show_trait?trait_id=10001&dataset=HET3-ITPPublish).
 
 ### Installation
 
