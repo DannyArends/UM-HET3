@@ -15,7 +15,7 @@ Or be a maintainer, and adopt (the documentation of) a function.
 
 ### License ⚖️
 
-Written by Danny Arends and is released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). 
+Written by Danny Arends and released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). 
 See [LICENSE.txt](./LICENSE.txt).
 
 ### Cite 📝
